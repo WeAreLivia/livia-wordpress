@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: read
+
+# Publishes livia-<version>.zip and its signature livia-<version>.zip.sig in the GitHub release of the tag; the Livia
+# update service relays both to the sites. The zip is built without any secret, by a job that runs the npm
+# dependencies' code; the signing key and the write access to the repository exist only in the job that signs and
+# publishes it, which installs and builds nothing and checks the zip against the tag before signing it.
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Setup Node.js 24.22.1
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24.22.1
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Build
+        run: npm run build
+      - name: Build the zip (the tag must match the plugin version)
+        run: bin/build-zip.sh "$GITHUB_REF_NAME"
+      - name: Upload the zip
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: livia-zip
+          path: dist/livia-*.zip
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      # The tag's own sources: bin/sign-zip.mjs and the public key it checks the signature against.
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      # Here, not in the build job: the npm dependencies' code that job runs could fake the result of a check.
+      - name: Refuse a tag whose commit is not on main
+        run: |
+          git rev-parse --verify --quiet origin/main >/dev/null || { echo "::error::origin/main is missing: check out with fetch-depth: 0."; exit 1; }
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main \
+            || { echo "::error::$GITHUB_REF_NAME points to $GITHUB_SHA, which is not on main. Tag the commit on origin/main once the change is merged."; exit 1; }
+      - name: Download the zip
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: livia-zip
+          path: dist
+      # The build job ran the npm dependencies' code: nothing is signed unless every file of the zip is the tag's own,
+      # byte for byte, or a build output under build/ that holds no code PHP would run.
+      - name: Check the zip against the tag
+        run: node bin/check-zip.mjs "dist/livia-${GITHUB_REF_NAME#v}.zip"
+      # Refused without the secret, with an empty Livia_Updater::SIGNING_KEY, or when that key does not verify the
+      # signature: the plugin installs no package without the signature of its key. The runner's own Node.js runs it.
+      - name: Sign the zip
+        env:
+          LIVIA_WP_SIGNING_KEY: ${{ secrets.LIVIA_WP_SIGNING_KEY }}
+        run: node bin/sign-zip.mjs "dist/livia-${GITHUB_REF_NAME#v}.zip"
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # A draft until the zip and its signature are attached: the latest release, which the update service offers,
+        # always carries both.
+        run: |
+          set -euo pipefail
+          zip="dist/livia-${GITHUB_REF_NAME#v}.zip"
+          api="https://api.github.com/repos/$GITHUB_REPOSITORY"
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
+          release=$(curl -fsS -X POST "$api/releases" "${auth[@]}" \
+            -d "$(jq -n --arg tag "$GITHUB_REF_NAME" '{tag_name: $tag, name: $tag, generate_release_notes: true, draft: true}')")
+          id=$(echo "$release" | jq -r '.id')
+          upload=$(echo "$release" | jq -r '.upload_url' | sed 's/{.*}//')
+          curl -fsS -X POST "$upload?name=$(basename "$zip")" \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/zip" \
+            --data-binary @"$zip" > /dev/null
+          curl -fsS -X POST "$upload?name=$(basename "$zip").sig" \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: text/plain" \
+            --data-binary @"$zip.sig" > /dev/null
+          published=$(curl -fsS -X PATCH "$api/releases/$id" "${auth[@]}" -d '{"draft": false}')
+          echo "Published $(basename "$zip") in $(echo "$published" | jq -r '.html_url')"

@@ -1,0 +1,34 @@
+.livia-placeholder {
+	background: #f6f7f7;
+	border-radius: 2px;
+	padding: 28px;
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	color: #1e1e1e;
+}
+
+.livia-placeholder__icon {
+	flex: none;
+	display: block;
+	width: 48px;
+	height: 48px;
+}
+
+.livia-placeholder__icon svg {
+	display: block;
+	width: 48px;
+	height: 48px;
+}
+
+.livia-placeholder__title {
+	font-weight: 600;
+	font-size: 15px;
+}
+
+.livia-placeholder__text {
+	color: #50575e;
+	font-size: 14px;
+	margin-top: 2px;
+}

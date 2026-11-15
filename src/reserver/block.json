@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "livia/reserver",
+	"title": "Book button",
+	"category": "widgets",
+	"description": "Opens the Livia booking experience: the number of guests, then the right path.",
+	"keywords": [ "livia", "book", "booking", "reservation" ],
+	"textdomain": "livia",
+	"attributes": {
+		"label": {
+			"type": "string",
+			"default": ""
+		},
+		"target": {
+			"type": "string",
+			"enum": [ "guests", "event" ],
+			"default": "guests"
+		},
+		"restaurant": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js"
+}

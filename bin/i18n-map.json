@@ -1,0 +1,1 @@
+{"src/widget/index.js":"build/widget/index.js","src/group-page/index.js":"build/group-page/index.js","src/editor-panel.js":"build/editor-panel.js","src/reserver/index.js":"build/reserver/index.js","src/convives/index.js":"build/convives/index.js","src/restaurant-control.js":["build/reserver/index.js","build/convives/index.js"]}

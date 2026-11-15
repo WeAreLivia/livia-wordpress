@@ -1,0 +1,7 @@
+/* The Livia picto on its lime tile, as the icon of the "Livia" element in Elementor's panel and empty preview. */
+.livia-elementor-icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	background: url(img/menu-icon.svg) center / contain no-repeat;
+}

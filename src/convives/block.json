@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "livia/convives",
+	"title": "How many of you?",
+	"category": "widgets",
+	"description": "The Livia guest selector, placed in the page: it leads to the right booking path.",
+	"keywords": [ "livia", "guests", "booking", "reservation" ],
+	"textdomain": "livia",
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"enum": [ "band", "card" ],
+			"default": "card"
+		},
+		"restaurant": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css"
+}

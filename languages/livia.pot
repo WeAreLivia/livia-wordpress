@@ -1,0 +1,1584 @@
+# Copyright (C) 2026 Livia
+# This file is distributed under the Proprietary.
+msgid ""
+msgstr ""
+"Project-Id-Version: Livia 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/livia\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-15T09:34:15+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: livia\n"
+
+#. Plugin Name of the plugin
+#. Author of the plugin
+#: livia.php
+msgid "Livia"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: livia.php
+msgid "https://www.wearelivia.com"
+msgstr ""
+
+#. Description of the plugin
+#: livia.php
+#: includes/class-livia-updater.php:261
+msgid "Publishes your restaurant's Livia group booking page on your site, with its booking assistant, and places Livia widgets on your pages."
+msgstr ""
+
+#: includes/class-livia-admin.php:73
+#: src/convives/index.js:25
+#: src/reserver/index.js:25
+#: src/widget/index.js:45
+msgid "Settings"
+msgstr ""
+
+#. translators: 1: year, 2: "Livia".
+#: includes/class-livia-admin.php:86
+#, php-format
+msgid "© %1$s %2$s. All rights reserved."
+msgstr ""
+
+#: includes/class-livia-admin.php:89
+msgid "Help"
+msgstr ""
+
+#. translators: %s: plugin version.
+#: includes/class-livia-admin.php:96
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: includes/class-livia-admin.php:170
+msgid "You are not allowed to change these settings."
+msgstr ""
+
+#: includes/class-livia-admin.php:207
+msgid "Livia does not recognise this key. Check that you copied all of it from your Livia space."
+msgstr ""
+
+#: includes/class-livia-admin.php:208
+msgid "The WordPress connector of this restaurant is turned off in Livia: the plugin no longer receives anything. Turn it on again in your Livia space, Connectors section."
+msgstr ""
+
+#: includes/class-livia-admin.php:209
+msgid "This restaurant is already connected."
+msgstr ""
+
+#: includes/class-livia-admin.php:210
+msgid "Livia is not answering right now. Please try again in a few minutes."
+msgstr ""
+
+#: includes/class-livia-admin.php:364
+msgid "WordPress could not create the page. Please try again."
+msgstr ""
+
+#: includes/class-livia-admin.php:432
+msgid "You are not allowed to move this content to the trash."
+msgstr ""
+
+#: includes/class-livia-admin.php:445
+msgid "This site has no trash for media files: the file would be hidden with no way to restore it. Choose another address, or delete the file yourself."
+msgstr ""
+
+#: includes/class-livia-admin.php:446
+msgid "This site empties its trash at once: the old content would be deleted for good. Choose another address, or delete the content yourself."
+msgstr ""
+
+#. translators: %s: restaurant name.
+#: includes/class-livia-admin.php:466
+msgid "Group booking"
+msgstr ""
+
+#. translators: %s: restaurant name.
+#: includes/class-livia-admin.php:466
+#, php-format
+msgid "Group booking, %s"
+msgstr ""
+
+#: includes/class-livia-admin.php:501
+msgid "Floating bubble"
+msgstr ""
+
+#: includes/class-livia-admin.php:502
+msgid "Button in the page"
+msgstr ""
+
+#: includes/class-livia-admin.php:503
+msgid "Embedded conversation"
+msgstr ""
+
+#: includes/class-livia-admin.php:565
+msgid "Meanwhile, the group booking page shows a short notice instead of its content."
+msgstr ""
+
+#: includes/class-livia-admin.php:708
+msgctxt "default address of the group booking page"
+msgid "group-booking"
+msgstr ""
+
+#: includes/class-livia-admin.php:717
+msgid "Widget of your Livia booking page"
+msgstr ""
+
+#. translators: %s: restaurant name.
+#: includes/class-livia-admin.php:736
+#, php-format
+msgid "%s is with you for your event."
+msgstr ""
+
+#: includes/class-livia-admin.php:737
+#: includes/views/settings.php:165
+msgid "Your restaurant"
+msgstr ""
+
+#: includes/class-livia-elementor-convives.php:30
+#: includes/class-livia-elementor-convives.php:64
+#: includes/class-livia-experience.php:248
+#: src/convives/index.js:45
+msgid "How many of you?"
+msgstr ""
+
+#: includes/class-livia-elementor-convives.php:68
+#: src/convives/index.js:27
+msgid "Layout"
+msgstr ""
+
+#: includes/class-livia-elementor-convives.php:72
+#: src/convives/index.js:30
+msgid "Card"
+msgstr ""
+
+#: includes/class-livia-elementor-convives.php:73
+#: src/convives/index.js:31
+msgid "Band, over a photo"
+msgstr ""
+
+#: includes/class-livia-elementor-reserver.php:30
+#: includes/class-livia-elementor-reserver.php:64
+#: includes/views/experience.php:23
+msgid "Book button"
+msgstr ""
+
+#: includes/class-livia-elementor-reserver.php:68
+#: src/reserver/index.js:27
+msgid "Label"
+msgstr ""
+
+#: includes/class-livia-elementor-reserver.php:71
+#: includes/class-livia-experience.php:247
+#: includes/class-livia-experience.php:280
+#: includes/class-livia-experience.php:322
+#: includes/class-livia-experience.php:440
+#: includes/class-livia-experience.php:626
+#: includes/class-livia-experience.php:647
+#: src/reserver/index.js:29
+#: src/reserver/index.js:53
+msgid "Book a table"
+msgstr ""
+
+#: includes/class-livia-elementor-reserver.php:77
+#: src/reserver/index.js:35
+msgid "Opens the window on"
+msgstr ""
+
+#: includes/class-livia-elementor-reserver.php:81
+#: src/reserver/index.js:38
+msgid "The choice of the number of guests"
+msgstr ""
+
+#: includes/class-livia-elementor-reserver.php:82
+#: src/reserver/index.js:39
+msgid "The private hire, at once"
+msgstr ""
+
+#: includes/class-livia-elementor-widget.php:74
+#: src/widget/index.js:57
+msgid "Choose a widget"
+msgstr ""
+
+#: includes/class-livia-elementor-widget.php:89
+msgid "edit this widget in Livia"
+msgstr ""
+
+#: includes/class-livia-elementor-widget.php:91
+#: includes/views/experience.php:376
+#: includes/views/settings.php:526
+#: src/editor-panel.js:63
+#: src/widget/index.js:49
+msgid "Widget"
+msgstr ""
+
+#: includes/class-livia-elementor-widget.php:95
+#: src/widget/index.js:69
+msgid "Livia widget"
+msgstr ""
+
+#. translators: %s: link to Livia's admin.
+#: includes/class-livia-elementor-widget.php:101
+#, php-format
+msgid "The buttons and embedded conversations of your connected restaurants. Label, colors and shape: %s."
+msgstr ""
+
+#: includes/class-livia-elementor-widget.php:102
+#: src/widget/index.js:54
+msgid "Connect your restaurant in the Livia menu to choose a widget."
+msgstr ""
+
+#: includes/class-livia-elementor.php:73
+#: src/restaurant-control.js:18
+msgid "Asked to the visitor"
+msgstr ""
+
+#: includes/class-livia-elementor.php:81
+#: includes/class-livia-experience.php:253
+#: includes/views/experience.php:239
+#: includes/views/settings.php:560
+#: src/restaurant-control.js:14
+msgid "Restaurant"
+msgstr ""
+
+#. translators: 1: name of the conversation's assistant, Livia by default, 2: restaurant name (in French, already preceded by "de" and contracted).
+#: includes/class-livia-experience.php:186
+#, php-format
+msgid "%1$s, %2$s's assistant, prepares your table with you: date, menus, space. She answers you right away, 7 days a week."
+msgstr ""
+
+#. translators: %1$s: name of the conversation's assistant, Livia by default.
+#: includes/class-livia-experience.php:188
+#: includes/class-livia-experience.php:276
+#, php-format
+msgid "%1$s, the restaurant's assistant, prepares your table with you: date, menus, space. She answers you right away, 7 days a week."
+msgstr ""
+
+#: includes/class-livia-experience.php:249
+msgid "Where and how many of you?"
+msgstr ""
+
+#: includes/class-livia-experience.php:250
+msgid "Enter the number of guests"
+msgstr ""
+
+#: includes/class-livia-experience.php:251
+msgid "Online table, group with Livia or event: what comes next depends on you."
+msgstr ""
+
+#: includes/class-livia-experience.php:252
+msgid "Choose the restaurant"
+msgstr ""
+
+#: includes/class-livia-experience.php:254
+msgid "One guest fewer"
+msgstr ""
+
+#: includes/class-livia-experience.php:255
+msgid "One guest more"
+msgstr ""
+
+#: includes/class-livia-experience.php:256
+msgid "Number of guests"
+msgstr ""
+
+#: includes/class-livia-experience.php:257
+msgid "guest"
+msgstr ""
+
+#: includes/class-livia-experience.php:258
+#: includes/views/experience.php:96
+#: includes/views/experience.php:97
+msgid "guests"
+msgstr ""
+
+#. translators: 1: smallest number of guests, 2: largest.
+#: includes/class-livia-experience.php:260
+#, php-format
+msgid "%1$d to %2$d"
+msgstr ""
+
+#. translators: 1: smallest number of guests of a group, 2: largest.
+#: includes/class-livia-experience.php:262
+#, php-format
+msgid "%1$d to %2$d · group"
+msgstr ""
+
+#. translators: %d: smallest number of guests of an event.
+#: includes/class-livia-experience.php:264
+#, php-format
+msgid "%d and over"
+msgstr ""
+
+#. translators: %d: smallest number of guests of an event, on a quick choice button.
+#: includes/class-livia-experience.php:266
+#, php-format
+msgid "%d+"
+msgstr ""
+
+#: includes/class-livia-experience.php:267
+msgid "Table"
+msgstr ""
+
+#: includes/class-livia-experience.php:268
+msgid "Group"
+msgstr ""
+
+#. translators: %d: event threshold, in guests.
+#: includes/class-livia-experience.php:270
+#, php-format
+msgid "Over %d guests"
+msgstr ""
+
+#: includes/class-livia-experience.php:271
+msgid "Online booking"
+msgstr ""
+
+#: includes/class-livia-experience.php:272
+msgid "Choose your time slot online, in a few seconds."
+msgstr ""
+
+#: includes/class-livia-experience.php:273
+msgid "Group table with Livia"
+msgstr ""
+
+#. translators: %d: first number of guests above the event threshold.
+#: includes/class-livia-experience.php:277
+#: includes/views/experience.php:404
+msgid "Private hire or event"
+msgstr ""
+
+#. translators: %d: event threshold, in guests.
+#: includes/class-livia-experience.php:279
+#, php-format
+msgid "Beyond %d guests, or to hire the place, the team makes you a tailored offer."
+msgstr ""
+
+#: includes/class-livia-experience.php:281
+msgid "Prepare my group table"
+msgstr ""
+
+#: includes/class-livia-experience.php:282
+#: includes/class-livia-experience.php:290
+#: includes/views/experience.php:414
+msgid "Contact the restaurant"
+msgstr ""
+
+#: includes/class-livia-experience.php:283
+msgid "Request a private hire"
+msgstr ""
+
+#: includes/class-livia-experience.php:284
+msgid "Guests"
+msgstr ""
+
+#: includes/class-livia-experience.php:285
+msgid "Open in a tab"
+msgstr ""
+
+#: includes/class-livia-experience.php:286
+msgid "Loading"
+msgstr ""
+
+#: includes/class-livia-experience.php:287
+#: includes/views/settings.php:570
+msgid "Close"
+msgstr ""
+
+#: includes/class-livia-experience.php:288
+#: includes/views/experience.php:389
+msgid "Let us prepare your group table"
+msgstr ""
+
+#: includes/class-livia-experience.php:289
+msgid "Private hire"
+msgstr ""
+
+#. translators: %d: event threshold, in guests.
+#: includes/class-livia-experience.php:292
+#, php-format
+msgid "For more than %d guests or a private hire, contact the restaurant."
+msgstr ""
+
+#: includes/class-livia-experience.php:293
+msgid "Write to the restaurant or drop by: the team will answer you."
+msgstr ""
+
+#: includes/class-livia-experience.php:294
+msgid "By email"
+msgstr ""
+
+#: includes/class-livia-experience.php:295
+msgid "By phone"
+msgstr ""
+
+#: includes/class-livia-experience.php:296
+msgid "On site"
+msgstr ""
+
+#: includes/class-livia-experience.php:297
+msgid "Write to the restaurant"
+msgstr ""
+
+#: includes/class-livia-experience.php:707
+msgid "A group starts at 2 guests at least, and at the event threshold at most; events start at 999 guests at most."
+msgstr ""
+
+#: includes/class-livia-experience.php:718
+msgid "Enter a full web address, starting with https://, or a path of your site, starting with /."
+msgstr ""
+
+#: includes/class-livia-experience.php:724
+msgid "Enter the address of your booking tool: the window opens it for tables below the group threshold."
+msgstr ""
+
+#: includes/class-livia-experience.php:727
+msgid "Enter the address of your private hire tool."
+msgstr ""
+
+#: includes/class-livia-experience.php:732
+msgid "This e-mail address is not valid."
+msgstr ""
+
+#: includes/class-livia-experience.php:734
+msgid "Enter the restaurant's e-mail address: the window shows a “Write to the restaurant” button."
+msgstr ""
+
+#: includes/class-livia-group-page.php:155
+msgid "This page is temporarily unavailable. Please try again a little later."
+msgstr ""
+
+#: includes/class-livia-group-page.php:184
+msgid "Your permalinks are set to “Plain”: WordPress cannot give the page a readable address. Choose another setting in Settings > Permalinks."
+msgstr ""
+
+#: includes/class-livia-group-page.php:189
+msgid "Enter an address."
+msgstr ""
+
+#. translators: %s: restaurant name (in French, already preceded by "de" and contracted).
+#: includes/class-livia-group-page.php:219
+#, php-format
+msgid "This address is already used by the group booking page of %s."
+msgstr ""
+
+#. translators: %s: category or tag name.
+#: includes/class-livia-group-page.php:236
+#, php-format
+msgid "This address is already used by the category “%s”."
+msgstr ""
+
+#. translators: %s: category or tag name.
+#: includes/class-livia-group-page.php:236
+#, php-format
+msgid "This address is already used by the tag “%s”."
+msgstr ""
+
+#: includes/class-livia-group-page.php:245
+msgid "This address matches a file or a folder of your server."
+msgstr ""
+
+#: includes/class-livia-group-page.php:249
+msgid "This address is reserved by WordPress."
+msgstr ""
+
+#: includes/class-livia-group-page.php:252
+msgid "This address is already used by WordPress or by another plugin."
+msgstr ""
+
+#: includes/class-livia-group-page.php:264
+msgid "(no title)"
+msgstr ""
+
+#. translators: %s: media file title.
+#: includes/class-livia-group-page.php:267
+#, php-format
+msgid "This address is already used by the media file “%s”."
+msgstr ""
+
+#: includes/class-livia-group-page.php:271
+msgctxt "page status"
+msgid "published"
+msgstr ""
+
+#: includes/class-livia-group-page.php:272
+msgctxt "page status"
+msgid "scheduled"
+msgstr ""
+
+#: includes/class-livia-group-page.php:273
+msgctxt "page status"
+msgid "private"
+msgstr ""
+
+#: includes/class-livia-group-page.php:274
+msgctxt "page status"
+msgid "in the trash"
+msgstr ""
+
+#. translators: 1: page title, 2: page status.
+#: includes/class-livia-group-page.php:277
+#, php-format
+msgid "This address is already used by your page “%1$s” (%2$s)."
+msgstr ""
+
+#: includes/class-livia-group-page.php:280
+msgctxt "post status"
+msgid "published"
+msgstr ""
+
+#: includes/class-livia-group-page.php:281
+msgctxt "post status"
+msgid "scheduled"
+msgstr ""
+
+#: includes/class-livia-group-page.php:282
+msgctxt "post status"
+msgid "private"
+msgstr ""
+
+#: includes/class-livia-group-page.php:283
+msgctxt "post status"
+msgid "in the trash"
+msgstr ""
+
+#. translators: 1: post title, 2: post status.
+#: includes/class-livia-group-page.php:286
+#, php-format
+msgid "This address is already used by your post “%1$s” (%2$s)."
+msgstr ""
+
+#. translators: 1: post title, 2: post status.
+#: includes/class-livia-group-page.php:286
+#, php-format
+msgid "This address is already used by the content “%1$s” (%2$s)."
+msgstr ""
+
+#: includes/class-livia-group-page.php:288
+msgctxt "content status"
+msgid "draft"
+msgstr ""
+
+#: includes/class-livia-updater.php:62
+msgid "This version of the Livia plugin cannot verify its updates. Download the new version from your Livia space and install it from Plugins > Add New Plugin > Upload Plugin."
+msgstr ""
+
+#: includes/class-livia-updater.php:81
+msgid "This update is no longer the one Livia offers. Check for updates again, then retry."
+msgstr ""
+
+#: includes/class-livia-updater.php:110
+msgid "The downloaded update does not carry the Livia signature: it was not installed. Try again later, or download the new version from your Livia space."
+msgstr ""
+
+#: includes/class-livia-updater.php:117
+msgid "The downloaded update is not the version Livia announces: it was not installed. Check for updates again, then retry."
+msgstr ""
+
+#: includes/class-livia-updater.php:120
+msgid "The downloaded update is not newer than the installed version of the Livia plugin: it was not installed."
+msgstr ""
+
+#. translators: 1: widget shown on desktop, 2: widget shown on phone.
+#: includes/class-livia-widgets.php:287
+#, php-format
+msgid "%1$s on desktop, %2$s on phone"
+msgstr ""
+
+#: includes/views/experience.php:18
+msgid "the address of your booking tool"
+msgstr ""
+
+#: includes/views/experience.php:19
+msgid "the restaurant's e-mail address"
+msgstr ""
+
+#: includes/views/experience.php:20
+msgid "the address of your private hire tool"
+msgstr ""
+
+#: includes/views/experience.php:24
+msgid "Guest selector"
+msgstr ""
+
+#: includes/views/experience.php:27
+msgid "“Book a table” was added at the end of your main menu."
+msgstr ""
+
+#: includes/views/experience.php:28
+#: includes/views/experience.php:486
+msgid "Your main menu already has a link to #reserver."
+msgstr ""
+
+#: includes/views/experience.php:29
+msgid "Your theme shows no menu at a location yet: create one in Appearance > Menus, then try again."
+msgstr ""
+
+#: includes/views/experience.php:30
+msgid "WordPress could not add the link. Please try again."
+msgstr ""
+
+#: includes/views/experience.php:31
+msgid "The header of your block theme has no menu the plugin can add to. Open Appearance > Editor > Navigation and add a custom link to #reserver, labelled “Book a table”."
+msgstr ""
+
+#: includes/views/experience.php:73
+msgid "Change the image"
+msgstr ""
+
+#: includes/views/experience.php:74
+#: includes/views/settings.php:212
+msgid "Remove"
+msgstr ""
+
+#: includes/views/experience.php:75
+msgid "Chosen in your media library."
+msgstr ""
+
+#: includes/views/experience.php:91
+msgid "Thresholds"
+msgstr ""
+
+#: includes/views/experience.php:96
+msgid "Group from"
+msgstr ""
+
+#: includes/views/experience.php:97
+msgid "Event above"
+msgstr ""
+
+#: includes/views/experience.php:100
+msgid "These are your restaurant's thresholds. The window shows them to the visitor while choosing."
+msgstr ""
+
+#. translators: %s: restaurant name.
+#: includes/views/experience.php:142
+#, php-format
+msgid "%s: a value was refused and the saved one is kept. Open this restaurant below to correct it."
+msgstr ""
+
+#: includes/views/experience.php:151
+#: includes/views/settings.php:175
+#: includes/views/settings.php:235
+msgid "Booking experience"
+msgstr ""
+
+#: includes/views/experience.php:152
+msgid "Your “Book” buttons open a window that asks for the number of guests, then leads the visitor to the right path."
+msgstr ""
+
+#: includes/views/experience.php:155
+msgctxt "booking experience status"
+msgid "On"
+msgstr ""
+
+#: includes/views/experience.php:157
+msgctxt "booking experience status"
+msgid "Off"
+msgstr ""
+
+#: includes/views/experience.php:162
+#: includes/views/settings.php:275
+msgid "On the site"
+msgstr ""
+
+#: includes/views/experience.php:164
+msgctxt "booking experience"
+msgid "On"
+msgstr ""
+
+#: includes/views/experience.php:164
+msgctxt "booking experience"
+msgid "Off"
+msgstr ""
+
+#: includes/views/experience.php:165
+msgid "Off, the Livia buttons and selector leave your pages; the site bubble and the group page stay."
+msgstr ""
+
+#. translators: 1: restaurant name, 2: fields to fill.
+#: includes/views/experience.php:172
+#, php-format
+msgid "%1$s: %2$s"
+msgstr ""
+
+#. translators: %s: fields to fill, by restaurant when there are several.
+#: includes/views/experience.php:175
+#, php-format
+msgid "The experience stays off until you fill in %s."
+msgstr ""
+
+#: includes/views/experience.php:193
+msgid "Restaurant choice"
+msgstr ""
+
+#: includes/views/experience.php:194
+msgid "With several connected restaurants, the window asks where and how many, on the same screen."
+msgstr ""
+
+#. translators: %d: number of restaurants.
+#: includes/views/experience.php:199
+#: includes/views/settings.php:147
+#, php-format
+msgid "%d restaurant"
+msgid_plural "%d restaurants"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/experience.php:205
+msgid "Restaurants offered"
+msgstr ""
+
+#. translators: %s: restaurant name (in French, already preceded by "de" and contracted).
+#: includes/views/experience.php:215
+#, php-format
+msgid "Sentence of %s"
+msgstr ""
+
+#. translators: %s: restaurant name.
+#: includes/views/experience.php:218
+#, php-format
+msgid "Move %s up"
+msgstr ""
+
+#. translators: %s: restaurant name.
+#: includes/views/experience.php:219
+#, php-format
+msgid "Move %s down"
+msgstr ""
+
+#: includes/views/experience.php:224
+msgid "A photo and a sentence per restaurant; drag, or use the arrows, to change the order. A button placed in a page can also open the window on a restaurant already chosen."
+msgstr ""
+
+#: includes/views/experience.php:234
+msgid "The three paths"
+msgstr ""
+
+#: includes/views/experience.php:235
+msgid "Each restaurant has its thresholds, its tools and its photos."
+msgstr ""
+
+#: includes/views/experience.php:235
+msgid "A photo and a destination per path. The visitor sees the photo change with the number of guests."
+msgstr ""
+
+#. translators: %d: last number of guests below the group threshold.
+#: includes/views/experience.php:256
+#: includes/views/experience.php:285
+#, php-format
+msgid "1 to %d guests"
+msgstr ""
+
+#. translators: 1: group threshold, 2: event threshold, in guests.
+#: includes/views/experience.php:257
+#: includes/views/experience.php:356
+#, php-format
+msgid "%1$d to %2$d guests"
+msgstr ""
+
+#. translators: %d: first number of guests above the event threshold.
+#: includes/views/experience.php:258
+#: includes/views/experience.php:404
+#, php-format
+msgid "%d guests and more"
+msgstr ""
+
+#: includes/views/experience.php:268
+#: includes/views/experience.php:517
+msgid "Shortcodes"
+msgstr ""
+
+#: includes/views/experience.php:275
+#: includes/views/settings.php:380
+msgid "Copied"
+msgstr ""
+
+#: includes/views/experience.php:275
+#: includes/views/settings.php:380
+msgid "Copy the shortcode"
+msgstr ""
+
+#: includes/views/experience.php:279
+msgid "For the other page builders and the classic editor: they open the window on this restaurant."
+msgstr ""
+
+#. translators: %d: last number of guests below the group threshold.
+#: includes/views/experience.php:285
+msgid "Your booking tool"
+msgstr ""
+
+#: includes/views/experience.php:288
+msgid "Your tool"
+msgstr ""
+
+#: includes/views/experience.php:298
+msgid "Another tool"
+msgstr ""
+
+#: includes/views/experience.php:299
+msgid "A page of your site"
+msgstr ""
+
+#: includes/views/experience.php:306
+msgid "What you already use for your tables: Zenchef, TheFork, SevenRooms, Guestonline, Tourbiz, another tool, or “A page of your site”, when booking happens in one of your pages."
+msgstr ""
+
+#: includes/views/experience.php:310
+msgid "Booking address"
+msgstr ""
+
+#. translators: 1: Zenchef address, 2: address of a page with an anchor, 3: {n}.
+#: includes/views/experience.php:318
+#, php-format
+msgid "With Zenchef: %1$s. With a page of your site: its address, with the anchor of the booking module if needed, for instance %2$s. With another tool: the address of its module, given in your space there. %3$s is replaced by the number of guests chosen, when the address allows it."
+msgstr ""
+
+#: includes/views/experience.php:319
+msgid "your identifier"
+msgstr ""
+
+#: includes/views/experience.php:328
+msgid "Opening"
+msgstr ""
+
+#: includes/views/experience.php:335
+msgid "In the window"
+msgstr ""
+
+#: includes/views/experience.php:336
+msgid "In a new tab"
+msgstr ""
+
+#: includes/views/experience.php:337
+msgid "In the current page"
+msgstr ""
+
+#: includes/views/experience.php:341
+msgid "In the window, an “Open in a tab” link is always offered; some tools refuse to show inside it. In the current page, the visitor is taken to the address, without a window: the natural choice for a page of your site."
+msgstr ""
+
+#: includes/views/experience.php:345
+#: includes/views/experience.php:394
+#: includes/views/experience.php:452
+msgid "Photo"
+msgstr ""
+
+#: includes/views/experience.php:348
+#: includes/views/experience.php:397
+#: includes/views/experience.php:455
+msgid "Caption"
+msgstr ""
+
+#: includes/views/experience.php:349
+msgid "Caption shown on the photo."
+msgstr ""
+
+#. translators: 1: group threshold, 2: event threshold, in guests.
+#: includes/views/experience.php:356
+msgid "A conversation with Livia"
+msgstr ""
+
+#: includes/views/experience.php:359
+#: includes/views/experience.php:407
+msgid "Destination"
+msgstr ""
+
+#: includes/views/experience.php:366
+msgid "The conversation, in the window"
+msgstr ""
+
+#: includes/views/experience.php:367
+msgid "Your group booking page"
+msgstr ""
+
+#: includes/views/experience.php:372
+msgid "In the window, the conversation opens at once, like a booking tool. Without a published group page (Booking page tab turned off), only the window is offered."
+msgstr ""
+
+#: includes/views/experience.php:380
+msgid "Among your “Embedded conversation” widgets. The number of guests chosen reaches the conversation: Livia does not ask for it again."
+msgstr ""
+
+#: includes/views/experience.php:382
+msgid "This restaurant has no embedded conversation: create one in your Livia space, or choose the group page."
+msgstr ""
+
+#: includes/views/experience.php:387
+msgid "Title"
+msgstr ""
+
+#: includes/views/experience.php:390
+msgid "Shown above the conversation, so that the visitor knows at once what to do. Left empty: “Let us prepare your group table”."
+msgstr ""
+
+#: includes/views/experience.php:415
+msgid "Your private hire tool"
+msgstr ""
+
+#: includes/views/experience.php:419
+msgid "With a private hire tool, give its address: it opens like the tool of small tables."
+msgstr ""
+
+#: includes/views/experience.php:423
+msgid "Tool address"
+msgstr ""
+
+#: includes/views/experience.php:430
+msgid "E-mail"
+msgstr ""
+
+#: includes/views/experience.php:434
+msgid "The window shows a “Write to the restaurant” button."
+msgstr ""
+
+#: includes/views/experience.php:438
+#: includes/views/settings.php:568
+msgid "Phone"
+msgstr ""
+
+#: includes/views/experience.php:441
+msgid "Optional. Shown under the e-mail, as an information."
+msgstr ""
+
+#: includes/views/experience.php:445
+#: includes/views/settings.php:446
+msgid "Address"
+msgstr ""
+
+#: includes/views/experience.php:448
+msgid "Optional. To drop by."
+msgstr ""
+
+#: includes/views/experience.php:467
+msgid "Where to open the window"
+msgstr ""
+
+#: includes/views/experience.php:468
+msgid "The buttons and the selector take the style of your theme; the window, its colours and its font."
+msgstr ""
+
+#: includes/views/experience.php:473
+msgid "Automatic"
+msgstr ""
+
+#: includes/views/experience.php:475
+msgid "On phones, a “Book a table” bar fixed at the bottom of the screen"
+msgstr ""
+
+#: includes/views/experience.php:476
+#: includes/views/settings.php:579
+msgid "On phones, the bubble gives way to the “Book a table” bar on the pages where it shows."
+msgstr ""
+
+#: includes/views/experience.php:481
+msgid "Add “Book a table” to the main menu"
+msgstr ""
+
+#. translators: %s: #reserver.
+#: includes/views/experience.php:492
+#, php-format
+msgid "Adds in one click a link to %s at the end of your main menu. You then move or remove it like any link of the menu."
+msgstr ""
+
+#: includes/views/experience.php:502
+#: includes/views/settings.php:373
+msgid "In your pages"
+msgstr ""
+
+#: includes/views/experience.php:505
+msgid "“Book button” block"
+msgstr ""
+
+#: includes/views/experience.php:505
+msgid "In the block editor or in Elementor (Livia elements), anywhere. It takes the style of your theme's buttons; its label changes button by button (“Book for lunch”)."
+msgstr ""
+
+#: includes/views/experience.php:506
+msgid "“How many of you?” block"
+msgstr ""
+
+#: includes/views/experience.php:506
+msgid "The guest selector, placed in the page: as a band over a photo, or as a card."
+msgstr ""
+
+#: includes/views/experience.php:507
+msgid "Your existing buttons"
+msgstr ""
+
+#. translators: 1: #reserver, 2: livia-reserver.
+#: includes/views/experience.php:511
+#, php-format
+msgid "Any link to %1$s, or carrying the class %2$s, opens the window, without touching the theme."
+msgstr ""
+
+#. translators: 1: first shortcode, 2: second shortcode.
+#: includes/views/experience.php:521
+#, php-format
+msgid "%1$s and %2$s, for the other page builders and the classic editor."
+msgstr ""
+
+#. translators: %s: masked key.
+#: includes/views/settings.php:87
+#: includes/views/settings.php:194
+#, php-format
+msgid "Key %s"
+msgstr ""
+
+#: includes/views/settings.php:110
+msgid "Restaurant key"
+msgstr ""
+
+#: includes/views/settings.php:123
+msgid "Connect"
+msgstr ""
+
+#: includes/views/settings.php:125
+msgid "You will find it in your Livia space, Connectors section, on the WordPress connector. It is only used to find your restaurant and its public widgets: it gives access to no data."
+msgstr ""
+
+#: includes/views/settings.php:127
+msgid "Cancel"
+msgstr ""
+
+#: includes/views/settings.php:139
+msgid "Bookings and widgets"
+msgstr ""
+
+#: includes/views/settings.php:149
+msgid "No restaurant connected"
+msgstr ""
+
+#: includes/views/settings.php:153
+msgid "My Livia space"
+msgstr ""
+
+#: includes/views/settings.php:157
+msgid "Livia on your site"
+msgstr ""
+
+#: includes/views/settings.php:158
+msgid "The widget, the group booking page and the booking experience of your restaurant, without touching any code."
+msgid_plural "The widgets, the group booking pages and the booking experience of your restaurants, without touching any code."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:166
+msgid "The key links this plugin to your restaurant in Livia."
+msgstr ""
+
+#: includes/views/settings.php:168
+msgid "To do"
+msgstr ""
+
+#: includes/views/settings.php:172
+#: includes/views/settings.php:230
+msgid "Livia settings"
+msgstr ""
+
+#: includes/views/settings.php:173
+#: includes/views/settings.php:233
+#: src/editor-panel.js:81
+msgid "Site widget"
+msgstr ""
+
+#: includes/views/settings.php:174
+#: includes/views/settings.php:234
+msgid "Booking page"
+msgstr ""
+
+#: includes/views/settings.php:177
+msgid "The settings open once the restaurant is connected."
+msgstr ""
+
+#: includes/views/settings.php:182
+msgid "Connected restaurants"
+msgstr ""
+
+#: includes/views/settings.php:183
+msgid "Add a restaurant"
+msgstr ""
+
+#: includes/views/settings.php:199
+msgid "Connected"
+msgstr ""
+
+#: includes/views/settings.php:201
+msgid "Connector turned off"
+msgstr ""
+
+#: includes/views/settings.php:203
+msgid "Key refused"
+msgstr ""
+
+#: includes/views/settings.php:206
+msgid "Change key"
+msgstr ""
+
+#: includes/views/settings.php:207
+msgid "Remove this restaurant? Its group booking page goes back to draft and its bubble leaves the site."
+msgstr ""
+
+#: includes/views/settings.php:226
+msgid "Livia is not answering right now: what you see dates from the last connection."
+msgstr ""
+
+#: includes/views/settings.php:233
+msgctxt "site widget tab"
+msgid "turned off"
+msgstr ""
+
+#: includes/views/settings.php:234
+msgctxt "booking page tab"
+msgid "turned off"
+msgstr ""
+
+#: includes/views/settings.php:235
+msgctxt "booking experience tab"
+msgid "turned off"
+msgstr ""
+
+#: includes/views/settings.php:246
+msgid "See the preview"
+msgstr ""
+
+#: includes/views/settings.php:252
+msgid "Changes saved"
+msgstr ""
+
+#: includes/views/settings.php:264
+msgid "Site bubble"
+msgid_plural "Site widgets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:265
+msgid "A chat bubble on the pages of your site, without pasting code in the theme."
+msgid_plural "One bubble per restaurant, each on its own pages. A page shows only one bubble."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:268
+#: includes/views/settings.php:277
+msgid "Turned on"
+msgstr ""
+
+#: includes/views/settings.php:270
+#: includes/views/settings.php:277
+msgid "Turned off"
+msgstr ""
+
+#: includes/views/settings.php:278
+msgid "Turned off, no bubble shows. The widgets placed in your pages stay: they are part of their content."
+msgstr ""
+
+#: includes/views/settings.php:284
+msgid "A page a restaurant chose under “Only” shows that restaurant's bubble: it appears greyed out for the other restaurants, with its name."
+msgstr ""
+
+#. translators: %d: number of pages.
+#: includes/views/settings.php:296
+#, php-format
+msgid "Shown on %d page"
+msgid_plural "Shown on %d pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:300
+msgid "Bubble on"
+msgstr ""
+
+#: includes/views/settings.php:300
+msgid "Bubble off"
+msgstr ""
+
+#: includes/views/settings.php:304
+msgid "On desktop"
+msgstr ""
+
+#: includes/views/settings.php:309
+msgid "No bubble chosen"
+msgstr ""
+
+#: includes/views/settings.php:310
+msgid "Chosen widget not found"
+msgstr ""
+
+#: includes/views/settings.php:316
+msgid "The widget chosen for desktop no longer exists in Livia. Choose another one before you turn this restaurant's bubble on, then save."
+msgstr ""
+
+#: includes/views/settings.php:317
+msgid "The widget chosen for desktop no longer exists in Livia: this restaurant's bubble no longer shows on desktop. Choose another one and save."
+msgstr ""
+
+#: includes/views/settings.php:318
+msgid "The widget chosen for desktop no longer exists in Livia: this restaurant's bubble no longer shows on desktop or on phone. Choose another one and save."
+msgstr ""
+
+#: includes/views/settings.php:324
+msgid "Among the bubbles of this restaurant."
+msgstr ""
+
+#: includes/views/settings.php:326
+msgid "This restaurant has no bubble widget: create one in your Livia space."
+msgstr ""
+
+#: includes/views/settings.php:332
+msgid "On phone"
+msgstr ""
+
+#: includes/views/settings.php:334
+msgid "The same widget"
+msgstr ""
+
+#: includes/views/settings.php:335
+msgid "A more discreet bubble on phone: choose a compact widget here. Its margins are the ones set in Livia."
+msgstr ""
+
+#: includes/views/settings.php:337
+msgid "On the pages where the “Book a table” bar shows, the bubble gives way to the bar."
+msgstr ""
+
+#: includes/views/settings.php:344
+msgid "Show on"
+msgstr ""
+
+#: includes/views/settings.php:349
+msgid "All pages"
+msgstr ""
+
+#: includes/views/settings.php:350
+msgid "All, except"
+msgstr ""
+
+#: includes/views/settings.php:351
+msgid "Only"
+msgstr ""
+
+#: includes/views/settings.php:369
+msgid "The group booking page never shows this bubble: it already has its conversation. Each page can also choose another widget, or none, in the Livia panel of the editor."
+msgstr ""
+
+#: includes/views/settings.php:385
+msgid "The buttons and embedded conversations of this restaurant, offered as they are in Elementor, the block editor and the shortcode. Nothing to set here."
+msgstr ""
+
+#: includes/views/settings.php:399
+msgid "Group booking page"
+msgid_plural "Group booking pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:400
+msgid "A real page of your site, in your theme, with the Livia conversation on the right."
+msgid_plural "One page per connected restaurant, each at its own address, set and published separately."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of pages.
+#: includes/views/settings.php:406
+#, php-format
+msgid "%d page online"
+msgid_plural "%d pages online"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:410
+#: includes/views/settings.php:440
+msgid "Not published yet"
+msgstr ""
+
+#: includes/views/settings.php:413
+msgid "Turned off, a page goes back to draft: it is no longer visible, and comes back at the same address when you turn it on again."
+msgstr ""
+
+#: includes/views/settings.php:425
+msgid "Add a link to this page in your site's menu (Appearance > Menus, or Appearance > Editor for a block theme): the old page, moved to the trash, is no longer in it."
+msgstr ""
+
+#: includes/views/settings.php:432
+msgid "Online"
+msgstr ""
+
+#: includes/views/settings.php:434
+msgid "Address to free"
+msgstr ""
+
+#: includes/views/settings.php:436
+msgid "Address to change"
+msgstr ""
+
+#: includes/views/settings.php:438
+msgid "Draft"
+msgstr ""
+
+#: includes/views/settings.php:442
+msgid "Published"
+msgstr ""
+
+#: includes/views/settings.php:442
+msgid "Not published"
+msgstr ""
+
+#: includes/views/settings.php:457
+msgid "Open the permalink settings"
+msgstr ""
+
+#: includes/views/settings.php:461
+msgid "Page online at this address."
+msgstr ""
+
+#: includes/views/settings.php:461
+#: includes/views/settings.php:472
+msgid "View the page"
+msgstr ""
+
+#: includes/views/settings.php:463
+msgid "Address available."
+msgstr ""
+
+#: includes/views/settings.php:463
+msgid "Address available. The page goes online when you save."
+msgstr ""
+
+#: includes/views/settings.php:469
+msgid "View the trash"
+msgstr ""
+
+#: includes/views/settings.php:475
+msgid "Edit the page"
+msgstr ""
+
+#: includes/views/settings.php:478
+msgid "Move to trash"
+msgstr ""
+
+#. translators: %d: number of days the trash keeps a content.
+#: includes/views/settings.php:491
+#, php-format
+msgid "To keep this address, move the old page to the trash: existing links and search engines will lead to the new page. The trash keeps it %d day."
+msgid_plural "To keep this address, move the old page to the trash: existing links and search engines will lead to the new page. The trash keeps it %d days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/views/settings.php:502
+msgid "Page title"
+msgstr ""
+
+#: includes/views/settings.php:505
+msgid "Shown by your theme at the top of the page, in the browser tab and in search engine results."
+msgstr ""
+
+#: includes/views/settings.php:509
+msgid "Headline"
+msgstr ""
+
+#. translators: %s: default headline.
+#: includes/views/settings.php:517
+#, php-format
+msgid "The title of the page's banner. Left empty: “%s”"
+msgstr ""
+
+#: includes/views/settings.php:531
+msgid "This restaurant has no embedded conversation: the page shows the widget of your Livia booking page. To choose another one, create an embedded conversation in your Livia space."
+msgstr ""
+
+#: includes/views/settings.php:534
+msgid "The chosen widget no longer exists in Livia: the page shows the widget of your Livia booking page. Choose another widget, then save."
+msgstr ""
+
+#: includes/views/settings.php:536
+msgid "Embedded conversations of this restaurant, created and set in your Livia space; the page uses their settings as they are. Full screen widgets are not offered: they would cover the page."
+msgstr ""
+
+#: includes/views/settings.php:544
+msgid "Visible on the site once saved."
+msgstr ""
+
+#: includes/views/settings.php:545
+msgid "Save"
+msgstr ""
+
+#: includes/views/settings.php:558
+msgid "Preview of the booking experience"
+msgstr ""
+
+#: includes/views/settings.php:558
+#: includes/views/settings.php:574
+msgid "Preview"
+msgstr ""
+
+#: includes/views/settings.php:566
+msgid "Device"
+msgstr ""
+
+#: includes/views/settings.php:567
+msgid "Computer"
+msgstr ""
+
+#: includes/views/settings.php:576
+msgid "The preview follows the settings in progress, even before saving. With several restaurants, the window first shows the choice of the restaurant."
+msgstr ""
+
+#: includes/views/settings.php:577
+msgid "No bubble shows with these settings."
+msgstr ""
+
+#: includes/views/settings.php:577
+msgid "No widget can be offered: create one in your Livia space."
+msgstr ""
+
+#: src/convives/index.js:50
+msgid "Livia guest selector, band layout."
+msgstr ""
+
+#: src/convives/index.js:51
+msgid "Livia guest selector, card layout."
+msgstr ""
+
+#: src/editor-panel.js:71
+msgid "Your restaurants have no other bubble widget."
+msgstr ""
+
+#: src/editor-panel.js:80
+msgid "Widget of this page"
+msgstr ""
+
+#: src/editor-panel.js:81
+msgid "None chosen in the Livia menu"
+msgstr ""
+
+#: src/editor-panel.js:82
+msgid "No widget"
+msgstr ""
+
+#: src/editor-panel.js:83
+msgid "Another widget"
+msgstr ""
+
+#: src/editor-panel.js:89
+msgid "The site widget is set in the Livia menu. To place a conversation in the text, add the “Livia widget” block."
+msgstr ""
+
+#: src/group-page/index.js:22
+msgid "Livia group booking page"
+msgstr ""
+
+#: src/group-page/index.js:26
+msgid "Livia shows the content of this page on the published page. Its address, title and widget are set in the Livia menu."
+msgstr ""
+
+#: src/reserver/index.js:31
+msgid "Empty: “Book a table”."
+msgstr ""
+
+#: src/reserver/index.js:44
+msgid "Appearance: that of your theme's buttons."
+msgstr ""
+
+#: src/restaurant-control.js:17
+msgid "Chosen here, the window opens on this restaurant; otherwise it asks the visitor where and how many."
+msgstr ""
+
+#: src/widget/index.js:19
+msgid "Choose a widget in the block settings."
+msgstr ""
+
+#: src/widget/index.js:22
+msgid "This widget no longer exists in Livia: choose another one in the block settings."
+msgstr ""
+
+#. translators: %s: widget name.
+#: src/widget/index.js:26
+#, js-format
+msgid "%s: embedded conversation. It appears here on the published page."
+msgstr ""
+
+#. translators: %s: widget name.
+#: src/widget/index.js:28
+#, js-format
+msgid "%s: button in the page. It appears here on the published page."
+msgstr ""
+
+#: src/widget/index.js:53
+msgid "Embedded conversation or button, among the widgets of your restaurants. Bubbles are set for the whole site in the Livia menu."
+msgstr ""
+
+#: src/convives/block.json
+msgctxt "block title"
+msgid "How many of you?"
+msgstr ""
+
+#: src/convives/block.json
+msgctxt "block description"
+msgid "The Livia guest selector, placed in the page: it leads to the right booking path."
+msgstr ""
+
+#: src/convives/block.json
+#: src/reserver/block.json
+#: src/widget/block.json
+msgctxt "block keyword"
+msgid "livia"
+msgstr ""
+
+#: src/convives/block.json
+msgctxt "block keyword"
+msgid "guests"
+msgstr ""
+
+#: src/convives/block.json
+#: src/reserver/block.json
+#: src/widget/block.json
+msgctxt "block keyword"
+msgid "booking"
+msgstr ""
+
+#: src/convives/block.json
+#: src/reserver/block.json
+msgctxt "block keyword"
+msgid "reservation"
+msgstr ""
+
+#: src/group-page/block.json
+msgctxt "block title"
+msgid "Livia group booking page"
+msgstr ""
+
+#: src/group-page/block.json
+msgctxt "block description"
+msgid "The group booking page Livia renders for your restaurant."
+msgstr ""
+
+#: src/reserver/block.json
+msgctxt "block title"
+msgid "Book button"
+msgstr ""
+
+#: src/reserver/block.json
+msgctxt "block description"
+msgid "Opens the Livia booking experience: the number of guests, then the right path."
+msgstr ""
+
+#: src/reserver/block.json
+msgctxt "block keyword"
+msgid "book"
+msgstr ""
+
+#: src/widget/block.json
+msgctxt "block title"
+msgid "Livia widget"
+msgstr ""
+
+#: src/widget/block.json
+msgctxt "block description"
+msgid "Places a Livia widget at this spot of the page."
+msgstr ""
+
+#: src/widget/block.json
+msgctxt "block keyword"
+msgid "chat"
+msgstr ""
