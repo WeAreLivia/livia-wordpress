@@ -15,5 +15,17 @@
 	"devDependencies": {
 		"@wordpress/env": "^12.1.0",
 		"@wordpress/scripts": "^37.1.0"
+	},
+	"overrides": {
+		"@wp-playground/storage": {
+			"isomorphic-git": "~1.38.6"
+		},
+		"express": {
+			"qs": "~6.16.2"
+		},
+		"markdownlint-cli": {
+			"js-yaml": "~5.4.1",
+			"smol-toml": "~1.9.0"
+		}
 	}
 }
