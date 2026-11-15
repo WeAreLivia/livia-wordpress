@@ -1,0 +1,957 @@
+/*
+ * The booking window, the "How many of you?" selector and the phone bar. Colours and fonts are the theme's, as
+ * Livia_Experience::theme_css() hands them over (--livia-*), with a sober fallback; the "go" buttons carry the
+ * theme's button class, whose style wins over the fallback given here.
+ */
+
+.livia-xp,
+.livia-sel,
+.livia-xp-mbar {
+	--lx-bg: var(--livia-bg, #fff);
+	--lx-ink: var(--livia-ink, #1e1e1e);
+	--lx-accent: var(--livia-button, var(--lx-ink));
+	--lx-accent-ink: var(--livia-button-ink, var(--lx-bg));
+	--lx-line: color-mix(in srgb, var(--lx-ink) 16%, transparent);
+	--lx-soft: color-mix(in srgb, var(--lx-ink) 6%, var(--lx-bg));
+	--lx-muted: color-mix(in srgb, var(--lx-ink) 68%, var(--lx-bg));
+	--lx-ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+.livia-xp *,
+.livia-sel * {
+	box-sizing: border-box;
+}
+
+.livia-xp [hidden],
+.livia-sel [hidden] {
+	display: none !important;
+}
+
+.livia-xp button,
+.livia-sel button {
+	font: inherit;
+	cursor: pointer;
+}
+
+.livia-xp-sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* The "go" button: the theme's button, a fallback when the theme has none. */
+:where(.livia-sel-go) {
+	border: 0;
+	border-radius: 999px;
+	padding: .9em 1.4em;
+	background: var(--lx-accent);
+	color: var(--lx-accent-ink);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.livia-sel-go {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: 100%;
+	text-align: center;
+	text-wrap: balance;
+}
+
+.livia-sel-go svg {
+	width: 18px;
+	height: 18px;
+	flex: none;
+}
+
+.livia-sel-go[data-state="empty"] svg {
+	display: none;
+}
+
+/* Selector */
+.livia-sel {
+	--lx-ink: currentColor;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	color: inherit;
+	font-family: inherit;
+}
+
+.livia-sel-title {
+	margin: 0;
+	font-size: .72rem;
+	font-weight: 700;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+}
+
+.livia-sel-count {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	border-radius: 8px;
+}
+
+.livia-sel-pm {
+	width: 52px;
+	height: 52px;
+	flex: none;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border: 1.5px solid var(--lx-line);
+	border-radius: 8px;
+	background: none;
+	color: inherit;
+	font-size: 1.5rem;
+	line-height: 1;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	transition: background .2s, transform .15s;
+}
+
+.livia-sel-pm:active {
+	transform: scale(.92);
+}
+
+.livia-sel-pm:disabled {
+	opacity: .3;
+	pointer-events: none;
+}
+
+.livia-sel-nb {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 0;
+}
+
+.livia-sel-nb input {
+	width: 3.2ch;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font-family: var(--livia-heading, inherit);
+	font-size: clamp(3rem, 7vw, 4.4rem);
+	line-height: .95;
+	text-align: center;
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+.livia-sel-nb input::-webkit-outer-spin-button,
+.livia-sel-nb input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.livia-sel-nb input:focus {
+	outline: none;
+}
+
+.livia-sel-nb input::placeholder {
+	color: inherit;
+	opacity: .45;
+}
+
+.livia-sel-nb span {
+	margin-top: 4px;
+	font-size: .7rem;
+	font-weight: 700;
+	letter-spacing: .2em;
+	text-transform: uppercase;
+	opacity: .7;
+}
+
+.livia-sel-tip {
+	margin: 0;
+	font-size: .86rem;
+	text-align: center;
+	opacity: .75;
+}
+
+/* An empty selector whose button was pressed points to its counter. */
+.livia-sel-count.is-asking {
+	outline: 2px solid currentColor;
+	outline-offset: 5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.livia-sel-count.is-asking,
+	.livia-xp-picks.is-asking {
+		animation: livia-ask .42s var(--lx-ease);
+	}
+}
+
+@keyframes livia-ask {
+	25% { transform: translateX(-5px); }
+	50% { transform: translateX(4px); }
+	75% { transform: translateX(-2px); }
+}
+
+.livia-sel.is-card {
+	--lx-ink: var(--livia-ink, #1e1e1e);
+	max-width: 420px;
+	padding: 22px;
+	border-radius: 16px;
+	background: var(--lx-bg);
+	color: var(--lx-ink);
+	box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .55);
+}
+
+.livia-sel.is-band {
+	flex-flow: row wrap;
+	align-items: center;
+	gap: 12px 24px;
+}
+
+.livia-sel.is-band .livia-sel-title,
+.livia-sel.is-band .livia-sel-tip {
+	flex-basis: 100%;
+	text-align: left;
+}
+
+.livia-sel.is-band .livia-sel-count {
+	flex: 0 1 260px;
+}
+
+.livia-sel.is-band .livia-sel-go {
+	flex: 1 1 240px;
+	width: auto;
+}
+
+[data-livia-convives="card"]:not([data-mounted]) {
+	min-height: 230px;
+}
+
+[data-livia-convives="band"]:not([data-mounted]) {
+	min-height: 120px;
+}
+
+/* Selector in the window: quick choices, tiers and the hint of the tier. */
+.livia-sel.is-modal {
+	gap: 18px;
+	container-type: inline-size;
+}
+
+.livia-sel-a,
+.livia-sel-b {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.livia-sel-chips {
+	display: flex;
+	gap: 6px;
+	justify-content: center;
+}
+
+.livia-sel-chips button {
+	min-width: 46px;
+	min-height: 44px;
+	padding: 8px 12px;
+	border: 1.5px solid var(--lx-line);
+	border-radius: 999px;
+	background: none;
+	color: inherit;
+	font-size: .86rem;
+	font-weight: 700;
+	transition: background .2s, border-color .2s;
+}
+
+.livia-sel-chips button[aria-pressed="true"] {
+	border-color: var(--lx-accent);
+	background: var(--lx-accent);
+	color: var(--lx-accent-ink);
+}
+
+/* Eight chips need a little more than 410px: two rows of four below. */
+@container (max-width: 419px) {
+	.livia-sel-chips {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(44px, 1fr));
+	}
+}
+
+.livia-sel-tiers {
+	display: grid;
+	grid-template-columns: 14fr 26fr 14fr;
+	gap: 4px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.livia-sel-tiers li {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	min-width: 0;
+	font-size: .7rem;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	opacity: .4;
+	transition: opacity .3s;
+}
+
+.livia-sel-tiers li::before {
+	content: "";
+	height: 5px;
+	border-radius: 5px;
+	background: var(--lx-line);
+	transition: background .3s;
+}
+
+.livia-sel-tiers li span {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.livia-sel-tiers li.is-on {
+	opacity: 1;
+}
+
+.livia-sel-tiers li.is-on::before {
+	background: var(--lx-accent);
+}
+
+.livia-sel-hint {
+	display: grid;
+	grid-template-columns: 40px minmax(0, 1fr);
+	gap: 4px 12px;
+	min-height: 92px;
+	padding: 14px 16px;
+	border-radius: 12px;
+	background: var(--lx-soft);
+}
+
+.livia-sel-hint i {
+	grid-row: span 2;
+	width: 40px;
+	height: 40px;
+	display: grid;
+	place-items: center;
+	border-radius: 10px;
+	background: var(--lx-bg);
+}
+
+.livia-sel-hint i svg {
+	width: 20px;
+	height: 20px;
+}
+
+.livia-sel-hint b {
+	font-size: 1rem;
+}
+
+.livia-sel-hint p {
+	margin: 0;
+	font-size: .88rem;
+	line-height: 1.5;
+	color: var(--lx-muted);
+}
+
+/* Window */
+html.livia-xp-open {
+	overflow: hidden;
+}
+
+.livia-xp {
+	width: min(940px, calc(100% - 48px));
+	max-width: none;
+	max-height: calc(100dvh - 48px);
+	margin: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 24px;
+	overflow: hidden;
+	background: var(--lx-bg);
+	color: var(--lx-ink);
+	font-family: var(--livia-font, inherit);
+	box-shadow: 0 60px 120px -40px rgba(0, 0, 0, .6);
+}
+
+.livia-xp:focus {
+	outline: none;
+}
+
+.livia-xp::backdrop {
+	background: rgba(0, 0, 0, .55);
+	backdrop-filter: blur(6px);
+}
+
+.livia-xp.is-multi {
+	width: min(1080px, calc(100% - 48px));
+}
+
+.livia-xp:has(> .livia-xp-panel:not([hidden])) {
+	width: min(760px, calc(100% - 48px));
+}
+
+.livia-xp h2,
+.livia-xp h3 {
+	margin: 0;
+	color: inherit;
+	font-family: var(--livia-heading, inherit);
+	font-weight: 500;
+	line-height: 1.05;
+}
+
+.livia-xp-x {
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	z-index: 3;
+	width: 44px;
+	height: 44px;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border: 1.5px solid var(--lx-line);
+	border-radius: 50%;
+	background: var(--lx-bg);
+	color: inherit;
+}
+
+.livia-xp-x svg {
+	width: 18px;
+	height: 18px;
+}
+
+.livia-xp-choice {
+	display: grid;
+	grid-template-columns: .92fr 1.08fr;
+	min-height: 580px;
+}
+
+.livia-xp.is-multi .livia-xp-choice {
+	grid-template-columns: minmax(0, 1fr);
+	min-height: 0;
+}
+
+.livia-xp.is-multi .livia-xp-photo {
+	display: none;
+}
+
+.livia-xp-photo {
+	position: relative;
+	overflow: hidden;
+	background: var(--lx-accent);
+	color: #fff;
+}
+
+.livia-xp-photo img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0;
+	transform: scale(1.06);
+	transition: opacity .7s var(--lx-ease), transform 1.4s var(--lx-ease);
+}
+
+.livia-xp-photo img.is-on {
+	opacity: 1;
+	transform: none;
+}
+
+.livia-xp-photo::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(0, 0, 0, .45) 0, rgba(0, 0, 0, .05) 30%, rgba(0, 0, 0, .1) 50%, rgba(0, 0, 0, .7));
+}
+
+.livia-xp-name {
+	position: absolute;
+	top: 24px;
+	left: 26px;
+	right: 70px;
+	z-index: 1;
+	font-family: var(--livia-heading, inherit);
+	font-size: 1.35rem;
+}
+
+.livia-xp-leg {
+	position: absolute;
+	right: 26px;
+	bottom: 26px;
+	left: 26px;
+	z-index: 1;
+}
+
+.livia-xp-leg small {
+	font-size: .7rem;
+	font-weight: 700;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+}
+
+.livia-xp-leg p {
+	margin: 6px 0 0;
+	font-family: var(--livia-heading, inherit);
+	font-size: 1.5rem;
+	line-height: 1.15;
+}
+
+.livia-xp-main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 44px 44px 34px;
+	overflow-y: auto;
+}
+
+.livia-xp-ey {
+	font-size: .72rem;
+	font-weight: 700;
+	letter-spacing: .18em;
+	text-transform: uppercase;
+	color: var(--lx-muted);
+}
+
+.livia-xp-main h2 {
+	margin: 8px 0 20px;
+	font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+}
+
+.livia-xp-picks {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 18px;
+	margin: 0 0 26px;
+	padding: 0;
+	border: 0;
+}
+
+.livia-xp-pick {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	min-height: 200px;
+	padding: 20px;
+	overflow: hidden;
+	border-radius: 16px;
+	background: var(--lx-accent);
+	color: #fff;
+	cursor: pointer;
+	box-shadow: 0 0 0 1px var(--lx-line);
+}
+
+.livia-xp-pick img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.livia-xp-pick::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, .6));
+}
+
+.livia-xp-pick > :not(img) {
+	position: relative;
+	z-index: 1;
+}
+
+.livia-xp-pick input {
+	position: absolute;
+	opacity: 0;
+}
+
+.livia-xp-pick b {
+	font-family: var(--livia-heading, inherit);
+	font-size: 1.6rem;
+	font-weight: 500;
+}
+
+.livia-xp-pick span:last-child:not(.livia-xp-ck) {
+	margin-top: 4px;
+	opacity: .9;
+}
+
+.livia-xp-ck {
+	position: absolute !important;
+	top: 16px;
+	right: 16px;
+	width: 34px;
+	height: 34px;
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+	color: transparent;
+	box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .85);
+}
+
+.livia-xp-ck svg {
+	width: 18px;
+	height: 18px;
+}
+
+.livia-xp-pick:has(input:checked) {
+	box-shadow: 0 0 0 3px var(--lx-bg), 0 0 0 6px var(--lx-accent);
+}
+
+.livia-xp-pick:has(input:checked) .livia-xp-ck {
+	background: #fff;
+	color: #1e1e1e;
+}
+
+.livia-xp-pick:has(input:focus-visible) {
+	outline: 2px solid var(--lx-ink);
+	outline-offset: 6px;
+}
+
+@media (min-width: 761px) {
+	.livia-xp.is-multi .livia-sel.is-modal {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 32px;
+		align-items: start;
+	}
+
+	.livia-xp.is-multi .livia-sel-chips {
+		flex-wrap: wrap;
+		justify-content: flex-start;
+	}
+}
+
+/* Contact */
+.livia-xp-contact {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.livia-xp-contact small {
+	font-size: .7rem;
+	font-weight: 700;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+	color: var(--lx-muted);
+}
+
+.livia-xp-contact h3 {
+	font-size: 2rem;
+}
+
+.livia-xp-contact p {
+	margin: 0;
+	line-height: 1.6;
+	color: var(--lx-muted);
+}
+
+.livia-xp-contact ul {
+	display: grid;
+	gap: 12px;
+	margin: 4px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.livia-xp-contact li {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	overflow-wrap: anywhere;
+}
+
+.livia-xp-contact li i {
+	width: 40px;
+	height: 40px;
+	flex: none;
+	display: grid;
+	place-items: center;
+	border: 1.5px solid var(--lx-line);
+	border-radius: 50%;
+}
+
+.livia-xp-contact li svg {
+	width: 18px;
+	height: 18px;
+}
+
+.livia-xp-contact li small {
+	display: block;
+	margin-bottom: 2px;
+	letter-spacing: .1em;
+}
+
+.livia-xp-contact .livia-sel-go {
+	width: auto;
+}
+
+.livia-xp-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 40px;
+	padding: 0 12px;
+	border: 1.5px solid var(--lx-line);
+	border-radius: 999px;
+	background: none;
+	color: inherit;
+	font-size: .84rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.livia-xp-back svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* Tool or conversation */
+.livia-xp-panel {
+	display: flex;
+	flex-direction: column;
+	height: min(860px, calc(100dvh - 48px));
+}
+
+.livia-xp-bar {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 14px;
+	padding: 12px 68px 12px 14px;
+	border-bottom: 1px solid var(--lx-line);
+}
+
+.livia-xp-bar ~ * {
+	min-height: 0;
+}
+
+.livia-xp-panel .livia-xp-x,
+.livia-xp:has(> .livia-xp-panel:not([hidden])) .livia-xp-x {
+	top: 10px;
+	right: 10px;
+	border-color: transparent;
+}
+
+.livia-xp-ttl {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.2;
+}
+
+.livia-xp-ttl b {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.livia-xp-ttl span {
+	overflow: hidden;
+	font-size: .8rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: var(--lx-muted);
+}
+
+.livia-xp-ext {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	font-size: .8rem;
+	font-weight: 700;
+	white-space: nowrap;
+	color: inherit;
+}
+
+.livia-xp-ext svg {
+	width: 14px;
+	height: 14px;
+}
+
+.livia-xp-frame {
+	position: relative;
+	flex: 1;
+	background: var(--lx-soft);
+}
+
+.livia-xp-frame iframe {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	opacity: 0;
+	transition: opacity .4s;
+}
+
+.livia-xp-frame.is-ready iframe {
+	opacity: 1;
+}
+
+.livia-xp-loading {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	font-size: .86rem;
+	color: var(--lx-muted);
+}
+
+.livia-xp-frame.is-ready .livia-xp-loading,
+.livia-xp-frame[data-mode="chat"] .livia-xp-loading,
+.livia-xp-frame[data-mode="chat"] iframe,
+.livia-xp-frame[data-mode="tool"] .livia-xp-chat {
+	display: none;
+}
+
+.livia-xp-chat {
+	position: absolute;
+	inset: 0;
+	overflow-y: auto;
+	background: var(--lx-bg);
+}
+
+/* Phone bar */
+.livia-xp-mbar {
+	display: none;
+}
+
+@media (max-width: 760px) {
+	.livia-xp-mbar {
+		position: fixed;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 9990;
+		display: flex;
+		padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+		border-top: 1px solid var(--lx-line);
+		background: color-mix(in srgb, var(--lx-bg) 96%, transparent);
+	}
+
+	/* The bar and a bubble have the same purpose: the bubble gives way on the pages showing the bar. */
+	body.livia-has-mbar livia-chat[data-livia-bubble] {
+		display: none;
+	}
+
+	.livia-xp-mbar a {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 50px;
+		text-decoration: none;
+	}
+
+	:where(.livia-xp-mbar a) {
+		border-radius: 999px;
+		background: var(--lx-accent);
+		color: var(--lx-accent-ink);
+		font-weight: 600;
+	}
+
+	body.livia-has-mbar {
+		padding-bottom: 72px;
+	}
+
+	.livia-xp,
+	.livia-xp.is-multi,
+	.livia-xp:has(> .livia-xp-panel:not([hidden])) {
+		width: 100%;
+		max-height: 94dvh;
+		margin: auto 0 0;
+		border-radius: 24px 24px 0 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.livia-xp-choice {
+		grid-template-columns: minmax(0, 1fr);
+		min-height: 0;
+	}
+
+	.livia-xp-photo {
+		height: 150px;
+	}
+
+	.livia-xp-name {
+		display: none;
+	}
+
+	.livia-xp-leg {
+		right: 70px;
+		bottom: 16px;
+		left: 20px;
+	}
+
+	.livia-xp-leg p {
+		font-size: 1.2rem;
+	}
+
+	.livia-xp-main {
+		padding: 22px 18px;
+	}
+
+	.livia-xp-main h2 {
+		margin: 4px 0 12px;
+	}
+
+	.livia-xp-picks {
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+		margin-bottom: 16px;
+	}
+
+	.livia-xp-pick {
+		min-height: 120px;
+		padding: 12px;
+	}
+
+	.livia-xp-pick b {
+		padding-right: 46px;
+		font-size: 1.15rem;
+	}
+
+	.livia-xp-panel {
+		height: 94dvh;
+	}
+
+	.livia-sel {
+		gap: 12px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.livia-xp-photo img {
+		transition: none;
+	}
+}
+
+@media (hover: hover) {
+	.livia-sel-pm:hover,
+	.livia-sel-chips button:hover,
+	.livia-xp-back:hover,
+	.livia-xp-x:hover {
+		background: var(--lx-soft);
+	}
+
+	.livia-sel-chips button[aria-pressed="true"]:hover {
+		background: var(--lx-accent);
+	}
+}

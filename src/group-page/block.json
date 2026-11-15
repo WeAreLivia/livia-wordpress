@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "livia/group-page",
+	"title": "Livia group booking page",
+	"category": "widgets",
+	"description": "The group booking page Livia renders for your restaurant.",
+	"textdomain": "livia",
+	"usesContext": [ "postId" ],
+	"attributes": {
+		"align": {
+			"type": "string",
+			"default": "full"
+		}
+	},
+	"supports": {
+		"html": false,
+		"inserter": false,
+		"multiple": false,
+		"reusable": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css"
+}

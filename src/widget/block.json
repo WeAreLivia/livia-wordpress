@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "livia/widget",
+	"title": "Livia widget",
+	"category": "widgets",
+	"description": "Places a Livia widget at this spot of the page.",
+	"keywords": [ "livia", "chat", "booking" ],
+	"textdomain": "livia",
+	"attributes": {
+		"widget": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css"
+}
