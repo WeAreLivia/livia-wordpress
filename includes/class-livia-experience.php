@@ -112,7 +112,7 @@ final class Livia_Experience {
 				'strategy'  => 'defer',
 			)
 		);
-		wp_add_inline_script( self::HANDLE, 'var liviaExperience = ' . wp_json_encode( self::config() ) . ';', 'before' );
+		wp_add_inline_script( self::HANDLE, 'var liviaExperience = ' . wp_json_encode( self::config(), JSON_HEX_TAG | JSON_HEX_AMP ) . ';', 'before' );
 	}
 
 	/**
@@ -462,8 +462,9 @@ final class Livia_Experience {
 	}
 
 	/**
-	 * Takes the menu links the window would open off the site while the section is off: the one the plugin added, and
-	 * a link to #reserver, which then opens nothing. A link of the restaurateur's to their own tool stays.
+	 * Takes the menu links the window would open off the site while the section is off: those with the class
+	 * livia-reserver that point to #reserver, the plugin's own or the restaurateur's, which then open nothing. Any other
+	 * link stays, a link of the restaurateur's to their own tool too.
 	 *
 	 * @param WP_Post[] $items Menu items.
 	 * @return WP_Post[]
@@ -803,7 +804,7 @@ final class Livia_Experience {
 			self::main_menu(),
 			0,
 			array(
-				'menu-item-title'   => __( 'Book a table', 'livia' ),
+				'menu-item-title'   => wp_strip_all_tags( __( 'Book a table', 'livia' ) ),
 				'menu-item-url'     => self::ANCHOR,
 				'menu-item-classes' => self::MENU_CLASS . ' ' . self::ADDED_CLASS,
 				'menu-item-type'    => 'custom',

@@ -46,7 +46,7 @@ Livia update service, which serves the zip to sites presenting a valid key: the 
 restaurants that Livia accepted at the last connection. The service's offer carries `signature`, the Ed25519 signature
 of the zip in base64: the plugin ignores an offer without one, and installs a downloaded zip only when that signature
 matches the public key it carries (`Livia_Updater::SIGNING_KEY`); otherwise the update screen shows why it refused.
-While that key is empty, every update is refused. WordPress's update list names the package `Livia_Updater::PACKAGE`,
+WordPress's update list names the package `Livia_Updater::PACKAGE`,
 not an address, and a path under `/dev/null` that no file can have: only the plugin, loaded, resolves it to the zip and
 checks it, so WordPress installs nothing when it updates the plugin without loading it (WP-CLI with `--skip-plugins`,
 the recovery mode). On a network where the plugin is active on sub-sites only, the network's update screen runs
@@ -138,11 +138,14 @@ Translate the new entries of `livia-fr_FR.po`, then run `npm run i18n` again to 
    workflow fails when the tag is not on `main`, when the tag differs from the plugin version, when the secret
    `LIVIA_WP_SIGNING_KEY` is missing, or when `Livia_Updater::SIGNING_KEY` is empty or does not verify the signature.
    The check refuses the zip, and nothing is signed, unless every file of the zip found in the tag is identical to it,
-   byte for byte, and every other file is a build output under `build/`: a script, a style, a `block.json`, or an
-   `*.asset.php` in the exact form wp-scripts writes. The public key and the PHP the sites run are thus the tag's own;
-   the scripts, styles and `block.json` under `build/` come from the build job and are not checked. `node --test
-   bin/check-zip.test.mjs` (part of `npm run test:js`) shows the check refusing a changed key, an added PHP file and an
-   asset file that carries code.
+   byte for byte, and every other file is a build output under `build/`: a script, a style, an `*.asset.php` in the
+   exact form wp-scripts writes, or a `block.json` holding the same JSON as its source under `src/` in the tag. The
+   check also refuses any entry with an extra field or a comment, which an unzip could read as another name. Every PHP
+   file of the zip, the public key with them, is thus the tag's own, byte for byte, every `*.asset.php` returns a
+   plain list, and every `block.json`, which names the PHP files WordPress runs for a block, says what the tag's says;
+   the scripts and styles under `build/` come from the build job and are not checked. `node --test
+   bin/check-zip.test.mjs` (part of `npm run test:js`) shows the check refusing a changed key, an added PHP file, an
+   asset file that carries code, an entry with an extra field or a comment, and a `block.json` other than its source.
    The Livia update service offers the latest release to the sites, with the content of its `.sig` as `signature`.
 
 The `release` job runs in the GitHub environment `release`, whose deployment rule only accepts the tags `v*`; the

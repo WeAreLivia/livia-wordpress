@@ -1,9 +1,10 @@
 // Checks a release zip against the tree of the checked out commit, the tag's, before it is signed: the build job
 // that made the zip runs the npm dependencies' code, which must not change the public key or any PHP the sites run.
 // Every file of the zip found in the tree must be identical to it, byte for byte; the others must be build outputs
-// under livia/build/ (scripts, styles, block.json, and *.asset.php in the exact form wp-scripts writes). Fails on the
-// first difference, and on any zip WordPress could read otherwise than this script: a comment, a gap between entries,
-// a link, an encrypted, zip64 or duplicate entry.
+// under livia/build/ (scripts, styles, *.asset.php in the exact form wp-scripts writes, and each block.json holding
+// the same JSON as its source under livia/src/). Fails on the first difference, and on any zip WordPress could read
+// otherwise than this script: a comment, a gap between entries, a link, an extra field (which can rename an entry), an
+// encrypted, zip64 or duplicate entry.
 // Usage: node bin/check-zip.mjs dist/livia-<version>.zip   (from the checkout of the tag)
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -15,6 +16,15 @@ const ASSET =
 const BUILD = /^livia\/build\/(?:[a-z0-9-]+\/)*[a-z0-9-]+(?:\.js|\.css|\.json|\.asset\.php)$/;
 // No empty, `.` or `..` segment, and no hidden file such as .htaccess or .user.ini.
 const NAME = /^livia\/(?:[A-Za-z0-9_@-][A-Za-z0-9_.@-]*\/)*(?:[A-Za-z0-9_@-][A-Za-z0-9_.@-]*)?$/;
+
+// The JSON value a file holds, written one way, or null when it holds none.
+function canonical( bytes ) {
+	try {
+		return JSON.stringify( JSON.parse( bytes.toString( 'utf8' ) ) );
+	} catch {
+		return null;
+	}
+}
 
 const path = process.argv[ 2 ];
 function fail( message ) {
@@ -64,7 +74,11 @@ for ( let i = 0; i < count; i++ ) {
 	const unix = zip.readUInt32LE( at + 38 ) >>> 16;
 	const offset = zip.readUInt32LE( at + 42 );
 	const name = zip.toString( 'latin1', at + 46, at + 46 + nameLength );
-	at += 46 + nameLength + zip.readUInt16LE( at + 30 ) + zip.readUInt16LE( at + 32 );
+	// Unzip and libzip extract an entry under the name an extra field (0x7075) gives, which this script does not read.
+	if ( zip.readUInt16LE( at + 30 ) || zip.readUInt16LE( at + 32 ) || zip.readUInt16LE( offset + 28 ) ) {
+		fail( `${ name } carries an extra field or a comment.` );
+	}
+	at += 46 + nameLength;
 
 	// Allowed flags: the deflate level (bits 1 and 2) and UTF-8 names (bit 11).
 	if ( flags & ~0x0806 || ( 0 !== method && 8 !== method ) || 0o120000 === ( unix & 0o170000 ) ) {
@@ -79,7 +93,7 @@ for ( let i = 0; i < count; i++ ) {
 	}
 	seen.add( key );
 	// The entries follow each other from the start, each local header repeating its central one.
-	const data = offset + 30 + zip.readUInt16LE( offset + 26 ) + zip.readUInt16LE( offset + 28 );
+	const data = offset + 30 + zip.readUInt16LE( offset + 26 );
 	if (
 		offset !== next ||
 		data + size > cdStart ||
@@ -111,6 +125,13 @@ for ( let i = 0; i < count; i++ ) {
 			fail( `${ name } differs from the tag.` );
 		}
 		kept++;
+	} else if ( name.endsWith( '/block.json' ) ) {
+		// Its render and variations name PHP files WordPress runs: the build may only reformat its source.
+		const source = tree.get( name.replace( /^livia\/build\//, 'livia/src/' ) );
+		if ( ! source || ! BUILD.test( name ) || canonical( bytes ) !== canonical( execFileSync( 'git', [ 'cat-file', 'blob', source.sha ] ) ) ) {
+			fail( `${ name } differs from ${ name.replace( /^livia\/build\//, 'livia/src/' ) } in the tag.` );
+		}
+		built++;
 	} else if ( BUILD.test( name ) && ( ! name.endsWith( '.asset.php' ) || ASSET.test( bytes.toString( 'latin1' ) ) ) ) {
 		built++;
 	} else {

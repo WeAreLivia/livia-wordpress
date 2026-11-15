@@ -1,6 +1,7 @@
 // bin/check-zip.mjs passes the zip bin/build-zip.sh makes from the committed tree, and refuses it once its public key
-// is changed, a PHP file is added, an asset file carries code, or its central directory hides bytes. Needs git, tar,
-// zip and bash, as the release does.
+// is changed, a PHP file is added, an asset file carries code, an entry carries an extra field or a comment, a
+// block.json differs from its source, or its central directory hides bytes. Needs git, tar, zip and bash, as the
+// release does.
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -8,6 +9,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { crc32 } from 'node:zlib';
 
 const repo = join( dirname( fileURLToPath( import.meta.url ) ), '..' );
 const tmp = mkdtempSync( join( tmpdir(), 'livia-check-zip-' ) );
@@ -22,7 +24,8 @@ const asset = ( deps ) =>
 const build = {
 	'widget/index.js': 'console.log(1);',
 	'widget/index.asset.php': asset( [ 'wp-blocks', 'wp-i18n' ] ),
-	'widget/block.json': '{}',
+	// wp-scripts copies block.json reformatted.
+	'widget/block.json': JSON.stringify( JSON.parse( readFileSync( join( out, 'src/widget/block.json' ), 'utf8' ) ), null, 2 ),
 	'editor-panel.js': 'console.log(2);',
 	'editor-panel.asset.php': asset( [] ),
 	'editor-panel.css': 'a{}',
@@ -53,6 +56,70 @@ test( 'the zip the build makes from the tag passes', () => {
 	const result = check( zip );
 	assert.equal( result.status, 0, result.stderr );
 	assert.match( result.stdout, /files identical to the tag, 6 build outputs/ );
+} );
+
+// A zip of one stored entry, livia/build/widget/index.js, with the given extra fields and entry comment.
+function crafted( { centralExtra = Buffer.alloc( 0 ), localExtra = Buffer.alloc( 0 ), comment = Buffer.alloc( 0 ) } ) {
+	const name = Buffer.from( 'livia/build/widget/index.js', 'latin1' );
+	const data = Buffer.from( "<?php echo 'injected';\n" );
+	const local = Buffer.alloc( 30 );
+	local.writeUInt32LE( 0x04034b50, 0 );
+	local.writeUInt16LE( 10, 4 );
+	local.writeUInt32LE( crc32( data ), 14 );
+	local.writeUInt32LE( data.length, 18 );
+	local.writeUInt32LE( data.length, 22 );
+	local.writeUInt16LE( name.length, 26 );
+	local.writeUInt16LE( localExtra.length, 28 );
+	const central = Buffer.alloc( 46 );
+	central.writeUInt32LE( 0x02014b50, 0 );
+	central.writeUInt16LE( ( 3 << 8 ) | 10, 4 );
+	central.writeUInt16LE( 10, 6 );
+	central.writeUInt32LE( crc32( data ), 16 );
+	central.writeUInt32LE( data.length, 20 );
+	central.writeUInt32LE( data.length, 24 );
+	central.writeUInt16LE( name.length, 28 );
+	central.writeUInt16LE( centralExtra.length, 30 );
+	central.writeUInt16LE( comment.length, 32 );
+	central.writeUInt32LE( ( 0o100644 << 16 ) >>> 0, 38 );
+	const entry = Buffer.concat( [ local, name, localExtra, data ] );
+	const cd = Buffer.concat( [ central, name, centralExtra, comment ] );
+	const eocd = Buffer.alloc( 22 );
+	eocd.writeUInt32LE( 0x06054b50, 0 );
+	eocd.writeUInt16LE( 1, 8 );
+	eocd.writeUInt16LE( 1, 10 );
+	eocd.writeUInt32LE( cd.length, 12 );
+	eocd.writeUInt32LE( entry.length, 16 );
+	const file = join( mkdtempSync( join( tmp, 'crafted-' ) ), 'livia.zip' );
+	writeFileSync( file, Buffer.concat( [ entry, cd, eocd ] ) );
+	return file;
+}
+
+test( 'an entry with an extra field or a comment is refused', () => {
+	// Info-ZIP Unicode Path (0x7075): unzip and libzip extract the entry under the name it carries.
+	const real = Buffer.from( 'livia/build/widget/index.php', 'utf8' );
+	const unicodePath = Buffer.alloc( 9 + real.length );
+	unicodePath.writeUInt16LE( 0x7075, 0 );
+	unicodePath.writeUInt16LE( 5 + real.length, 2 );
+	unicodePath.writeUInt8( 1, 4 );
+	unicodePath.writeUInt32LE( crc32( Buffer.from( 'livia/build/widget/index.js', 'latin1' ) ), 5 );
+	real.copy( unicodePath, 9 );
+	for ( const parts of [ { centralExtra: unicodePath, localExtra: unicodePath }, { localExtra: unicodePath }, { comment: Buffer.from( 'note' ) } ] ) {
+		const result = check( crafted( parts ) );
+		assert.equal( result.status, 1, Object.keys( parts ).join( ', ' ) );
+		assert.match( result.stderr, /index\.js carries an extra field or a comment/ );
+	}
+	assert.equal( check( crafted( {} ) ).status, 0, 'the same entry without them' );
+} );
+
+test( 'a block.json other than its source in the tag is refused', () => {
+	const source = JSON.parse( readFileSync( join( out, 'src/widget/block.json' ), 'utf8' ) );
+	for ( const changed of [ { ...source, variations: 'file:../../uninstall.php' }, { ...source, render: 'file:../../uninstall.php' } ] ) {
+		const result = check( altered( 'livia/build/widget/block.json', JSON.stringify( changed ) ) );
+		assert.equal( result.status, 1 );
+		assert.match( result.stderr, /block\.json differs from livia\/src\/widget\/block\.json in the tag/ );
+	}
+	const result = check( altered( 'livia/build/other/block.json', JSON.stringify( source ) ) );
+	assert.equal( result.status, 1, 'a block.json with no source' );
 } );
 
 test( 'a changed public key is refused', () => {

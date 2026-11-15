@@ -53,6 +53,15 @@ add_action(
 		load_plugin_textdomain( 'livia', false, dirname( LIVIA_BASENAME ) . '/languages' );
 	}
 );
+// WordPress prefers a livia-<locale> file in WP_LANG_DIR/plugins, which a third-party language pack sets: ours always win.
+add_filter(
+	'load_textdomain_mofile',
+	static function ( $mofile, $domain ) {
+		return 'livia' === $domain ? LIVIA_DIR . 'languages/' . basename( $mofile ) : $mofile;
+	},
+	10,
+	2
+);
 
 Livia_Group_Page::init();
 Livia_Widgets::init();

@@ -529,6 +529,18 @@ final class ExperienceTest extends Livia_TestCase {
 		$this->assertFalse( wp_script_is( Livia_Experience::HANDLE, 'registered' ), 'nothing to book without a restaurant' );
 	}
 
+	public function test_a_name_with_markup_cannot_end_the_window_s_inline_script() {
+		$this->turn_on();
+		$connections                             = get_option( 'livia_connections' );
+		$connections['r1']['restaurant']['name'] = 'Brasserie <!--<script ';
+		update_option( 'livia_connections', $connections );
+		$this->new_assets();
+		Livia_Experience::enqueue();
+		$before = implode( '', wp_scripts()->get_data( Livia_Experience::HANDLE, 'before' ) );
+		$this->assertStringContainsString( 'Brasserie \u003C!--\u003Cscript ', $before );
+		$this->assertStringNotContainsString( '<', $before );
+	}
+
 	public function test_the_theme_s_colours_and_fonts_reach_the_window() {
 		$css = Livia_Experience::theme_css();
 		$this->assertStringNotContainsString( '<', $css );
@@ -663,6 +675,65 @@ final class ExperienceTest extends Livia_TestCase {
 		wp_delete_post( $own, true );
 		unregister_nav_menu( 'footer' );
 		unregister_nav_menu( 'primary' );
+	}
+
+	public function test_the_classic_menu_link_keeps_no_markup_from_a_translation() {
+		$this->use_theme( array( 'twentytwentyone', 'twentytwenty', 'twentynineteen' ) );
+		register_nav_menus( array( 'primary' => 'Primary' ) );
+		$main = wp_create_nav_menu( 'Principal' );
+		set_theme_mod( 'nav_menu_locations', array( 'primary' => $main ) );
+		// Who may post unfiltered HTML: WordPress itself keeps the title as given.
+		$user = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		if ( is_multisite() ) {
+			grant_super_admin( $user );
+		}
+		wp_set_current_user( $user );
+		$hostile = static function ( $translation, $text, $domain ) {
+			return 'livia' === $domain && 'Book a table' === $text ? 'Réserver <img src=x onerror=alert(1)>' : $translation;
+		};
+		add_filter( 'gettext', $hostile, 10, 3 );
+		try {
+			$this->assertSame( 'added', Livia_Experience::add_to_menu() );
+		} finally {
+			remove_filter( 'gettext', $hostile, 10 );
+			wp_set_current_user( 0 );
+			unregister_nav_menu( 'primary' );
+		}
+		$this->assertSame( 'Réserver', wp_get_nav_menu_items( $main )[0]->title );
+	}
+
+	public function test_the_plugin_s_own_translations_win_over_a_file_of_the_same_name_in_the_languages_folder() {
+		global $wp_textdomain_registry, $l10n_unloaded;
+		$dir     = WP_LANG_DIR . '/plugins';
+		$file    = $dir . '/livia-fr_FR.l10n.php';
+		$created = ! is_dir( WP_LANG_DIR );
+		$this->assertFalse( file_exists( $file ) );
+		wp_mkdir_p( $dir );
+		file_put_contents( $file, "<?php\nreturn array( 'messages' => array( 'Book a table' => 'Traduction tierce' ) );\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		$registry               = $wp_textdomain_registry;
+		$wp_textdomain_registry = new WP_Textdomain_Registry();
+		wp_cache_delete( md5( $dir . '/' ), 'translation_files' );
+		load_plugin_textdomain( 'livia', false, dirname( LIVIA_BASENAME ) . '/languages' );
+		unload_textdomain( 'livia', true );
+		unset( $l10n_unloaded['livia'] );
+		$french = static function () {
+			return 'fr_FR';
+		};
+		add_filter( 'locale', $french );
+		try {
+			$this->assertSame( $dir . '/', $wp_textdomain_registry->get( 'livia', 'fr_FR' ), 'WordPress looks in its own folder first' );
+			$this->assertSame( 'Réserver une table', __( 'Book a table', 'livia' ) );
+		} finally {
+			remove_filter( 'locale', $french );
+			unload_textdomain( 'livia', true );
+			$wp_textdomain_registry = $registry;
+			wp_delete_file( $file );
+			wp_cache_delete( md5( $dir . '/' ), 'translation_files' );
+			if ( $created ) {
+				rmdir( $dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+				rmdir( WP_LANG_DIR ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+			}
+		}
 	}
 
 	public function test_a_location_whose_menu_was_deleted_under_another_theme_is_skipped() {

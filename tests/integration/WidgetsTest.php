@@ -400,6 +400,22 @@ final class WidgetsTest extends Livia_TestCase {
 		$this->assertStringContainsString( '"siteWidget":"La Terrasse, site on desktop, Privatisation on phone"', $before );
 	}
 
+	public function test_a_name_with_markup_cannot_end_the_editor_s_inline_script() {
+		$this->connect( array( 'bubble_on' => true ), array( 'site_on' => true ) );
+		$connections                             = get_option( 'livia_connections' );
+		$connections['r1']['restaurant']['name'] = 'Brasserie <!--<script ';
+		$connections['r1']['widgets'][1]['name'] = 'Pages <!--<script ';
+		update_option( 'livia_connections', $connections );
+		set_transient( 'livia_checked_r1', 1, 60 );
+		if ( ! wp_script_is( 'livia-widget-editor-script', 'registered' ) ) {
+			wp_register_script( 'livia-widget-editor-script', '', array(), LIVIA_VERSION, true );
+		}
+		Livia_Widgets::editor_assets();
+		$before = implode( "\n", (array) wp_scripts()->get_data( 'livia-widget-editor-script', 'before' ) );
+		$this->assertStringContainsString( 'Brasserie \u003C!--\u003Cscript ', $before );
+		$this->assertStringNotContainsString( '<', $before );
+	}
+
 	public function test_a_hostile_widget_id_stays_an_attribute() {
 		$markup = Livia_Widgets::markup( '"><script>alert(1)</script>' );
 		$this->assertStringNotContainsString( '<script', $markup );

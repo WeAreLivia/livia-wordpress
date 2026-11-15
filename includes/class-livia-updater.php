@@ -26,9 +26,9 @@ final class Livia_Updater {
 
 	/**
 	 * Ed25519 public key of the releases, base64: a package installs only with its signature by the matching private
-	 * key. Empty, every update is refused.
+	 * key.
 	 */
-	const SIGNING_KEY = '';
+	const SIGNING_KEY = 'yxIp/wef3E3FvHPD/9RpXeZqCxQRks4xxpT98WtK32I=';
 
 	/**
 	 * The package WordPress's update list names: not an address, and a path under /dev/null, which no file can have,
@@ -64,10 +64,6 @@ final class Livia_Updater {
 	public static function download( $reply, $package, $upgrader, $hook_extra = array() ) {
 		if ( is_wp_error( $reply ) || ! isset( $hook_extra['plugin'] ) || LIVIA_BASENAME !== $hook_extra['plugin'] ) {
 			return $reply;
-		}
-		if ( '' === self::SIGNING_KEY ) {
-			self::discard( $reply );
-			return new WP_Error( 'livia_unsigned', wp_strip_all_tags( __( 'This version of the Livia plugin cannot verify its updates. Download the new version from your Livia space and install it from Plugins > Add New Plugin > Upload Plugin.', 'livia' ) ) );
 		}
 		return self::signed_download( $package, $upgrader, self::SIGNING_KEY, $reply );
 	}

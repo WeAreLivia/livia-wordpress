@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-15T09:34:15+00:00\n"
+"POT-Creation-Date: 2026-11-15T18:14:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: livia\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #. Description of the plugin
 #: livia.php
-#: includes/class-livia-updater.php:261
+#: includes/class-livia-updater.php:266
 msgid "Publishes your restaurant's Livia group booking page on your site, with its booking assistant, and places Livia widgets on your pages."
 msgstr ""
 
@@ -79,68 +79,68 @@ msgstr ""
 msgid "WordPress could not create the page. Please try again."
 msgstr ""
 
-#: includes/class-livia-admin.php:432
+#: includes/class-livia-admin.php:430
 msgid "You are not allowed to move this content to the trash."
 msgstr ""
 
-#: includes/class-livia-admin.php:445
+#: includes/class-livia-admin.php:443
 msgid "This site has no trash for media files: the file would be hidden with no way to restore it. Choose another address, or delete the file yourself."
 msgstr ""
 
-#: includes/class-livia-admin.php:446
+#: includes/class-livia-admin.php:444
 msgid "This site empties its trash at once: the old content would be deleted for good. Choose another address, or delete the content yourself."
 msgstr ""
 
 #. translators: %s: restaurant name.
-#: includes/class-livia-admin.php:466
+#: includes/class-livia-admin.php:464
 msgid "Group booking"
 msgstr ""
 
 #. translators: %s: restaurant name.
-#: includes/class-livia-admin.php:466
+#: includes/class-livia-admin.php:464
 #, php-format
 msgid "Group booking, %s"
 msgstr ""
 
-#: includes/class-livia-admin.php:501
+#: includes/class-livia-admin.php:499
 msgid "Floating bubble"
 msgstr ""
 
-#: includes/class-livia-admin.php:502
+#: includes/class-livia-admin.php:500
 msgid "Button in the page"
 msgstr ""
 
-#: includes/class-livia-admin.php:503
+#: includes/class-livia-admin.php:501
 msgid "Embedded conversation"
 msgstr ""
 
-#: includes/class-livia-admin.php:565
+#: includes/class-livia-admin.php:563
 msgid "Meanwhile, the group booking page shows a short notice instead of its content."
 msgstr ""
 
-#: includes/class-livia-admin.php:708
+#: includes/class-livia-admin.php:707
 msgctxt "default address of the group booking page"
 msgid "group-booking"
 msgstr ""
 
-#: includes/class-livia-admin.php:717
+#: includes/class-livia-admin.php:716
 msgid "Widget of your Livia booking page"
 msgstr ""
 
 #. translators: %s: restaurant name.
-#: includes/class-livia-admin.php:736
+#: includes/class-livia-admin.php:735
 #, php-format
 msgid "%s is with you for your event."
 msgstr ""
 
-#: includes/class-livia-admin.php:737
+#: includes/class-livia-admin.php:736
 #: includes/views/settings.php:165
 msgid "Your restaurant"
 msgstr ""
 
 #: includes/class-livia-elementor-convives.php:30
 #: includes/class-livia-elementor-convives.php:64
-#: includes/class-livia-experience.php:248
+#: includes/class-livia-experience.php:255
 #: src/convives/index.js:45
 msgid "How many of you?"
 msgstr ""
@@ -172,12 +172,12 @@ msgid "Label"
 msgstr ""
 
 #: includes/class-livia-elementor-reserver.php:71
-#: includes/class-livia-experience.php:247
-#: includes/class-livia-experience.php:280
-#: includes/class-livia-experience.php:322
-#: includes/class-livia-experience.php:440
-#: includes/class-livia-experience.php:626
-#: includes/class-livia-experience.php:647
+#: includes/class-livia-experience.php:254
+#: includes/class-livia-experience.php:287
+#: includes/class-livia-experience.php:329
+#: includes/class-livia-experience.php:447
+#: includes/class-livia-experience.php:782
+#: includes/class-livia-experience.php:807
 #: src/reserver/index.js:29
 #: src/reserver/index.js:53
 msgid "Book a table"
@@ -237,7 +237,7 @@ msgid "Asked to the visitor"
 msgstr ""
 
 #: includes/class-livia-elementor.php:81
-#: includes/class-livia-experience.php:253
+#: includes/class-livia-experience.php:260
 #: includes/views/experience.php:239
 #: includes/views/settings.php:560
 #: src/restaurant-control.js:14
@@ -245,205 +245,205 @@ msgid "Restaurant"
 msgstr ""
 
 #. translators: 1: name of the conversation's assistant, Livia by default, 2: restaurant name (in French, already preceded by "de" and contracted).
-#: includes/class-livia-experience.php:186
+#: includes/class-livia-experience.php:193
 #, php-format
 msgid "%1$s, %2$s's assistant, prepares your table with you: date, menus, space. She answers you right away, 7 days a week."
 msgstr ""
 
 #. translators: %1$s: name of the conversation's assistant, Livia by default.
-#: includes/class-livia-experience.php:188
-#: includes/class-livia-experience.php:276
+#: includes/class-livia-experience.php:195
+#: includes/class-livia-experience.php:283
 #, php-format
 msgid "%1$s, the restaurant's assistant, prepares your table with you: date, menus, space. She answers you right away, 7 days a week."
 msgstr ""
 
-#: includes/class-livia-experience.php:249
+#: includes/class-livia-experience.php:256
 msgid "Where and how many of you?"
 msgstr ""
 
-#: includes/class-livia-experience.php:250
+#: includes/class-livia-experience.php:257
 msgid "Enter the number of guests"
 msgstr ""
 
-#: includes/class-livia-experience.php:251
+#: includes/class-livia-experience.php:258
 msgid "Online table, group with Livia or event: what comes next depends on you."
 msgstr ""
 
-#: includes/class-livia-experience.php:252
+#: includes/class-livia-experience.php:259
 msgid "Choose the restaurant"
 msgstr ""
 
-#: includes/class-livia-experience.php:254
+#: includes/class-livia-experience.php:261
 msgid "One guest fewer"
 msgstr ""
 
-#: includes/class-livia-experience.php:255
+#: includes/class-livia-experience.php:262
 msgid "One guest more"
 msgstr ""
 
-#: includes/class-livia-experience.php:256
+#: includes/class-livia-experience.php:263
 msgid "Number of guests"
 msgstr ""
 
-#: includes/class-livia-experience.php:257
+#: includes/class-livia-experience.php:264
 msgid "guest"
 msgstr ""
 
-#: includes/class-livia-experience.php:258
+#: includes/class-livia-experience.php:265
 #: includes/views/experience.php:96
 #: includes/views/experience.php:97
 msgid "guests"
 msgstr ""
 
 #. translators: 1: smallest number of guests, 2: largest.
-#: includes/class-livia-experience.php:260
+#: includes/class-livia-experience.php:267
 #, php-format
 msgid "%1$d to %2$d"
 msgstr ""
 
 #. translators: 1: smallest number of guests of a group, 2: largest.
-#: includes/class-livia-experience.php:262
+#: includes/class-livia-experience.php:269
 #, php-format
 msgid "%1$d to %2$d · group"
 msgstr ""
 
 #. translators: %d: smallest number of guests of an event.
-#: includes/class-livia-experience.php:264
+#: includes/class-livia-experience.php:271
 #, php-format
 msgid "%d and over"
 msgstr ""
 
 #. translators: %d: smallest number of guests of an event, on a quick choice button.
-#: includes/class-livia-experience.php:266
+#: includes/class-livia-experience.php:273
 #, php-format
 msgid "%d+"
 msgstr ""
 
-#: includes/class-livia-experience.php:267
+#: includes/class-livia-experience.php:274
 msgid "Table"
 msgstr ""
 
-#: includes/class-livia-experience.php:268
+#: includes/class-livia-experience.php:275
 msgid "Group"
 msgstr ""
 
 #. translators: %d: event threshold, in guests.
-#: includes/class-livia-experience.php:270
+#: includes/class-livia-experience.php:277
 #, php-format
 msgid "Over %d guests"
 msgstr ""
 
-#: includes/class-livia-experience.php:271
+#: includes/class-livia-experience.php:278
 msgid "Online booking"
 msgstr ""
 
-#: includes/class-livia-experience.php:272
+#: includes/class-livia-experience.php:279
 msgid "Choose your time slot online, in a few seconds."
 msgstr ""
 
-#: includes/class-livia-experience.php:273
+#: includes/class-livia-experience.php:280
 msgid "Group table with Livia"
 msgstr ""
 
 #. translators: %d: first number of guests above the event threshold.
-#: includes/class-livia-experience.php:277
+#: includes/class-livia-experience.php:284
 #: includes/views/experience.php:404
 msgid "Private hire or event"
 msgstr ""
 
 #. translators: %d: event threshold, in guests.
-#: includes/class-livia-experience.php:279
+#: includes/class-livia-experience.php:286
 #, php-format
 msgid "Beyond %d guests, or to hire the place, the team makes you a tailored offer."
 msgstr ""
 
-#: includes/class-livia-experience.php:281
+#: includes/class-livia-experience.php:288
 msgid "Prepare my group table"
 msgstr ""
 
-#: includes/class-livia-experience.php:282
-#: includes/class-livia-experience.php:290
+#: includes/class-livia-experience.php:289
+#: includes/class-livia-experience.php:297
 #: includes/views/experience.php:414
 msgid "Contact the restaurant"
 msgstr ""
 
-#: includes/class-livia-experience.php:283
+#: includes/class-livia-experience.php:290
 msgid "Request a private hire"
 msgstr ""
 
-#: includes/class-livia-experience.php:284
+#: includes/class-livia-experience.php:291
 msgid "Guests"
 msgstr ""
 
-#: includes/class-livia-experience.php:285
+#: includes/class-livia-experience.php:292
 msgid "Open in a tab"
 msgstr ""
 
-#: includes/class-livia-experience.php:286
+#: includes/class-livia-experience.php:293
 msgid "Loading"
 msgstr ""
 
-#: includes/class-livia-experience.php:287
+#: includes/class-livia-experience.php:294
 #: includes/views/settings.php:570
 msgid "Close"
 msgstr ""
 
-#: includes/class-livia-experience.php:288
+#: includes/class-livia-experience.php:295
 #: includes/views/experience.php:389
 msgid "Let us prepare your group table"
 msgstr ""
 
-#: includes/class-livia-experience.php:289
+#: includes/class-livia-experience.php:296
 msgid "Private hire"
 msgstr ""
 
 #. translators: %d: event threshold, in guests.
-#: includes/class-livia-experience.php:292
+#: includes/class-livia-experience.php:299
 #, php-format
 msgid "For more than %d guests or a private hire, contact the restaurant."
 msgstr ""
 
-#: includes/class-livia-experience.php:293
+#: includes/class-livia-experience.php:300
 msgid "Write to the restaurant or drop by: the team will answer you."
 msgstr ""
 
-#: includes/class-livia-experience.php:294
+#: includes/class-livia-experience.php:301
 msgid "By email"
 msgstr ""
 
-#: includes/class-livia-experience.php:295
+#: includes/class-livia-experience.php:302
 msgid "By phone"
 msgstr ""
 
-#: includes/class-livia-experience.php:296
+#: includes/class-livia-experience.php:303
 msgid "On site"
 msgstr ""
 
-#: includes/class-livia-experience.php:297
+#: includes/class-livia-experience.php:304
 msgid "Write to the restaurant"
 msgstr ""
 
-#: includes/class-livia-experience.php:707
+#: includes/class-livia-experience.php:947
 msgid "A group starts at 2 guests at least, and at the event threshold at most; events start at 999 guests at most."
 msgstr ""
 
-#: includes/class-livia-experience.php:718
+#: includes/class-livia-experience.php:958
 msgid "Enter a full web address, starting with https://, or a path of your site, starting with /."
 msgstr ""
 
-#: includes/class-livia-experience.php:724
+#: includes/class-livia-experience.php:964
 msgid "Enter the address of your booking tool: the window opens it for tables below the group threshold."
 msgstr ""
 
-#: includes/class-livia-experience.php:727
+#: includes/class-livia-experience.php:967
 msgid "Enter the address of your private hire tool."
 msgstr ""
 
-#: includes/class-livia-experience.php:732
+#: includes/class-livia-experience.php:972
 msgid "This e-mail address is not valid."
 msgstr ""
 
-#: includes/class-livia-experience.php:734
+#: includes/class-livia-experience.php:974
 msgid "Enter the restaurant's e-mail address: the window shows a “Write to the restaurant” button."
 msgstr ""
 
@@ -562,23 +562,19 @@ msgctxt "content status"
 msgid "draft"
 msgstr ""
 
-#: includes/class-livia-updater.php:62
-msgid "This version of the Livia plugin cannot verify its updates. Download the new version from your Livia space and install it from Plugins > Add New Plugin > Upload Plugin."
-msgstr ""
-
-#: includes/class-livia-updater.php:81
+#: includes/class-livia-updater.php:85
 msgid "This update is no longer the one Livia offers. Check for updates again, then retry."
 msgstr ""
 
-#: includes/class-livia-updater.php:110
+#: includes/class-livia-updater.php:115
 msgid "The downloaded update does not carry the Livia signature: it was not installed. Try again later, or download the new version from your Livia space."
 msgstr ""
 
-#: includes/class-livia-updater.php:117
+#: includes/class-livia-updater.php:122
 msgid "The downloaded update is not the version Livia announces: it was not installed. Check for updates again, then retry."
 msgstr ""
 
-#: includes/class-livia-updater.php:120
+#: includes/class-livia-updater.php:125
 msgid "The downloaded update is not newer than the installed version of the Livia plugin: it was not installed."
 msgstr ""
 

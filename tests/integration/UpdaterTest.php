@@ -266,21 +266,13 @@ final class UpdaterTest extends Livia_TestCase {
 		);
 	}
 
-	public function test_the_package_is_refused_while_the_plugin_has_no_signing_key_and_the_key_is_well_formed_once_set() {
+	public function test_the_signing_key_is_well_formed_and_other_packages_are_left_to_wordpress() {
 		$this->connect();
 		$this->answers['/wordpress/v1/update'] = $this->update_answer( LIVIA_SERVICE_URL );
 		$package                               = $this->check()['package'];
-		$calls                                 = count( $this->calls );
 		$upgrader                              = new stdClass();
 
-		if ( '' === Livia_Updater::SIGNING_KEY ) {
-			$refused = apply_filters( 'upgrader_pre_download', false, $package, $upgrader, array( 'plugin' => LIVIA_BASENAME ) );
-			$this->assertWPError( $refused );
-			$this->assertSame( 'livia_unsigned', $refused->get_error_code() );
-			$this->assertCount( $calls, $this->calls, 'nothing downloaded' );
-		} else {
-			$this->assertSame( 32, strlen( (string) base64_decode( Livia_Updater::SIGNING_KEY, true ) ), 'an Ed25519 public key in base64' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-		}
+		$this->assertSame( 32, strlen( (string) base64_decode( Livia_Updater::SIGNING_KEY, true ) ), 'an Ed25519 public key in base64' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 
 		$this->assertFalse( apply_filters( 'upgrader_pre_download', false, $package, $upgrader, array( 'plugin' => 'other/other.php' ) ), 'another plugin is left to WordPress' );
 		$this->assertFalse( apply_filters( 'upgrader_pre_download', false, $package, $upgrader, array( 'theme' => 'livia' ) ) );
@@ -427,9 +419,8 @@ final class UpdaterTest extends Livia_TestCase {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 		$upgrader = new WP_Upgrader( new Automatic_Upgrader_Skin() );
 		$upgrader->init();
-		if ( '' === Livia_Updater::SIGNING_KEY ) {
-			$this->assertSame( 'livia_unsigned', $upgrader->download_package( $package, false, array( 'plugin' => LIVIA_BASENAME ) )->get_error_code(), 'the plugin, loaded, answers for WordPress' );
-		}
+		$this->assertSame( 'livia_bad_signature', $upgrader->download_package( $package, false, array( 'plugin' => LIVIA_BASENAME ) )->get_error_code(), 'the plugin, loaded, answers for WordPress' );
+		$received = array();
 
 		// WP-CLI with --skip-plugins, a network's main site, the recovery mode: WordPress updates the plugin without it.
 		remove_filter( 'upgrader_pre_download', array( 'Livia_Updater', 'download' ), PHP_INT_MAX );
@@ -454,9 +445,6 @@ final class UpdaterTest extends Livia_TestCase {
 			}
 		);
 		$refusals = array( Livia_Updater::signed_download( 'any', $this->upgrader(), 'any' ) );
-		if ( '' === Livia_Updater::SIGNING_KEY ) {
-			$refusals[] = Livia_Updater::download( false, 'any', $this->upgrader(), array( 'plugin' => LIVIA_BASENAME ) );
-		}
 		$served   = '';
 		$received = array();
 		$this->serve_package( $served, $received );

@@ -304,7 +304,7 @@ final class Livia_Widgets {
 			),
 			'groupPageIds' => array_values( Livia_Group_Page::page_ids() ),
 		);
-		wp_add_inline_script( 'livia-widget-editor-script', 'window.liviaEditor = ' . wp_json_encode( $data ) . ';', 'before' );
+		wp_add_inline_script( 'livia-widget-editor-script', 'window.liviaEditor = ' . wp_json_encode( $data, JSON_HEX_TAG | JSON_HEX_AMP ) . ';', 'before' );
 
 		$screen = get_current_screen();
 		if ( ! $screen || 'post' !== $screen->base || ! in_array( $screen->post_type, array( 'post', 'page' ), true ) ) {
