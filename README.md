@@ -57,8 +57,10 @@ matches the public key it embeds. See [SECURITY.md](SECURITY.md).
 
 On a network where the plugin is active on sub-sites only, the network's update screen runs without the plugin, so
 nothing would check the signature there: it lists the new version without a package. Download the new version's zip
-from your Livia space or from the [latest release](https://github.com/WeAreLivia/livia-wordpress/releases/latest):
-both carry the same signed zip, installed as in the Installation section.
+from your Livia space or from the [latest release](https://github.com/WeAreLivia/livia-wordpress/releases/latest),
+then upload it with Plugins > Add New Plugin > Upload Plugin, replacing the installed version. Do not network-activate
+it again. The upload does not check the signature (only an update the plugin downloads itself is checked), so take the
+zip from those two places only.
 
 ## Configuration
 
@@ -123,17 +125,18 @@ entries, then run it again.
 3. The Release workflow (`.github/workflows/release.yml`) builds `livia-<version>.zip` in a job without any secret,
    then, in a second job that installs and builds nothing, checks the zip against the tag (`bin/check-zip.mjs`),
    signs it (`bin/sign-zip.mjs`) and attaches the zip and `livia-<version>.zip.sig` (its detached Ed25519 signature,
-   base64) to the GitHub release of the tag. It stops at the first check that fails: `bin/check-zip.mjs` lists the
-   zip checks and `bin/sign-zip.mjs` the reasons it refuses to sign.
+   base64) to the GitHub release of the tag. It stops at the first check that fails: the reasons are in
+   `.github/workflows/release.yml`, `bin/build-zip.sh`, `bin/check-zip.mjs` and `bin/sign-zip.mjs`.
 
 The second job runs in the GitHub environment `release`, which only accepts the tags `v*` and requires a reviewer's
 approval. The secret `LIVIA_WP_SIGNING_KEY`, the private key (the 32-byte Ed25519 seed in base64), is stored in that
 environment only, never in the repository's secrets. The matching public key (32 bytes in base64) is
 `Livia_Updater::SIGNING_KEY` in `includes/class-livia-updater.php`; the Livia update service verifies the releases
-with the same public key, so change it there at the same time. If the seed is lost, no installed site accepts an
-update signed with a new key. To generate a pair, run this on a trusted machine, outside CI and any shared or recorded
+with the same public key. The key pair cannot be changed without reinstalling the plugin on every site: installed
+sites keep the old public key and refuse a release signed with another seed. If the seed is lost, no installed site
+accepts an update. To generate a pair, run this on a trusted machine, outside CI and any shared or recorded
 terminal. Put the seed in the secret `LIVIA_WP_SIGNING_KEY` of the `release` environment, and keep an encrypted
-offline backup of it (a team password manager), never in the repository, in CI or in a shared terminal:
+backup of it (for example a team password manager), never in the repository, in CI or in a shared terminal:
 
 ```bash
 node -e "const k=require('crypto').generateKeyPairSync('ed25519');console.log('LIVIA_WP_SIGNING_KEY', k.privateKey.export({format:'der',type:'pkcs8'}).subarray(16).toString('base64'));console.log('SIGNING_KEY', k.publicKey.export({format:'der',type:'spki'}).subarray(12).toString('base64'))"
