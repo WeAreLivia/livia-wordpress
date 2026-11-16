@@ -45,13 +45,18 @@ conversational assistant without any code.
    pages, the address of its booking page, and its thresholds and paths. Each tab saves on its own.
 
 Deactivating the plugin turns the published group booking pages into drafts; activating it again publishes them
-again. Deleting the plugin leaves the pages as drafts and removes its settings.
+again. On a multisite network, a network-wide deactivation or activation does so on every site. Removing a
+restaurant turns its page into a draft. Deleting the plugin leaves the pages as drafts and removes its settings.
 
 ## Updates
 
 Updates come through WordPress's standard update screen, served by Livia to sites presenting a valid restaurant key.
 Each release zip carries an Ed25519 signature: the plugin installs a downloaded update only when the signature
 matches the public key it embeds. See [SECURITY.md](SECURITY.md).
+
+On a network where the plugin is active on sub-sites only, the network's update screen runs without the plugin, so
+nothing would check the signature there: it lists the new version without a package, to be installed by hand from the
+`.zip` of the release.
 
 ## Configuration
 
@@ -60,7 +65,7 @@ The plugin calls the Livia service at `https://chat.booking.wearelivia.com`. A s
 
 ```php
 define( 'LIVIA_SERVICE_URL', 'https://...' ); // Address the WordPress server calls.
-define( 'LIVIA_PUBLIC_URL', 'https://...' );  // Address visitors' browsers load scripts from; defaults to LIVIA_SERVICE_URL.
+define( 'LIVIA_PUBLIC_URL', 'https://...' );  // Address visitors' browsers load scripts and previews from; defaults to LIVIA_SERVICE_URL.
 ```
 
 ## Local development
@@ -101,13 +106,33 @@ npx wp-env run tests-cli --env-cwd=wp-content/plugins/livia-wordpress env LIVIA_
 ```
 
 The CI (`.github/workflows/ci.yml`) runs these checks under WordPress 6.5 with PHP 7.4 and WordPress 7.1 with
-PHP 8.3, and builds the zip.
+PHP 8.3 (the Elementor run under WordPress 7.1 only), and builds the zip.
 
 ### Translations
 
 Source strings are in English; the French translation is `languages/livia-fr_FR.po`. With wp-env started and the
 scripts built, `npm run i18n` updates `livia.pot` and `livia-fr_FR.po` and compiles the translations. Translate the new
 entries, then run it again.
+
+## Publishing a version
+
+1. Set the new version in `livia.php` (the `Version` header and `LIVIA_VERSION`) and as `Stable tag` in `readme.txt`.
+2. Merge to `main`, then push a tag `v<version>` on that commit.
+3. The Release workflow (`.github/workflows/release.yml`) builds `livia-<version>.zip` in a job without any secret,
+   then, in a second job that installs and builds nothing, checks the zip against the tag (`bin/check-zip.mjs`),
+   signs it (`bin/sign-zip.mjs`) and attaches the zip and `livia-<version>.zip.sig` (its detached Ed25519 signature,
+   base64) to the GitHub release of the tag. It fails when the tag is not on `main`, when the tag differs from the
+   plugin version, when the signing secret is missing, or when `Livia_Updater::SIGNING_KEY` is empty or does not
+   verify the signature.
+
+The second job runs in the GitHub environment `release`, which only accepts the tags `v*` and requires a reviewer's
+approval. The secret `LIVIA_WP_SIGNING_KEY`, the private key (the 32-byte Ed25519 seed in base64), is stored in that
+environment only, never in the repository's secrets. The matching public key (32 bytes in base64) is
+`Livia_Updater::SIGNING_KEY` in `includes/class-livia-updater.php`. To generate a pair:
+
+```bash
+node -e "const k=require('crypto').generateKeyPairSync('ed25519');console.log('LIVIA_WP_SIGNING_KEY', k.privateKey.export({format:'der',type:'pkcs8'}).subarray(16).toString('base64'));console.log('SIGNING_KEY', k.publicKey.export({format:'der',type:'spki'}).subarray(12).toString('base64'))"
+```
 
 ## Security
 
