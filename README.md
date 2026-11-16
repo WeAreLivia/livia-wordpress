@@ -45,8 +45,9 @@ conversational assistant without any code.
    pages, the address of its booking page, and its thresholds and paths. Each tab saves on its own.
 
 Deactivating the plugin turns the published group booking pages into drafts; activating it again publishes them
-again. On a multisite network, a network-wide deactivation or activation does so on every site. Removing a
-restaurant turns its page into a draft. Deleting the plugin leaves the pages as drafts and removes its settings.
+again. On a multisite network, a network-wide activation does so on every site, and a network-wide deactivation on
+every site that has not also activated the plugin for itself. Removing a restaurant turns its page into a
+draft. Deleting the plugin leaves the pages as drafts and removes its settings.
 
 ## Updates
 
@@ -55,8 +56,8 @@ Each release zip carries an Ed25519 signature: the plugin installs a downloaded 
 matches the public key it embeds. See [SECURITY.md](SECURITY.md).
 
 On a network where the plugin is active on sub-sites only, the network's update screen runs without the plugin, so
-nothing would check the signature there: it lists the new version without a package, to be installed by hand from the
-`.zip` of the release.
+nothing would check the signature there: it lists the new version without a package. Download the new version from your
+Livia space.
 
 ## Configuration
 
@@ -121,14 +122,14 @@ entries, then run it again.
 3. The Release workflow (`.github/workflows/release.yml`) builds `livia-<version>.zip` in a job without any secret,
    then, in a second job that installs and builds nothing, checks the zip against the tag (`bin/check-zip.mjs`),
    signs it (`bin/sign-zip.mjs`) and attaches the zip and `livia-<version>.zip.sig` (its detached Ed25519 signature,
-   base64) to the GitHub release of the tag. It fails when the tag is not on `main`, when the tag differs from the
-   plugin version, when the signing secret is missing, or when `Livia_Updater::SIGNING_KEY` is empty or does not
-   verify the signature.
+   base64) to the GitHub release of the tag. It stops at the first check that fails: the workflow and
+   `bin/build-zip.sh` list them.
 
 The second job runs in the GitHub environment `release`, which only accepts the tags `v*` and requires a reviewer's
 approval. The secret `LIVIA_WP_SIGNING_KEY`, the private key (the 32-byte Ed25519 seed in base64), is stored in that
 environment only, never in the repository's secrets. The matching public key (32 bytes in base64) is
-`Livia_Updater::SIGNING_KEY` in `includes/class-livia-updater.php`. To generate a pair:
+`Livia_Updater::SIGNING_KEY` in `includes/class-livia-updater.php`. To generate a pair, run this on a trusted machine, outside CI and any shared or recorded
+terminal. Store the seed directly as the secret `LIVIA_WP_SIGNING_KEY` of the `release` environment and keep no other copy:
 
 ```bash
 node -e "const k=require('crypto').generateKeyPairSync('ed25519');console.log('LIVIA_WP_SIGNING_KEY', k.privateKey.export({format:'der',type:'pkcs8'}).subarray(16).toString('base64'));console.log('SIGNING_KEY', k.publicKey.export({format:'der',type:'spki'}).subarray(12).toString('base64'))"
