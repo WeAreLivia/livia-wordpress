@@ -16,7 +16,7 @@
 			var field = select.closest( '[data-livia-field]' );
 			var follow = field && field.querySelector( '[data-livia-follow]' );
 			if ( follow ) {
-				follow.hidden = '' !== select.value;
+				follow.hidden = ( select.value || field.dataset.liviaAuto ) !== field.dataset.liviaShared;
 			}
 		} );
 	} );
@@ -242,8 +242,9 @@
 			select = phone;
 		}
 		var siteOn = form.querySelector( '[name="livia_site_on"]' );
-		// The page tab's empty choice follows the Livia booking page's widget; a bubble needs a widget of its own.
+		// The page tab's empty choice is the automatic widget; a bubble needs a widget of its own.
 		var shown = select && ( page || ( siteOn.checked && field( current, 'bubble_on' ).checked && select.value ) );
+		var widget = select && ( select.value || ( page && select.closest( '[data-livia-field]' ).dataset.liviaAuto ) );
 		// Printed only when the phone bar shows on the site, where it hides the bubble on phones.
 		var underBar = dialog.querySelector( '[data-livia-under-bar]' );
 		var barred = !! ( shown && underBar && frame.classList.contains( 'phone' ) );
@@ -253,8 +254,8 @@
 		shown = shown && ! barred;
 		var src = new URL( current.dataset.preview );
 		var address = current.dataset.address;
-		if ( shown && select.value ) {
-			src.searchParams.set( 'widget', select.value );
+		if ( shown && widget ) {
+			src.searchParams.set( 'widget', widget );
 		}
 		if ( page ) {
 			var headline = field( current, 'headline' ).value.trim();

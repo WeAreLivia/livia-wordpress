@@ -453,14 +453,27 @@ final class Livia_Service {
 	}
 
 	/**
-	 * The widget of a restaurant's group page: the one chosen, else the one of the restaurant's Livia booking page.
+	 * The widget of a restaurant's group page: the one chosen, else the automatic one, see auto_page_widget().
 	 *
 	 * @param string $id Restaurant id.
 	 * @return string
 	 */
 	public static function page_widget( $id ) {
 		$chosen = self::restaurant( $id )['page_widget'];
-		return '' !== $chosen ? $chosen : (string) self::connection( $id )['pageWidgetId'];
+		return '' !== $chosen ? $chosen : self::auto_page_widget( $id );
+	}
+
+	/**
+	 * The group page's widget when none is chosen: the Livia booking page's widget when it is an embedded conversation,
+	 * else the restaurant's first embedded conversation, else the Livia booking page's widget, bubble included.
+	 *
+	 * @param string $id Restaurant id.
+	 * @return string
+	 */
+	public static function auto_page_widget( $id ) {
+		$page    = (string) self::connection( $id )['pageWidgetId'];
+		$offered = Livia_Rules::widget_ids( self::widgets( $id, array( 'inline' ) ) );
+		return ! $offered || in_array( $page, $offered, true ) ? $page : $offered[0];
 	}
 
 	/**

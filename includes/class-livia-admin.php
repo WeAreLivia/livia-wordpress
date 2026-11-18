@@ -796,15 +796,21 @@ final class Livia_Admin {
 			}
 			$conflict = Livia_Group_Page::check_address( $slug, $id );
 			$widgets  = Livia_Service::widgets( $id, array( 'inline' ) );
-			// Without a choice, the page follows the Livia booking page's widget, which may be a bubble: the list offers
-			// it as such, so that saving the tab unchanged keeps it.
-			$default = Livia_Service::widget( (string) $view['connection']['pageWidgetId'] );
-			$follow  = array(
+			// The list is offered with an embedded conversation only, so its empty choice always names one.
+			$auto     = Livia_Service::auto_page_widget( $id );
+			$default  = Livia_Service::widget( $auto );
+			$follow   = array(
 				'id'          => '',
-				'name'        => __( 'Widget of your Livia booking page', 'livia' ),
+				'name'        => sprintf(
+					/* translators: %s: name of the embedded conversation the group page shows when none is chosen. */
+					__( 'Automatic: %s', 'livia' ),
+					$default['name'] ?? ''
+				),
 				'format'      => $default['format'] ?? '',
 				'description' => $default['description'] ?? array(),
 			);
+			$shared   = (string) $view['connection']['pageWidgetId'];
+			$fallback = '' !== $settings['page_widget'] && ! in_array( $settings['page_widget'], Livia_Rules::widget_ids( $widgets ), true );
 
 			$restaurants[ $id ] = array_merge(
 				$view,
@@ -827,7 +833,11 @@ final class Livia_Admin {
 					'page_widget'  => $settings['page_widget'],
 					'page_layout'  => $settings['page_layout'],
 					// Only a widget chosen here can be missing: the Livia booking page's widget is a default, and may be a bubble.
-					'fallback'     => '' !== $settings['page_widget'] && ! in_array( $settings['page_widget'], Livia_Rules::widget_ids( $widgets ), true ),
+					'fallback'     => $fallback,
+					'auto_widget'  => $auto,
+					'shared'       => $shared,
+					// The page counts its conversations with the Livia booking page's when it shows that same widget.
+					'follow'       => $fallback || Livia_Service::page_widget( $id ) === $shared,
 				)
 			);
 			++$index;

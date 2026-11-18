@@ -436,7 +436,12 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 						<div class="lv-card-h">
 							<div>
 								<h2 class="lv-h2" id="livia-cache"><?php esc_html_e( 'Cache and optimisation', 'livia' ); ?></h2>
-								<p class="lv-desc"><?php esc_html_e( 'On the whole site, Livia\'s scripts are excluded from these tools\' delay, defer, minification and combination, and the group booking pages from their page cache. Nothing is written in their settings: it all stops if you deactivate Livia.', 'livia' ); ?></p>
+								<p class="lv-desc">
+									<?php
+									/* translators: %s: names of the cache and optimisation tools, separated by commas. */
+									echo esc_html( sprintf( __( 'Supported tools: %s.', 'livia' ), implode( ', ', array_column( Livia_Cache::TOOLS, 'name' ) ) ) );
+									?>
+									<?php esc_html_e( 'On the whole site, Livia\'s scripts are excluded from these tools\' delay, defer, minification and combination, and the group booking pages from their page cache. Nothing is written in their settings: it all stops if you deactivate Livia.', 'livia' ); ?></p>
 							</div>
 							<?php if ( $view['tools'] ) : ?>
 								<span class="lv-tag t-ok"><i></i>
@@ -643,7 +648,7 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 								</div>
 								<div class="lv-row">
 									<label class="lv-lab" for="<?php echo esc_attr( $livia_field ); ?>-widget"><?php esc_html_e( 'Widget', 'livia' ); ?></label>
-									<div data-livia-field>
+									<div data-livia-field data-livia-auto="<?php echo esc_attr( $livia_r['auto_widget'] ); ?>" data-livia-shared="<?php echo esc_attr( $livia_r['shared'] ); ?>">
 										<?php if ( $livia_r['page_widgets'] ) : ?>
 											<?php $livia_select( $livia_field . '-widget', 'livia[' . $livia_id . '][page_widget]', $livia_r['page_widgets'], $livia_r['page_widget'] ); ?>
 										<?php else : ?>
@@ -653,8 +658,7 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 											<div class="lv-strip lv-alone s-warn"><?php echo Livia_Admin::icon( 'info' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup. ?><span><?php esc_html_e( 'The chosen widget no longer exists in Livia: the page shows the widget of your Livia booking page. Choose another widget, then save.', 'livia' ); ?></span></div>
 										<?php endif; ?>
 										<p class="lv-help"><?php esc_html_e( 'Embedded conversations of this restaurant, created and set in your Livia space; the page uses their settings as they are. Full screen widgets are not offered: they would cover the page.', 'livia' ); ?></p>
-										<?php $livia_follow = ! $livia_r['page_widgets'] || '' === $livia_r['page_widget'] || $livia_r['fallback']; ?>
-										<p class="lv-help" data-livia-follow<?php echo $livia_follow ? '' : ' hidden'; ?>><?php esc_html_e( 'Conversations from this page are counted together with those of your Livia booking page. To track them separately, create an embedded conversation in your Livia space.', 'livia' ); ?></p>
+										<p class="lv-help" data-livia-follow<?php echo $livia_r['follow'] ? '' : ' hidden'; ?>><?php esc_html_e( 'Conversations from this page are counted together with those of your Livia booking page. To track them separately, create an embedded conversation in your Livia space.', 'livia' ); ?></p>
 									</div>
 								</div>
 								<div class="lv-row">
