@@ -57,6 +57,20 @@ final class CacheTest extends Livia_TestCase {
 		$this->assertSame( 2, $this->page_calls() );
 	}
 
+	public function test_a_new_headline_or_widget_keeps_the_last_version_while_livia_is_down() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp">Version 1</div>' );
+		Livia_Service::group_page( 'r1' );
+		unset( $this->answers['/wordpress/v1/page'] );
+
+		Livia_Service::save_restaurant( 'r1', array( 'headline' => 'Vos événements' ) );
+		$this->new_request();
+		$this->assertSame( '<div class="livia-rp">Version 1</div>', Livia_Service::group_page( 'r1' )['html'] );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_other' ) );
+		$this->new_request();
+		$this->assertSame( '<div class="livia-rp">Version 1</div>', Livia_Service::group_page( 'r1' )['html'] );
+	}
+
 	public function test_a_refused_key_or_a_turned_off_connector_drops_the_last_version() {
 		$refusals = array(
 			array( 404, array( 'error' => 'unknown_key' ) ),

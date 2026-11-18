@@ -109,6 +109,21 @@ final class LandingTest extends Livia_TestCase {
 		$this->assertStringContainsString( 'wdg_page', do_blocks( $this->page->post_content ), 'the theme keeps its copy' );
 	}
 
+	public function test_a_landing_page_received_is_served_whatever_the_address_of_the_site_while_livia_does_not_answer() {
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		Livia_Service::forget_page( 'r1' );
+		$this->go_to( get_permalink( $this->page ) );
+		$this->assertStringContainsString( 'wdg_page', do_blocks( $this->page->post_content ) );
+
+		unset( $this->answers['/wordpress/v1/page'] );
+		$other = static fn() => 'https://other.example.test';
+		add_filter( 'home_url', $other );
+		$this->new_request();
+		$html = do_blocks( $this->page->post_content );
+		remove_filter( 'home_url', $other );
+		$this->assertStringContainsString( 'wdg_page', $html );
+	}
+
 	public function test_a_page_in_the_theme_keeps_every_script() {
 		$this->go_to( get_permalink( $this->page ) );
 		wp_enqueue_script( 'zenchef-sdk', 'https://sdk.zenchef.com/v1/sdk.min.js', array(), null, false );
