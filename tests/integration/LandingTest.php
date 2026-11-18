@@ -137,10 +137,12 @@ final class LandingTest extends Livia_TestCase {
 	}
 
 	public function test_a_landing_page_on_a_block_theme_prints_one_title_and_one_viewport() {
-		switch_theme( 'twentytwentyfive' );
+		switch_theme( 'twentytwentyfour' );
 		$GLOBALS['_wp_theme_features']['block-templates'] = true; // A block theme declares it when it loads, which switch_theme() does not replay.
 		remove_theme_support( 'title-tag' );
 		locate_block_template( '', 'page', array( 'page.php' ) ); // The template loader's own step: it hooks the block theme's title and viewport.
+		$this->assertNotFalse( has_action( 'wp_head', '_block_template_viewport_meta_tag' ), 'the block theme hooks its viewport' );
+		$this->assertNotFalse( has_action( 'wp_head', '_block_template_render_title_tag' ), 'the block theme hooks its title' );
 		$html = $this->landing_head();
 		$this->assertSame( 1, substr_count( $html, '<title>' ), 'one title' );
 		$this->assertSame( 1, substr_count( $html, 'name="viewport"' ), 'one viewport' );

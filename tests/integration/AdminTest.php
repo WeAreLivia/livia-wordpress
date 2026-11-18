@@ -749,7 +749,7 @@ final class AdminTest extends Livia_TestCase {
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- The tools' own names.
 		define( 'FLYING_PRESS_VERSION', '5.0' );
 		define( 'NITROPACK_VERSION', '1.18' );
-		class_alias( 'stdClass', 'WpFastestCache' );
+		class_alias( get_class( new class() {} ), 'WpFastestCache' ); // class_alias() refuses an internal class such as stdClass under PHP 7.4.
 		// phpcs:enable
 		Livia_Group_Page::publish( 'r1', 'reservation-groupe', 'Réservation de groupe' );
 		$this->as_role( 'administrator' );

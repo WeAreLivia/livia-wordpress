@@ -213,7 +213,8 @@ final class CacheTest extends Livia_TestCase {
 		$this->assertSame( $plain, $html );
 		preg_match( '#<script\b[^>]*>(.*?liviaGuests.*?)</script>#s', $html, $script );
 		$this->assertNotEmpty( $script );
-		$this->assertDoesNotMatchRegularExpression( '/[\[\]<]/', $script[1], 'no bracket for do_shortcode, no `<` for wptexturize' );
+		$body = preg_replace( '#^\s*/\* <!\[CDATA\[ \*/|/\* \]\]> \*/\s*$#', '', $script[1] ); // WordPress 6.5 wraps an inline script in a CDATA comment.
+		$this->assertDoesNotMatchRegularExpression( '/[\[\]<]/', $body, 'no bracket for do_shortcode, no `<` for wptexturize' );
 	}
 
 	public function test_a_site_updated_from_1_0_keeps_its_page_and_its_cache_key() {
