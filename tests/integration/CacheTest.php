@@ -180,8 +180,46 @@ final class CacheTest extends Livia_TestCase {
 		$this->assertSame( 1, $this->page_calls() );
 		$this->assertStringContainsString( 'couverts', $with );
 		$this->assertStringContainsString( 'setAttribute("guests"', $with );
-		$this->assertStringContainsString( 'if(n>=1&&999>=n&&n%1===0){', $with, 'wptexturize leaves the script body intact' );
+		$this->assertStringContainsString( 'if(liviaGuests>=1&&999>=liviaGuests&&liviaGuests%1===0){', $with, 'wptexturize leaves the script body intact' );
+		$this->assertStringContainsString( '.shadowRoot', $with, 'an isolated page keeps its conversation in a shadow root' );
 		$this->assertStringNotContainsString( '&#038;', $with );
 		$this->assertLessThan( strpos( $with, '<script' ), strpos( $with, '<livia-chat' ), 'the script follows the conversation it hands the number to' );
+	}
+
+	public function test_a_site_updated_from_1_0_keeps_its_page_and_its_cache_key() {
+		// Options as 1.0 saved them: neither the display mode nor the styles.
+		$this->assertArrayNotHasKey( 'page_layout', get_option( 'livia_restaurants' )['r1'] );
+		$this->assertArrayNotHasKey( 'page_styles', get_option( 'livia_settings' ) );
+		$this->assertSame( 'theme', Livia_Service::restaurant( 'r1' )['page_layout'] );
+		$this->assertSame( 'inherit', Livia_Service::settings()['page_styles'] );
+		$this->assertSame(
+			array(
+				'key'    => self::KEY,
+				'widget' => 'wdg_page',
+			),
+			Livia_Service::page_query( 'r1' )
+		);
+
+		$this->answers['/wordpress/v1/page'] = $this->page_answer();
+		Livia_Service::group_page( 'r1' );
+		$this->assertIsArray( get_transient( 'livia_page_' . md5( self::KEY . '|wdg_page' ) ), 'the transient 1.0 wrote' );
+		foreach ( array( 'layout', 'styles', 'home' ) as $argument ) {
+			$this->assertStringNotContainsString( $argument . '=', $this->calls[0] );
+		}
+	}
+
+	public function test_the_landing_mode_and_isolated_styles_are_asked_for_with_their_own_cache() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer();
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		Livia_Service::save_settings( array( 'page_styles' => 'isolated' ) );
+		Livia_Service::group_page( 'r1' );
+
+		$this->assertStringContainsString( 'layout=landing', $this->calls[0] );
+		$this->assertStringContainsString( 'styles=isolated', $this->calls[0] );
+		$this->assertStringContainsString( 'home=' . rawurlencode( home_url( '/' ) ), $this->calls[0] );
+		$this->assertFalse( get_transient( 'livia_page_' . md5( self::KEY . '|wdg_page' ) ) );
+
+		// A service that ignores the mode answers with the page for the theme: it is served as it comes.
+		$this->assertSame( '<div class="livia-rp">Livia</div>', Livia_Service::group_page( 'r1' )['html'] );
 	}
 }

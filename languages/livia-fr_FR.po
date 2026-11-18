@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Livia 1.0.0\n"
+"Project-Id-Version: Livia 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: Livia\n"
 "Language-Team: \n"
@@ -32,7 +32,7 @@ msgstr "https://www.wearelivia.com"
 msgid "Publishes your restaurant's Livia group booking page on your site, with its booking assistant, and places Livia widgets on your pages."
 msgstr "Publie sur votre site la page de réservation de groupe Livia de votre restaurant, avec son assistant de réservation, et place les widgets Livia sur vos pages."
 
-#: includes/class-livia-admin.php:73
+#: includes/class-livia-admin.php:75
 #: src/convives/index.js:25
 #: src/reserver/index.js:25
 #: src/widget/index.js:45
@@ -40,179 +40,179 @@ msgid "Settings"
 msgstr "Réglages"
 
 #. translators: 1: year, 2: "Livia".
-#: includes/class-livia-admin.php:86
+#: includes/class-livia-admin.php:88
 #, php-format
 msgid "© %1$s %2$s. All rights reserved."
 msgstr "© %1$s %2$s. Tous droits réservés."
 
-#: includes/class-livia-admin.php:89
+#: includes/class-livia-admin.php:91
 msgid "Help"
 msgstr "Assistance"
 
 #. translators: %s: plugin version.
-#: includes/class-livia-admin.php:96
+#: includes/class-livia-admin.php:98
 #, php-format
 msgid "Version %s"
 msgstr "Version %s"
 
-#: includes/class-livia-admin.php:170
+#: includes/class-livia-admin.php:172
 msgid "You are not allowed to change these settings."
 msgstr "Vous n'avez pas le droit de modifier ces réglages."
 
-#: includes/class-livia-admin.php:207
+#: includes/class-livia-admin.php:209
 msgid "Livia does not recognise this key. Check that you copied all of it from your Livia space."
 msgstr "Cette clé n'est pas reconnue par Livia. Vérifiez qu'elle est copiée en entier depuis votre espace Livia."
 
-#: includes/class-livia-admin.php:210
+#: includes/class-livia-admin.php:212
 msgid "Livia is not answering right now. Please try again in a few minutes."
 msgstr "Livia ne répond pas pour le moment. Réessayez dans quelques minutes."
 
-#: includes/class-livia-admin.php:364
+#: includes/class-livia-admin.php:369
 msgid "WordPress could not create the page. Please try again."
 msgstr "WordPress n'a pas pu créer la page. Réessayez."
 
-#: includes/class-livia-admin.php:430
+#: includes/class-livia-admin.php:467
 msgid "You are not allowed to move this content to the trash."
 msgstr "Vous n'avez pas le droit de mettre ce contenu à la corbeille."
 
 #. translators: %s: restaurant name.
-#: includes/class-livia-admin.php:464
+#: includes/class-livia-admin.php:501
 msgid "Group booking"
 msgstr "Réservation de groupe"
 
-#: includes/class-livia-admin.php:499
+#: includes/class-livia-admin.php:536
 msgid "Floating bubble"
 msgstr "Bulle flottante"
 
-#: includes/class-livia-admin.php:500
+#: includes/class-livia-admin.php:537
 msgid "Button in the page"
 msgstr "Bouton dans la page"
 
-#: includes/class-livia-admin.php:501
+#: includes/class-livia-admin.php:538
 msgid "Embedded conversation"
 msgstr "Conversation intégrée"
 
-#: includes/class-livia-admin.php:707
+#: includes/class-livia-admin.php:783
 msgctxt "default address of the group booking page"
 msgid "group-booking"
 msgstr "reservation-groupe"
 
 #. translators: %s: restaurant name.
-#: includes/class-livia-admin.php:735
+#: includes/class-livia-admin.php:811
 #, php-format
 msgid "%s is with you for your event."
 msgstr "%s vous accompagne pour votre événement."
 
-#: includes/class-livia-admin.php:736
+#: includes/class-livia-admin.php:812
 #: includes/views/settings.php:165
 msgid "Your restaurant"
 msgstr "Votre restaurant"
 
-#: includes/class-livia-group-page.php:155
+#: includes/class-livia-group-page.php:207
 msgid "This page is temporarily unavailable. Please try again a little later."
 msgstr "Cette page est momentanément indisponible. Merci de réessayer un peu plus tard."
 
-#: includes/class-livia-group-page.php:184
+#: includes/class-livia-group-page.php:238
 msgid "Your permalinks are set to “Plain”: WordPress cannot give the page a readable address. Choose another setting in Settings > Permalinks."
 msgstr "Vos permaliens sont réglés sur « Simple » : WordPress ne peut pas donner d'adresse lisible à la page. Choisissez un autre réglage dans Réglages > Permaliens."
 
-#: includes/class-livia-group-page.php:189
+#: includes/class-livia-group-page.php:243
 msgid "Enter an address."
 msgstr "Saisissez une adresse."
 
 #. translators: %s: category or tag name.
-#: includes/class-livia-group-page.php:236
+#: includes/class-livia-group-page.php:290
 #, php-format
 msgid "This address is already used by the category “%s”."
 msgstr "Cette adresse est déjà prise par la catégorie « %s »."
 
 #. translators: %s: category or tag name.
-#: includes/class-livia-group-page.php:236
+#: includes/class-livia-group-page.php:290
 #, php-format
 msgid "This address is already used by the tag “%s”."
 msgstr "Cette adresse est déjà prise par l'étiquette « %s »."
 
-#: includes/class-livia-group-page.php:245
+#: includes/class-livia-group-page.php:299
 msgid "This address matches a file or a folder of your server."
 msgstr "Cette adresse correspond à un fichier ou à un dossier de votre serveur."
 
-#: includes/class-livia-group-page.php:249
+#: includes/class-livia-group-page.php:303
 msgid "This address is reserved by WordPress."
 msgstr "Cette adresse est réservée par WordPress."
 
-#: includes/class-livia-group-page.php:252
+#: includes/class-livia-group-page.php:306
 msgid "This address is already used by WordPress or by another plugin."
 msgstr "Cette adresse est déjà utilisée par WordPress ou par une autre extension."
 
-#: includes/class-livia-group-page.php:264
+#: includes/class-livia-group-page.php:318
 msgid "(no title)"
 msgstr "(sans titre)"
 
 #. translators: %s: media file title.
-#: includes/class-livia-group-page.php:267
+#: includes/class-livia-group-page.php:321
 #, php-format
 msgid "This address is already used by the media file “%s”."
 msgstr "Cette adresse est déjà prise par le fichier « %s » de la médiathèque."
 
-#: includes/class-livia-group-page.php:271
+#: includes/class-livia-group-page.php:325
 msgctxt "page status"
 msgid "published"
 msgstr "publiée"
 
-#: includes/class-livia-group-page.php:272
+#: includes/class-livia-group-page.php:326
 msgctxt "page status"
 msgid "scheduled"
 msgstr "programmée"
 
-#: includes/class-livia-group-page.php:273
+#: includes/class-livia-group-page.php:327
 msgctxt "page status"
 msgid "private"
 msgstr "privée"
 
-#: includes/class-livia-group-page.php:274
+#: includes/class-livia-group-page.php:328
 msgctxt "page status"
 msgid "in the trash"
 msgstr "dans la corbeille"
 
 #. translators: 1: page title, 2: page status.
-#: includes/class-livia-group-page.php:277
+#: includes/class-livia-group-page.php:331
 #, php-format
 msgid "This address is already used by your page “%1$s” (%2$s)."
 msgstr "Cette adresse est déjà prise par votre page « %1$s » (%2$s)."
 
-#: includes/class-livia-group-page.php:280
+#: includes/class-livia-group-page.php:334
 msgctxt "post status"
 msgid "published"
 msgstr "publié"
 
-#: includes/class-livia-group-page.php:281
+#: includes/class-livia-group-page.php:335
 msgctxt "post status"
 msgid "scheduled"
 msgstr "programmé"
 
-#: includes/class-livia-group-page.php:282
+#: includes/class-livia-group-page.php:336
 msgctxt "post status"
 msgid "private"
 msgstr "privé"
 
-#: includes/class-livia-group-page.php:283
+#: includes/class-livia-group-page.php:337
 msgctxt "post status"
 msgid "in the trash"
 msgstr "dans la corbeille"
 
 #. translators: 1: post title, 2: post status.
-#: includes/class-livia-group-page.php:286
+#: includes/class-livia-group-page.php:340
 #, php-format
 msgid "This address is already used by your post “%1$s” (%2$s)."
 msgstr "Cette adresse est déjà prise par votre article « %1$s » (%2$s)."
 
 #. translators: 1: post title, 2: post status.
-#: includes/class-livia-group-page.php:286
+#: includes/class-livia-group-page.php:340
 #, php-format
 msgid "This address is already used by the content “%1$s” (%2$s)."
 msgstr "Cette adresse est déjà prise par le contenu « %1$s » (%2$s)."
 
-#: includes/class-livia-group-page.php:288
+#: includes/class-livia-group-page.php:342
 msgctxt "content status"
 msgid "draft"
 msgstr "brouillon"
@@ -225,12 +225,12 @@ msgstr "Aucun restaurant connecté"
 msgid "My Livia space"
 msgstr "Mon espace Livia"
 
-#: includes/views/settings.php:461
-#: includes/views/settings.php:472
+#: includes/views/settings.php:575
+#: includes/views/settings.php:586
 msgid "View the page"
 msgstr "Voir la page"
 
-#: includes/views/settings.php:425
+#: includes/views/settings.php:539
 msgid "Add a link to this page in your site's menu (Appearance > Menus, or Appearance > Editor for a block theme): the old page, moved to the trash, is no longer in it."
 msgstr "Ajoutez un lien vers cette page dans le menu de votre site (Apparence > Menus, ou Apparence > Éditeur pour un thème à blocs) : l'ancienne page, mise à la corbeille, n'y figure plus."
 
@@ -238,11 +238,11 @@ msgstr "Ajoutez un lien vers cette page dans le menu de votre site (Apparence > 
 msgid "The key links this plugin to your restaurant in Livia."
 msgstr "La clé relie cette extension à votre restaurant dans Livia."
 
-#: includes/views/settings.php:199
+#: includes/views/settings.php:200
 msgid "Connected"
 msgstr "Connecté"
 
-#: includes/views/settings.php:201
+#: includes/views/settings.php:202
 msgid "Connector turned off"
 msgstr "Connecteur désactivé"
 
@@ -261,152 +261,152 @@ msgstr "Connecter"
 #: includes/class-livia-elementor.php:81
 #: includes/class-livia-experience.php:260
 #: includes/views/experience.php:239
-#: includes/views/settings.php:560
+#: includes/views/settings.php:695
 #: src/restaurant-control.js:14
 msgid "Restaurant"
 msgstr "Restaurant"
 
-#: includes/views/settings.php:206
+#: includes/views/settings.php:207
 msgid "Change key"
 msgstr "Changer de clé"
 
-#: includes/views/settings.php:226
+#: includes/views/settings.php:227
 msgid "Livia is not answering right now: what you see dates from the last connection."
 msgstr "Livia ne répond pas pour le moment : les informations affichées datent de la dernière connexion."
 
-#: includes/views/settings.php:399
+#: includes/views/settings.php:513
 msgid "Group booking page"
 msgid_plural "Group booking pages"
 msgstr[0] "Page de réservation de groupe"
 msgstr[1] "Pages de réservation de groupe"
 
-#: includes/views/settings.php:400
+#: includes/views/settings.php:514
 msgid "A real page of your site, in your theme, with the Livia conversation on the right."
 msgid_plural "One page per connected restaurant, each at its own address, set and published separately."
 msgstr[0] "Une vraie page de votre site, dans votre thème, avec la conversation Livia à droite."
 msgstr[1] "Une page par restaurant connecté, chacune à son adresse, réglée et publiée séparément."
 
-#: includes/views/settings.php:432
+#: includes/views/settings.php:546
 msgid "Online"
 msgstr "En ligne"
 
-#: includes/views/settings.php:434
+#: includes/views/settings.php:548
 msgid "Address to free"
 msgstr "Adresse à libérer"
 
-#: includes/views/settings.php:436
+#: includes/views/settings.php:550
 msgid "Address to change"
 msgstr "Adresse à changer"
 
-#: includes/views/settings.php:410
-#: includes/views/settings.php:440
+#: includes/views/settings.php:524
+#: includes/views/settings.php:554
 msgid "Not published yet"
 msgstr "Pas encore publiée"
 
 #: includes/views/experience.php:445
-#: includes/views/settings.php:446
+#: includes/views/settings.php:560
 msgid "Address"
 msgstr "Adresse"
 
-#: includes/views/settings.php:457
+#: includes/views/settings.php:571
 msgid "Open the permalink settings"
 msgstr "Ouvrir les réglages des permaliens"
 
-#: includes/views/settings.php:461
+#: includes/views/settings.php:575
 msgid "Page online at this address."
 msgstr "Page en ligne à cette adresse."
 
-#: includes/views/settings.php:463
+#: includes/views/settings.php:577
 msgid "Address available."
 msgstr "Adresse disponible."
 
-#: includes/views/settings.php:469
+#: includes/views/settings.php:583
 msgid "View the trash"
 msgstr "Voir la corbeille"
 
-#: includes/views/settings.php:475
+#: includes/views/settings.php:589
 msgid "Edit the page"
 msgstr "Modifier la page"
 
-#: includes/views/settings.php:478
+#: includes/views/settings.php:592
 msgid "Move to trash"
 msgstr "Mettre à la corbeille"
 
 #. translators: %d: number of days the trash keeps a content.
-#: includes/views/settings.php:491
+#: includes/views/settings.php:605
 #, php-format
 msgid "To keep this address, move the old page to the trash: existing links and search engines will lead to the new page. The trash keeps it %d day."
 msgid_plural "To keep this address, move the old page to the trash: existing links and search engines will lead to the new page. The trash keeps it %d days."
 msgstr[0] "Pour garder cette adresse, mettez l'ancienne page à la corbeille : les liens existants et les moteurs de recherche mèneront à la nouvelle page. La corbeille la garde %d jour."
 msgstr[1] "Pour garder cette adresse, mettez l'ancienne page à la corbeille : les liens existants et les moteurs de recherche mèneront à la nouvelle page. La corbeille la garde %d jours."
 
-#: includes/views/settings.php:502
+#: includes/views/settings.php:616
 msgid "Page title"
 msgstr "Titre de la page"
 
-#: includes/views/settings.php:509
+#: includes/views/settings.php:623
 msgid "Headline"
 msgstr "Accroche"
 
 #. translators: %s: default headline.
-#: includes/views/settings.php:517
+#: includes/views/settings.php:631
 #, php-format
 msgid "The title of the page's banner. Left empty: “%s”"
 msgstr "Le titre du bandeau de la page. Laissé vide : « %s »"
 
 #: includes/class-livia-elementor-widget.php:91
 #: includes/views/experience.php:376
-#: includes/views/settings.php:526
+#: includes/views/settings.php:641
 #: src/editor-panel.js:63
 #: src/widget/index.js:49
 msgid "Widget"
 msgstr "Widget"
 
-#: includes/views/settings.php:577
+#: includes/views/settings.php:712
 msgid "No widget can be offered: create one in your Livia space."
 msgstr "Aucun widget ne peut être proposé : créez-en un dans votre espace Livia."
 
-#: includes/views/settings.php:534
+#: includes/views/settings.php:649
 msgid "The chosen widget no longer exists in Livia: the page shows the widget of your Livia booking page. Choose another widget, then save."
 msgstr "Le widget choisi n'existe plus dans Livia : la page affiche celui de votre page de réservation Livia. Choisissez un autre widget, puis enregistrez."
 
 #: includes/views/settings.php:173
-#: includes/views/settings.php:233
+#: includes/views/settings.php:234
 #: src/editor-panel.js:81
 msgid "Site widget"
 msgstr "Widget du site"
 
-#: includes/views/settings.php:265
+#: includes/views/settings.php:287
 msgid "A chat bubble on the pages of your site, without pasting code in the theme."
 msgid_plural "One bubble per restaurant, each on its own pages. A page shows only one bubble."
 msgstr[0] "Une bulle de conversation sur les pages de votre site, sans code à coller dans le thème."
 msgstr[1] "Une bulle par restaurant, chacune sur ses pages. Sur une page, une seule bulle s'affiche."
 
 #. translators: %d: number of pages.
-#: includes/views/settings.php:296
+#: includes/views/settings.php:318
 #, php-format
 msgid "Shown on %d page"
 msgid_plural "Shown on %d pages"
 msgstr[0] "Affichée sur %d page"
 msgstr[1] "Affichée sur %d pages"
 
-#: includes/views/settings.php:344
+#: includes/views/settings.php:366
 msgid "Show on"
 msgstr "Afficher sur"
 
-#: includes/views/settings.php:349
+#: includes/views/settings.php:371
 msgid "All pages"
 msgstr "Toutes les pages"
 
-#: includes/views/settings.php:350
+#: includes/views/settings.php:372
 msgid "All, except"
 msgstr "Toutes, sauf"
 
-#: includes/views/settings.php:351
+#: includes/views/settings.php:373
 msgid "Only"
 msgstr "Seulement"
 
-#: includes/views/settings.php:369
+#: includes/views/settings.php:391
 msgid "The group booking page never shows this bubble: it already has its conversation. Each page can also choose another widget, or none, in the Livia panel of the editor."
 msgstr "La page de réservation de groupe n'affiche jamais cette bulle : elle a déjà sa conversation. Chaque page peut aussi choisir un autre widget, ou aucun, dans le panneau Livia de l'éditeur."
 
@@ -512,19 +512,19 @@ msgctxt "block keyword"
 msgid "booking"
 msgstr "réservation"
 
-#: includes/class-livia-admin.php:208
+#: includes/class-livia-admin.php:210
 msgid "The WordPress connector of this restaurant is turned off in Livia: the plugin no longer receives anything. Turn it on again in your Livia space, Connectors section."
 msgstr "Le connecteur WordPress de ce restaurant est désactivé dans Livia : l'extension ne reçoit plus rien. Réactivez-le dans votre espace Livia, rubrique Connecteurs."
 
-#: includes/class-livia-admin.php:443
+#: includes/class-livia-admin.php:480
 msgid "This site has no trash for media files: the file would be hidden with no way to restore it. Choose another address, or delete the file yourself."
 msgstr "Ce site n'a pas de corbeille pour les médias : le fichier serait masqué sans moyen de le restaurer. Choisissez une autre adresse, ou supprimez ce fichier vous-même."
 
-#: includes/class-livia-admin.php:444
+#: includes/class-livia-admin.php:481
 msgid "This site empties its trash at once: the old content would be deleted for good. Choose another address, or delete the content yourself."
 msgstr "Ce site vide sa corbeille immédiatement : l'ancien contenu serait supprimé définitivement. Choisissez une autre adresse, ou supprimez ce contenu vous-même."
 
-#: includes/class-livia-admin.php:563
+#: includes/class-livia-admin.php:600
 msgid "Meanwhile, the group booking page shows a short notice instead of its content."
 msgstr "En attendant, la page de réservation de groupe affiche un court message à la place de son contenu."
 
@@ -532,25 +532,25 @@ msgstr "En attendant, la page de réservation de groupe affiche un court message
 msgid "You will find it in your Livia space, Connectors section, on the WordPress connector. It is only used to find your restaurant and its public widgets: it gives access to no data."
 msgstr "Vous la trouvez dans votre espace Livia, rubrique Connecteurs, sur le connecteur WordPress. Elle sert seulement à retrouver votre restaurant et ses widgets publics : elle ne donne accès à aucune donnée."
 
-#: includes/class-livia-admin.php:209
+#: includes/class-livia-admin.php:211
 msgid "This restaurant is already connected."
 msgstr "Ce restaurant est déjà connecté."
 
 #. translators: %s: restaurant name.
-#: includes/class-livia-admin.php:464
+#: includes/class-livia-admin.php:501
 #, php-format
 msgid "Group booking, %s"
 msgstr "Réservation de groupe, %s"
 
 #. translators: %s: restaurant name (in French, already preceded by "de" and contracted).
-#: includes/class-livia-group-page.php:219
+#: includes/class-livia-group-page.php:273
 #, php-format
 msgid "This address is already used by the group booking page of %s."
 msgstr "Cette adresse est déjà prise par la page de réservation de groupe %s."
 
 #. translators: %s: masked key.
 #: includes/views/settings.php:87
-#: includes/views/settings.php:194
+#: includes/views/settings.php:195
 #, php-format
 msgid "Key %s"
 msgstr "Clé %s"
@@ -577,172 +577,168 @@ msgid "Livia on your site"
 msgstr "Livia sur votre site"
 
 #: includes/views/settings.php:172
-#: includes/views/settings.php:230
+#: includes/views/settings.php:231
 msgid "Livia settings"
 msgstr "Réglages Livia"
 
 #: includes/views/settings.php:174
-#: includes/views/settings.php:234
+#: includes/views/settings.php:235
 msgid "Booking page"
 msgstr "Page de réservation"
 
-#: includes/views/settings.php:177
+#: includes/views/settings.php:178
 msgid "The settings open once the restaurant is connected."
 msgstr "Les réglages s'ouvrent une fois le restaurant connecté."
 
-#: includes/views/settings.php:182
+#: includes/views/settings.php:183
 msgid "Connected restaurants"
 msgstr "Restaurants connectés"
 
-#: includes/views/settings.php:183
+#: includes/views/settings.php:184
 msgid "Add a restaurant"
 msgstr "Ajouter un restaurant"
 
-#: includes/views/settings.php:203
+#: includes/views/settings.php:204
 msgid "Key refused"
 msgstr "Clé refusée"
 
-#: includes/views/settings.php:207
+#: includes/views/settings.php:208
 msgid "Remove this restaurant? Its group booking page goes back to draft and its bubble leaves the site."
 msgstr "Retirer ce restaurant ? Sa page de réservation de groupe repasse en brouillon et sa bulle quitte le site."
 
 #: includes/views/experience.php:74
-#: includes/views/settings.php:212
+#: includes/views/settings.php:213
 msgid "Remove"
 msgstr "Retirer"
 
-#: includes/views/settings.php:233
+#: includes/views/settings.php:234
 msgctxt "site widget tab"
 msgid "turned off"
 msgstr "désactivé"
 
-#: includes/views/settings.php:234
+#: includes/views/settings.php:235
 msgctxt "booking page tab"
 msgid "turned off"
 msgstr "désactivée"
 
-#: includes/views/settings.php:246
+#: includes/views/settings.php:249
 msgid "See the preview"
 msgstr "Voir l'aperçu"
 
-#: includes/views/settings.php:252
+#: includes/views/settings.php:256
 msgid "Changes saved"
 msgstr "Modifications enregistrées"
 
-#: includes/views/settings.php:264
+#: includes/views/settings.php:286
 msgid "Site bubble"
 msgid_plural "Site widgets"
 msgstr[0] "Bulle du site"
 msgstr[1] "Widgets du site"
 
-#: includes/views/settings.php:268
-#: includes/views/settings.php:277
+#: includes/views/settings.php:290
+#: includes/views/settings.php:299
 msgid "Turned on"
 msgstr "Activé"
 
-#: includes/views/settings.php:270
-#: includes/views/settings.php:277
+#: includes/views/settings.php:292
+#: includes/views/settings.php:299
 msgid "Turned off"
 msgstr "Désactivé"
 
 #: includes/views/experience.php:162
-#: includes/views/settings.php:275
+#: includes/views/settings.php:297
 msgid "On the site"
 msgstr "Sur le site"
 
-#: includes/views/settings.php:278
+#: includes/views/settings.php:300
 msgid "Turned off, no bubble shows. The widgets placed in your pages stay: they are part of their content."
 msgstr "Désactivé, aucune bulle ne s'affiche. Les widgets posés dans vos pages restent affichés : ils font partie de leur contenu."
 
-#: includes/views/settings.php:284
+#: includes/views/settings.php:306
 msgid "A page a restaurant chose under “Only” shows that restaurant's bubble: it appears greyed out for the other restaurants, with its name."
 msgstr "Une page choisie par un restaurant avec « Seulement » affiche sa bulle à lui : elle apparaît grisée chez les autres restaurants, avec son nom."
 
-#: includes/views/settings.php:300
+#: includes/views/settings.php:322
 msgid "Bubble on"
 msgstr "Bulle activée"
 
-#: includes/views/settings.php:300
+#: includes/views/settings.php:322
 msgid "Bubble off"
 msgstr "Bulle désactivée"
 
-#: includes/views/settings.php:324
+#: includes/views/settings.php:346
 msgid "Among the bubbles of this restaurant."
 msgstr "Parmi les bulles de ce restaurant."
 
-#: includes/views/settings.php:326
+#: includes/views/settings.php:348
 msgid "This restaurant has no bubble widget: create one in your Livia space."
 msgstr "Ce restaurant n'a aucun widget en bulle : créez-en un dans votre espace Livia."
 
 #: includes/views/experience.php:502
-#: includes/views/settings.php:373
+#: includes/views/settings.php:395
 msgid "In your pages"
 msgstr "Dans vos pages"
 
 #. translators: %d: number of pages.
-#: includes/views/settings.php:406
+#: includes/views/settings.php:520
 #, php-format
 msgid "%d page online"
 msgid_plural "%d pages online"
 msgstr[0] "%d page en ligne"
 msgstr[1] "%d pages en ligne"
 
-#: includes/views/settings.php:413
+#: includes/views/settings.php:527
 msgid "Turned off, a page goes back to draft: it is no longer visible, and comes back at the same address when you turn it on again."
 msgstr "Désactivée, la page repasse en brouillon : elle n'est plus visible, et revient à la même adresse quand vous la réactivez."
 
-#: includes/views/settings.php:438
+#: includes/views/settings.php:552
 msgid "Draft"
 msgstr "Brouillon"
 
-#: includes/views/settings.php:442
+#: includes/views/settings.php:556
 msgid "Published"
 msgstr "Publiée"
 
-#: includes/views/settings.php:442
+#: includes/views/settings.php:556
 msgid "Not published"
 msgstr "Non publiée"
 
-#: includes/views/settings.php:505
-msgid "Shown by your theme at the top of the page, in the browser tab and in search engine results."
-msgstr "Affiché par votre thème en haut de la page, dans l'onglet du navigateur et dans les résultats des moteurs de recherche."
-
-#: includes/views/settings.php:536
+#: includes/views/settings.php:651
 msgid "Embedded conversations of this restaurant, created and set in your Livia space; the page uses their settings as they are. Full screen widgets are not offered: they would cover the page."
 msgstr "Les conversations intégrées de ce restaurant, créées et réglées dans votre espace Livia ; la page reprend leurs réglages tels quels. Les widgets en plein écran ne sont pas proposés : ils couvriraient la page."
 
-#: includes/views/settings.php:544
+#: includes/views/settings.php:671
 msgid "Visible on the site once saved."
 msgstr "Visible sur le site dès l'enregistrement."
 
-#: includes/views/settings.php:545
+#: includes/views/settings.php:672
 msgid "Save"
 msgstr "Enregistrer"
 
-#: includes/views/settings.php:558
-#: includes/views/settings.php:574
+#: includes/views/settings.php:693
+#: includes/views/settings.php:709
 msgid "Preview"
 msgstr "Aperçu"
 
-#: includes/views/settings.php:566
+#: includes/views/settings.php:701
 msgid "Device"
 msgstr "Appareil"
 
-#: includes/views/settings.php:567
+#: includes/views/settings.php:702
 msgid "Computer"
 msgstr "Ordinateur"
 
 #: includes/views/experience.php:438
-#: includes/views/settings.php:568
+#: includes/views/settings.php:703
 msgid "Phone"
 msgstr "Téléphone"
 
 #: includes/class-livia-experience.php:294
-#: includes/views/settings.php:570
+#: includes/views/settings.php:705
 msgid "Close"
 msgstr "Fermer"
 
-#: includes/views/settings.php:577
+#: includes/views/settings.php:712
 msgid "No bubble shows with these settings."
 msgstr "Aucune bulle ne s'affiche avec ces réglages."
 
@@ -764,7 +760,7 @@ msgstr "modifier ce widget dans Livia"
 msgid "The buttons and embedded conversations of your connected restaurants. Label, colors and shape: %s."
 msgstr "Les boutons et conversations intégrées de vos restaurants connectés. Libellé, couleurs et forme : %s."
 
-#: includes/views/settings.php:385
+#: includes/views/settings.php:407
 msgid "The buttons and embedded conversations of this restaurant, offered as they are in Elementor, the block editor and the shortcode. Nothing to set here."
 msgstr "Les boutons et conversations intégrées de ce restaurant, proposés tels quels dans Elementor, l'éditeur de blocs et le code court. Rien à régler ici."
 
@@ -1061,7 +1057,7 @@ msgstr "Ce sont les seuils de votre restaurant. La fenêtre les affiche au visit
 
 #: includes/views/experience.php:151
 #: includes/views/settings.php:175
-#: includes/views/settings.php:235
+#: includes/views/settings.php:236
 msgid "Booking experience"
 msgstr "Expérience de réservation"
 
@@ -1304,7 +1300,7 @@ msgid "On phones, a “Book a table” bar fixed at the bottom of the screen"
 msgstr "Sur téléphone, barre « Réserver une table » fixée en bas de l'écran"
 
 #: includes/views/experience.php:476
-#: includes/views/settings.php:579
+#: includes/views/settings.php:714
 msgid "On phones, the bubble gives way to the “Book a table” bar on the pages where it shows."
 msgstr "Sur téléphone, la bulle laisse la place à la barre « Réserver une table » sur les pages où celle-ci s'affiche."
 
@@ -1361,18 +1357,19 @@ msgid_plural "The widgets, the group booking pages and the booking experience of
 msgstr[0] "Le widget, la page de réservation de groupe et l'expérience de réservation de votre restaurant, sans toucher au code."
 msgstr[1] "Les widgets, les pages de réservation de groupe et l'expérience de réservation de vos restaurants, sans toucher au code."
 
-#: includes/views/settings.php:235
+#: includes/views/settings.php:236
 msgctxt "booking experience tab"
 msgid "turned off"
 msgstr "désactivée"
 
 #: includes/views/experience.php:275
-#: includes/views/settings.php:380
+#: includes/views/settings.php:402
+#: includes/views/settings.php:462
 msgid "Copied"
 msgstr "Copié"
 
 #: includes/views/experience.php:275
-#: includes/views/settings.php:380
+#: includes/views/settings.php:402
 msgid "Copy the shortcode"
 msgstr "Copier le code court"
 
@@ -1487,39 +1484,39 @@ msgstr "Sélecteur de convives"
 msgid "For the other page builders and the classic editor: they open the window on this restaurant."
 msgstr "Pour les autres constructeurs de pages et l'éditeur classique : ils ouvrent la fenêtre sur ce restaurant."
 
-#: includes/views/settings.php:463
+#: includes/views/settings.php:577
 msgid "Address available. The page goes online when you save."
 msgstr "Adresse disponible. La page se publie à l'enregistrement."
 
-#: includes/views/settings.php:531
+#: includes/views/settings.php:646
 msgid "This restaurant has no embedded conversation: the page shows the widget of your Livia booking page. To choose another one, create an embedded conversation in your Livia space."
 msgstr "Ce restaurant n'a pas de conversation intégrée : la page affiche le widget de votre page de réservation Livia. Pour en choisir un autre, créez une conversation intégrée dans votre espace Livia."
 
-#: includes/views/settings.php:558
+#: includes/views/settings.php:693
 msgid "Preview of the booking experience"
 msgstr "Aperçu de l'expérience de réservation"
 
-#: includes/views/settings.php:576
+#: includes/views/settings.php:711
 msgid "The preview follows the settings in progress, even before saving. With several restaurants, the window first shows the choice of the restaurant."
 msgstr "L'aperçu suit les réglages en cours, même avant l'enregistrement. Avec plusieurs restaurants, la fenêtre montre d'abord le choix du restaurant."
 
-#: includes/class-livia-admin.php:716
+#: includes/class-livia-admin.php:792
 msgid "Widget of your Livia booking page"
 msgstr "Widget de votre page de réservation Livia"
 
-#: includes/views/settings.php:304
+#: includes/views/settings.php:326
 msgid "On desktop"
 msgstr "Sur ordinateur"
 
-#: includes/views/settings.php:332
+#: includes/views/settings.php:354
 msgid "On phone"
 msgstr "Sur téléphone"
 
-#: includes/views/settings.php:334
+#: includes/views/settings.php:356
 msgid "The same widget"
 msgstr "Le même widget"
 
-#: includes/views/settings.php:335
+#: includes/views/settings.php:357
 msgid "A more discreet bubble on phone: choose a compact widget here. Its margins are the ones set in Livia."
 msgstr "Une bulle plus discrète sur téléphone : choisissez ici un widget compact. Ses marges sont celles réglées dans Livia."
 
@@ -1529,7 +1526,7 @@ msgstr "Une bulle plus discrète sur téléphone : choisissez ici un widget comp
 msgid "%s: a value was refused and the saved one is kept. Open this restaurant below to correct it."
 msgstr "%s : une valeur a été refusée, la valeur enregistrée est conservée. Ouvrez ce restaurant plus bas pour la corriger."
 
-#: includes/views/settings.php:337
+#: includes/views/settings.php:359
 msgid "On the pages where the “Book a table” bar shows, the bubble gives way to the bar."
 msgstr "Sur les pages où la barre « Réserver une table » s'affiche, la bulle laisse la place à la barre."
 
@@ -1541,11 +1538,11 @@ msgstr "Cette mise à jour n'est plus celle que propose Livia. Recherchez à nou
 msgid "The downloaded update does not carry the Livia signature: it was not installed. Try again later, or download the new version from your Livia space."
 msgstr "La mise à jour téléchargée ne porte pas la signature de Livia : elle n'a pas été installée. Réessayez plus tard, ou téléchargez la nouvelle version depuis votre espace Livia."
 
-#: includes/views/settings.php:309
+#: includes/views/settings.php:331
 msgid "No bubble chosen"
 msgstr "Aucune bulle choisie"
 
-#: includes/views/settings.php:310
+#: includes/views/settings.php:332
 msgid "Chosen widget not found"
 msgstr "Widget choisi introuvable"
 
@@ -1557,11 +1554,11 @@ msgstr "La mise à jour téléchargée n'est pas la version qu'annonce Livia : e
 msgid "The downloaded update is not newer than the installed version of the Livia plugin: it was not installed."
 msgstr "La mise à jour téléchargée n'est pas plus récente que la version installée de l'extension Livia : elle n'a pas été installée."
 
-#: includes/views/settings.php:318
+#: includes/views/settings.php:340
 msgid "The widget chosen for desktop no longer exists in Livia: this restaurant's bubble no longer shows on desktop or on phone. Choose another one and save."
 msgstr "Le widget choisi pour l'ordinateur n'existe plus dans Livia : la bulle de ce restaurant ne s'affiche plus ni sur ordinateur ni sur téléphone. Choisissez-en un autre et enregistrez."
 
-#: includes/views/settings.php:317
+#: includes/views/settings.php:339
 msgid "The widget chosen for desktop no longer exists in Livia: this restaurant's bubble no longer shows on desktop. Choose another one and save."
 msgstr "Le widget choisi pour l'ordinateur n'existe plus dans Livia : la bulle de ce restaurant ne s'affiche plus sur ordinateur. Choisissez-en un autre et enregistrez."
 
@@ -1571,10 +1568,172 @@ msgstr "Le widget choisi pour l'ordinateur n'existe plus dans Livia : la bulle d
 msgid "%1$s on desktop, %2$s on phone"
 msgstr "%1$s sur ordinateur, %2$s sur téléphone"
 
-#: includes/views/settings.php:316
+#: includes/views/settings.php:338
 msgid "The widget chosen for desktop no longer exists in Livia. Choose another one before you turn this restaurant's bubble on, then save."
 msgstr "Le widget choisi pour l'ordinateur n'existe plus dans Livia. Choisissez-en un autre avant d'activer la bulle de ce restaurant, puis enregistrez."
 
 #: includes/views/experience.php:31
 msgid "The header of your block theme has no menu the plugin can add to. Open Appearance > Editor > Navigation and add a custom link to #reserver, labelled “Book a table”."
 msgstr "L'en-tête de votre thème à blocs n'a aucun menu auquel l'extension peut ajouter un lien. Ouvrez Apparence > Éditeur > Navigation et ajoutez un lien personnalisé vers #reserver, intitulé « Réserver une table »."
+
+#: includes/views/settings.php:176
+#: includes/views/settings.php:237
+#: includes/views/settings.php:260
+msgid "Advanced settings"
+msgstr "Paramètres avancés"
+
+#. translators: %s: names of the cache tools, separated by commas.
+#: includes/views/settings.php:270
+#, php-format
+msgid "Cache cleared: %s."
+msgstr "Cache vidé : %s."
+
+#: includes/views/settings.php:271
+msgid "No cache to clear."
+msgstr "Aucun cache à vider."
+
+#: includes/views/settings.php:422
+msgid "Minification"
+msgstr "Minification"
+
+#: includes/views/settings.php:423
+msgid "Combination"
+msgstr "Combinaison"
+
+#: includes/views/settings.php:429
+msgid "Applied automatically"
+msgstr "Appliquée automatiquement"
+
+#: includes/views/settings.php:430
+msgid "To copy into its settings"
+msgstr "À recopier dans ses réglages"
+
+#: includes/views/settings.php:431
+msgid "Not done by this tool"
+msgstr "Sans objet pour cet outil"
+
+#: includes/views/settings.php:438
+msgid "Cache and optimisation"
+msgstr "Cache et optimisation"
+
+#. translators: %d: number of tools.
+#: includes/views/settings.php:445
+#, php-format
+msgid "%d tool detected"
+msgid_plural "%d tools detected"
+msgstr[0] "%d outil détecté"
+msgstr[1] "%d outils détectés"
+
+#: includes/views/settings.php:449
+msgid "No tool detected"
+msgstr "Aucun outil détecté"
+
+#: includes/views/settings.php:462
+msgid "Copy the rule"
+msgstr "Copier la règle"
+
+#: includes/views/settings.php:479
+msgid "Cache"
+msgstr "Cache"
+
+#: includes/views/settings.php:481
+msgid "Clear the cache"
+msgstr "Vider le cache"
+
+#: includes/views/settings.php:482
+msgid "No cache or optimisation tool detected on this site."
+msgstr "Aucun outil de cache ou d'optimisation détecté sur ce site."
+
+#: includes/views/settings.php:490
+msgid "Group booking page styles"
+msgstr "Styles de la page groupe"
+
+#: includes/views/settings.php:491
+msgid "For the group booking pages of every restaurant, in both display modes."
+msgstr "Pour les pages groupe de tous les restaurants, dans les deux modes d'affichage."
+
+#: includes/views/settings.php:496
+msgid "Styles"
+msgstr "Styles"
+
+#: includes/views/settings.php:499
+msgid "Inherit from the site"
+msgstr "Hériter du site"
+
+#: includes/views/settings.php:500
+msgid "Isolated"
+msgstr "Isolée"
+
+#: includes/views/settings.php:502
+msgid "Inherit from the site: your site's styles also apply to the page. Isolated: the page keeps Livia's styles, out of reach of your site's CSS; the rest of your site, cookie banner included, keeps its own."
+msgstr "Hériter du site : les styles de votre site s'appliquent aussi à la page. Isolée : la page garde les styles de Livia, hors d'atteinte du CSS de votre site ; le reste de votre site, bandeau de cookies compris, garde les siens."
+
+#: includes/views/settings.php:636
+msgid "A landing page shows the title of your Livia booking page instead."
+msgstr "En landing page, la page affiche à la place le titre de votre page Livia."
+
+#: includes/views/settings.php:653
+msgid "Conversations from this page are counted together with those of your Livia booking page. To track them separately, create an embedded conversation in your Livia space."
+msgstr "Les conversations de cette page sont comptées avec celles de votre page Livia. Pour les suivre à part, créez une conversation intégrée dans votre espace Livia."
+
+#: includes/views/settings.php:657
+msgid "Display mode"
+msgstr "Mode d'affichage"
+
+#: includes/views/settings.php:660
+msgid "Inside the theme"
+msgstr "Intégré au thème"
+
+#: includes/views/settings.php:661
+msgid "Landing page"
+msgstr "Landing page"
+
+#: includes/views/settings.php:420
+msgid "Script delay"
+msgstr "Retardement des scripts"
+
+#: includes/views/settings.php:421
+msgid "Script defer"
+msgstr "Différé des scripts"
+
+#: includes/views/settings.php:424
+msgid "Group booking page cache"
+msgstr "Cache de la page groupe"
+
+#: includes/views/settings.php:439
+msgid "On the whole site, Livia's scripts are excluded from these tools' delay, defer, minification and combination, and the group booking pages from their page cache. Nothing is written in their settings: it all stops if you deactivate Livia."
+msgstr "Sur tout le site, les scripts de Livia sont exclus du retardement, du différé, de la minification et de la combinaison de ces outils, et les pages groupe de leur cache de pages. Rien n'est écrit dans leurs réglages : tout s'arrête si vous désactivez Livia."
+
+#. translators: %s: name of the cache tool.
+#: includes/views/settings.php:471
+#, php-format
+msgid "%s offers no hook for some of these rules: paste each copied rule into its exclusion settings, one line per entry."
+msgstr "%s n'offre aucun point d'accroche pour certaines de ces règles : collez chaque règle copiée dans ses réglages d'exclusion, une ligne par entrée."
+
+#: includes/views/settings.php:482
+msgid "Clears the detected tools' cache so that every page is rebuilt with these rules."
+msgstr "Vide le cache des outils détectés, pour que chaque page soit reconstruite avec ces règles."
+
+#: includes/views/settings.php:619
+msgid "Shown by your theme at the top of the page (inside the theme only), in the browser tab and in search engine results."
+msgstr "Affiché par votre thème en haut de la page (en mode intégré au thème seulement), dans l'onglet du navigateur et dans les résultats des moteurs de recherche."
+
+#: includes/views/settings.php:663
+msgid "Inside the theme: the page keeps your theme's header and footer. Landing page: the page stands alone, like your Livia booking page, with a link back to your site; your site's scripts still load, except other booking tools' widgets."
+msgstr "Intégré au thème : la page garde l'en-tête et le pied de page de votre thème. Landing page : la page s'affiche seule, comme votre page Livia, avec un lien de retour vers votre site ; les scripts de votre site restent chargés, sauf les widgets des autres outils de réservation."
+
+#: includes/views/settings.php:260
+msgid "Pages your cache tools already hold do not reflect the latest Livia changes yet: clear their cache to apply them."
+msgstr "Les pages déjà en cache dans vos outils de cache ne reflètent pas encore les derniers changements de Livia : videz leur cache pour les appliquer."
+
+#: includes/views/settings.php:425
+msgid "Stylesheet optimisation"
+msgstr "Optimisation des styles"
+
+#: includes/views/settings.php:426
+msgid "Image lazy loading on the group booking page"
+msgstr "Chargement différé des images de la page groupe"
+
+#: includes/views/settings.php:432
+msgid "Left to the attributes Livia puts on its images"
+msgstr "Confiée aux attributs que Livia pose sur ses images"

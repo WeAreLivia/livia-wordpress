@@ -35,6 +35,7 @@ final class Livia_Service {
 		'title'        => '',
 		'headline'     => '',
 		'page_widget'  => '',
+		'page_layout'  => 'theme',
 		'page_id'      => 0,
 		'replaced_id'  => 0,
 	) + self::EXPERIENCE;
@@ -88,20 +89,25 @@ final class Livia_Service {
 	/**
 	 * The settings of the whole site.
 	 *
-	 * @return array{site_on: bool, next_id: int, xp_on: bool, xp_bar: bool, xp_order: string[]} Whether the site
-	 *         widgets section is on, the number the next restaurant connected takes in its id, never reused, whether
-	 *         the booking experience is on (off until the webmaster sets it), whether it shows its bar on phones, and
-	 *         the order of the restaurant choice, kept apart from the restaurants' order, which decides the bubbles.
+	 * @return array{site_on: bool, next_id: int, xp_on: bool, xp_bar: bool, xp_order: string[], page_styles: string, purge_due: bool}
+	 *         Whether the site widgets section is on, the number the next restaurant connected takes in its id, never
+	 *         reused, whether the booking experience is on (off until the webmaster sets it), whether it shows its bar
+	 *         on phones, the order of the restaurant choice, kept apart from the restaurants' order, which decides the
+	 *         bubbles, the styles of the group pages, `inherit` (the site's apply) or `isolated`, and whether the
+	 *         cache tools' pages predate a change, which the screen asks to clear them for: from an update to 1.1 on,
+	 *         until the screen's button clears them.
 	 */
 	public static function settings() {
 		$saved = get_option( self::SETTINGS, array() );
 		return array_merge(
 			array(
-				'site_on'  => true,
-				'next_id'  => 1,
-				'xp_on'    => false,
-				'xp_bar'   => true,
-				'xp_order' => array(),
+				'site_on'     => true,
+				'next_id'     => 1,
+				'xp_on'       => false,
+				'xp_bar'      => true,
+				'xp_order'    => array(),
+				'page_styles' => 'inherit',
+				'purge_due'   => true,
 			),
 			is_array( $saved ) ? $saved : array()
 		);
@@ -457,18 +463,24 @@ final class Livia_Service {
 	}
 
 	/**
-	 * What Livia renders a group page for: the key, the widget and the headline when one is set.
+	 * What Livia renders a group page for: the key, the widget and the headline when one is set, then the layout, the
+	 * styles and the site's home only when they differ from the service's defaults (`theme`, `inherit`), so that a
+	 * site that changes neither keeps its cache key, see page_transient().
 	 *
 	 * @param string $id Restaurant id.
 	 * @return array
 	 */
 	public static function page_query( $id ) {
 		$restaurant = self::restaurant( $id );
+		$landing    = 'landing' === $restaurant['page_layout'];
 		return array_filter(
 			array(
 				'key'      => $restaurant['key'],
 				'widget'   => self::page_widget( $id ),
 				'headline' => $restaurant['headline'],
+				'layout'   => $landing ? 'landing' : '',
+				'styles'   => 'isolated' === self::settings()['page_styles'] ? 'isolated' : '',
+				'home'     => $landing ? home_url( '/' ) : '',
 			),
 			'strlen'
 		);

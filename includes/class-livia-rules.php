@@ -56,6 +56,13 @@ final class Livia_Rules {
 	);
 
 	/**
+	 * The booking tools whose widgets a group page in landing mode leaves out, by a word of their hosts (as `thefork` in
+	 * `widget.thefork.com`), of their plugins' folders or of their script handles: the tools common in France,
+	 * TheFork's former name and OpenTable's static host included.
+	 */
+	const BOOKING_TOOLS = array( 'zenchef', 'thefork', 'lafourchette', 'sevenrooms', 'guestonline', 'tourbiz', 'opentable', 'otstatic', 'resy', 'formitable', 'bookingshake', 'covermanager', 'quandoo', 'resengo', 'tablebooker' );
+
+	/**
 	 * Reads a response of the Livia service.
 	 *
 	 * @param int    $code HTTP status, 0 when the service could not be reached.
@@ -413,6 +420,55 @@ final class Livia_Rules {
 	 */
 	public static function without_shortcodes( $html ) {
 		return str_replace( array( '[', ']' ), array( '&#91;', '&#93;' ), (string) $html );
+	}
+
+	/**
+	 * Whether a script loads a booking tool of BOOKING_TOOLS: an address of its host or of its plugin's folder, or its
+	 * id, in the opening tag (a consent manager moves `src` to another attribute), or, in an inline script that creates
+	 * scripts, an address of its host. Livia's own scripts, whose id starts with `livia-`, never are: their settings
+	 * carry the restaurant's booking address.
+	 *
+	 * @param string $tag  Attributes of the opening tag.
+	 * @param string $body Content of the script.
+	 * @return bool
+	 */
+	public static function is_booking_script( $tag, $body = '' ) {
+		if ( preg_match( '#(?<![\w-])id\s*=\s*["\']?livia-#i', $tag ) ) {
+			return false;
+		}
+		$text = false !== stripos( $body, 'createElement' ) ? $tag . ' ' . $body : $tag;
+		// Hosts, escaped slashes of a JSON string included; plugin folders; the tag's id.
+		preg_match_all( '#(?:https?:)?\\\\?/\\\\?/([a-z0-9-]+(?:\.[a-z0-9-]+)+)|/plugins/([^/"\'\s>]+)/#i', $text, $found );
+		$names = array_merge( $found[1], $found[2] );
+		if ( preg_match( '#(?<![\w-])id\s*=\s*["\']?([^"\'\s>]+)#i', $tag, $id ) ) {
+			$names[] = $id[1];
+		}
+		foreach ( $names as $name ) {
+			if ( array_intersect( preg_split( '#[^a-z0-9]+#', strtolower( $name ), -1, PREG_SPLIT_NO_EMPTY ), self::BOOKING_TOOLS ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * A part of a page without the scripts of the booking tools, see is_booking_script().
+	 *
+	 * @param string $html HTML.
+	 * @return string
+	 */
+	public static function without_booking_tools( $html ) {
+		// shortcut: a script that Google Tag Manager or another script injects in the browser never shows here and
+		// stays, as does a script printed outside the parts filtered; upgrade to a client-side guard if restaurants need it.
+		$kept = preg_replace_callback(
+			'#<script\b([^>]*)>(.*?)</script\s*>#is',
+			static function ( $script ) {
+				return self::is_booking_script( $script[1], $script[2] ) ? '' : $script[0];
+			},
+			(string) $html
+		);
+		// A PCRE failure leaves the part as it was rather than empty.
+		return null === $kept ? (string) $html : $kept;
 	}
 
 	/**

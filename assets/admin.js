@@ -1,5 +1,6 @@
 /**
- * Livia settings screen: the widget menus redraw their label, the page list follows the display rule, the address
+ * Livia settings screen: the widget menus redraw their label (and, on a group page, say when its conversations count
+ * with the Livia booking page's), the page list follows the display rule, the address
  * state clears once the address is edited (checked again on save), a removal asks first, a widget's shortcode copies
  * in one click, the booking experience picks its photos in the media library, orders its restaurants and shows one
  * restaurant at a time, and the preview window shows the settings in progress, saved or not. Every text comes from the
@@ -12,6 +13,11 @@
 			var label = select.parentNode.querySelector( '.lv-sel-label' );
 			label.querySelector( 'b' ).textContent = option.dataset.name;
 			label.querySelector( 'span' ).textContent = option.dataset.format;
+			var field = select.closest( '[data-livia-field]' );
+			var follow = field && field.querySelector( '[data-livia-follow]' );
+			if ( follow ) {
+				follow.hidden = '' !== select.value;
+			}
 		} );
 	} );
 
@@ -256,6 +262,11 @@
 				src.searchParams.set( 'headline', headline );
 			}
 			address += field( current, 'slug' ).value.trim() + '/';
+			var layout = current.querySelector( '[name="livia[' + current.dataset.liviaRestaurant + '][page_layout]"]:checked' );
+			if ( layout && 'landing' === layout.value ) {
+				src.searchParams.set( 'layout', 'landing' );
+				src.searchParams.set( 'home', current.dataset.home );
+			}
 		}
 		frame.hidden = ! shown;
 		dialog.querySelector( '[data-livia-empty]' ).hidden = !! shown || barred;

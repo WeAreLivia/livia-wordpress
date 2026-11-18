@@ -102,6 +102,8 @@ final class AdminTest extends Livia_TestCase {
 				'livia_save_experience',
 			),
 			'handle_add_menu'        => array( array(), 'livia_add_menu' ),
+			'handle_save_advanced'   => array( array( 'livia_page_styles' => 'isolated' ), 'livia_save_advanced' ),
+			'handle_purge_cache'     => array( array(), 'livia_purge_cache' ),
 		);
 	}
 
@@ -111,6 +113,7 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertSame( '', Livia_Service::restaurant( 'r1' )['title'] );
 		$this->assertTrue( Livia_Service::settings()['site_on'] );
 		$this->assertFalse( Livia_Service::settings()['xp_on'] );
+		$this->assertSame( 'inherit', Livia_Service::settings()['page_styles'] );
 		$this->assertSame( 15, Livia_Service::restaurant( 'r1' )['xp_from'] );
 		$this->assertSame( 'publish', get_post_status( $post ) );
 	}
@@ -669,5 +672,69 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertStringContainsString( 'value="livia_connect"', $html );
 		$this->assertStringContainsString( 'aria-disabled="true"', $html );
 		$this->assertStringNotContainsString( 'livia_save_', $html );
+	}
+
+	public function test_the_page_tab_saves_each_restaurant_s_display_mode() {
+		$this->as_role( 'administrator' );
+		$page_tab = $this->screen( 'page' );
+		$this->assertStringContainsString( 'name="livia[r1][page_layout]" value="theme"  checked=\'checked\'', $page_tab, 'inside the theme by default' );
+		$this->assertStringContainsString( 'data-home="' . home_url( '/' ) . '"', $page_tab );
+		Livia_Service::save_settings( array( 'purge_due' => false ) );
+
+		$this->save_page_tab(
+			'r1',
+			array(
+				'slug'        => 'reservation-groupe',
+				'page_on'     => 1,
+				'page_layout' => 'landing',
+			)
+		);
+		$this->assertSame( 'landing', Livia_Service::restaurant( 'r1' )['page_layout'] );
+		$this->assertTrue( Livia_Service::settings()['purge_due'], 'the screen asks to clear the cache, nothing is cleared' );
+		$this->save_page_tab(
+			'r1',
+			array(
+				'slug'        => 'reservation-groupe',
+				'page_on'     => 1,
+				'page_layout' => 'anything',
+			)
+		);
+		$this->assertSame( 'theme', Livia_Service::restaurant( 'r1' )['page_layout'] );
+	}
+
+	public function test_the_page_tab_says_when_conversations_count_with_the_livia_booking_page() {
+		$this->as_role( 'administrator' );
+		$text = 'Conversations from this page are counted together with those of your Livia booking page.';
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>' . preg_quote( $text, '#' ) . '#', $this->screen( 'page' ), 'no embedded conversation chosen' );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_page' ) );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow hidden>#', $this->screen( 'page' ), 'its own conversation, the text waits for the empty choice' );
+	}
+
+	public function test_the_advanced_tab_saves_the_styles_and_lists_the_tools() {
+		$user     = $this->as_role( 'administrator' );
+		$advanced = $this->screen( 'advanced' );
+		$this->assertStringContainsString( 'name="action" value="livia_save_advanced"', $advanced );
+		$this->assertStringContainsString( 'name="livia_page_styles" value="inherit"  checked=\'checked\'', $advanced );
+		$this->assertStringContainsString( 'No cache or optimisation tool detected on this site.', $advanced );
+		$this->assertStringContainsString( 'form="livia-purge-cache"', $advanced );
+		$this->assertStringNotContainsString( 'data-livia-open', $advanced, 'no preview on this tab' );
+		$this->assertStringNotContainsString( 'data-livia-dialog', $advanced );
+		$this->assertTrue( Livia_Service::settings()['purge_due'], 'a site updated to 1.1 is asked to clear its cache' );
+		$this->assertStringNotContainsString( 'do not reflect the latest Livia changes', $advanced, 'only with a cache tool' );
+
+		$this->request( array( 'livia_page_styles' => 'isolated' ), 'livia_save_advanced' );
+		$this->assertSame( 'redirect', $this->run_action( 'handle_save_advanced' ) );
+		$this->assertSame( 'isolated', Livia_Service::settings()['page_styles'] );
+		$this->assertStringContainsString( 'styles=isolated', $this->screen( 'page' ), 'the preview follows the saved styles' );
+
+		$this->request( array(), 'livia_purge_cache' );
+		$this->assertSame( 'redirect', $this->run_action( 'handle_purge_cache' ) );
+		$this->assertSame( array(), get_transient( 'livia_notice_' . $user )['purged'] );
+		$this->assertFalse( Livia_Service::settings()['purge_due'] );
+
+		$this->request( array( 'livia_page_styles' => 'inherit' ), 'livia_save_advanced' );
+		$this->run_action( 'handle_save_advanced' );
+		$this->assertTrue( Livia_Service::settings()['purge_due'], 'a change of styles asks again' );
 	}
 }
