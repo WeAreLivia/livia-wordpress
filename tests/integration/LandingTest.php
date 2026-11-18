@@ -5,15 +5,18 @@
  * @package Livia
  */
 
-// phpcs:disable WordPress.WP.EnqueuedResources,WordPress.WP.EnqueuedResourceParameters,WordPress.WP.GlobalVariablesOverride -- Scripts of other tools, as a site prints them; each test starts from WordPress's empty script queue.
+// phpcs:disable WordPress.WP.EnqueuedResources,WordPress.WP.EnqueuedResourceParameters,WordPress.WP.GlobalVariablesOverride,WordPress.NamingConventions.PrefixAllGlobals -- Scripts of other tools, as a site prints them; each test starts from WordPress's empty script queue.
 
 final class LandingTest extends Livia_TestCase {
 
 	private $page;
 
+	private $features;
+
 	public function set_up() {
 		parent::set_up();
 		$GLOBALS['wp_scripts'] = null;
+		$this->features        = $GLOBALS['_wp_theme_features'] ?? array();
 		$this->connect();
 		$this->new_request();
 		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp"><livia-chat widget="wdg_page"></livia-chat></div>' );
@@ -21,7 +24,8 @@ final class LandingTest extends Livia_TestCase {
 	}
 
 	public function tear_down() {
-		$GLOBALS['wp_scripts'] = null;
+		$GLOBALS['wp_scripts']         = null;
+		$GLOBALS['_wp_theme_features'] = $this->features;
 		parent::tear_down();
 	}
 
@@ -122,6 +126,36 @@ final class LandingTest extends Livia_TestCase {
 		$html = do_blocks( $this->page->post_content );
 		remove_filter( 'home_url', $other );
 		$this->assertStringContainsString( 'wdg_page', $html );
+	}
+
+	private function landing_head() {
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		$this->go_to( get_permalink( $this->page ) );
+		ob_start();
+		include LIVIA_DIR . 'includes/views/landing.php';
+		return ob_get_clean();
+	}
+
+	public function test_a_landing_page_on_a_block_theme_prints_one_title_and_one_viewport() {
+		switch_theme( 'twentytwentyfive' );
+		$GLOBALS['_wp_theme_features']['block-templates'] = true; // A block theme declares it when it loads, which switch_theme() does not replay.
+		remove_theme_support( 'title-tag' );
+		locate_block_template( '', 'page', array( 'page.php' ) ); // The template loader's own step: it hooks the block theme's title and viewport.
+		$html = $this->landing_head();
+		$this->assertSame( 1, substr_count( $html, '<title>' ), 'one title' );
+		$this->assertSame( 1, substr_count( $html, 'name="viewport"' ), 'one viewport' );
+	}
+
+	public function test_a_landing_page_on_a_classic_theme_prints_one_title_and_one_viewport_whether_it_declares_the_title_tag_or_not() {
+		$GLOBALS['_wp_theme_features']['title-tag'] = true; // add_theme_support() refuses it once WordPress has loaded.
+		$html                                       = $this->landing_head();
+		$this->assertSame( 1, substr_count( $html, '<title>' ), 'the theme\'s title only' );
+		$this->assertSame( 1, substr_count( $html, 'name="viewport"' ), 'the page\'s viewport' );
+
+		remove_theme_support( 'title-tag' );
+		$html = $this->landing_head();
+		$this->assertSame( 1, substr_count( $html, '<title>' ), 'the page\'s own title' );
+		$this->assertSame( 1, substr_count( $html, 'name="viewport"' ) );
 	}
 
 	public function test_a_page_in_the_theme_keeps_every_script() {
