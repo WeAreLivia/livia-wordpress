@@ -43,7 +43,7 @@ The settings screen uses the Hanken Grotesk and Archivo fonts, under the SIL Ope
 * Without a widget chosen, the group booking page shows the restaurant's first embedded conversation other than the Livia booking page's widget, else the Livia booking page's widget; a note says when its conversations are counted with the Livia booking page's.
 * The group booking page's bubble follows its opening setting, always closed on phones; on phones, the page opens its conversation from a button fixed at the bottom of the screen, whatever the widget's format, as the tab explains.
 * Fixed: with a cache tool that delays JavaScript, the bubble, the "Book" window and ?couverts=N waited for the visitor's first interaction.
-* The plugin never clears a cache by itself: after the update, clear it from the "Advanced settings" tab. The landing page and the isolated styles need the current Livia service; until then, a landing page shows inside the theme.
+* The plugin never clears a cache by itself: after the update, clear it from the "Advanced settings" tab. The landing page and the isolated styles need the current Livia service. A landing page shows inside the theme when the Livia service does not render landing pages.
 
 = 1.0.0 =
 * First release: one or several restaurants, group booking pages, site bubbles, "Livia widget" block, Elementor elements and shortcodes, editor panel, booking experience, updates from Livia.

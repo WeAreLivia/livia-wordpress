@@ -66,7 +66,7 @@ Livia 1.1 lets each restaurant choose how its group booking page looks on your s
 - WordPress 6.5 or later, tested up to 7.1; PHP 7.4 or later.
 - The automated tests run on WordPress 6.5 with PHP 7.4, and on WordPress 7.1 with PHP 8.3 and Elementor.
 - The "Livia" Elementor elements need Elementor 3.5 or later.
-- The landing page and the isolated styles need the current Livia service, which renders them. Until then, a group booking page set as a landing page shows inside the theme.
+- The landing page and the isolated styles need the current Livia service, which renders them. A group booking page set as a landing page shows inside the theme when the Livia service does not render landing pages.
 
 ### Known limitations
 
