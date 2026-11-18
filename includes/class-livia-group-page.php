@@ -165,6 +165,8 @@ final class Livia_Group_Page {
 	 * @param string $hook `wp_head`, `wp_body_open` or `wp_footer`.
 	 */
 	public static function print_without_booking_tools( $hook ) {
+		// shortcut: a plugin that opens an output buffer in one hook and closes it in another loses its processing, as
+		// the buffers close out of order; upgrade to one buffer around the whole template if a restaurant's site needs it.
 		ob_start();
 		do_action( $hook ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- WordPress's own hooks.
 		echo Livia_Rules::without_booking_tools( ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The site's own output, scripts removed.
@@ -201,10 +203,15 @@ final class Livia_Group_Page {
 		$id      = self::restaurant_of( $post_id );
 		$page    = null !== $id ? Livia_Service::group_page( $id ) : null;
 		if ( ! $page ) {
+			// A landing page has no theme header to lead the visitor back to the site.
+			$back = null !== $id && 'landing' === Livia_Service::restaurant( $id )['page_layout']
+				? sprintf( '<p><a href="%s">%s</a></p>', esc_url( home_url( '/' ) ), esc_html__( 'Back to the site', 'livia' ) )
+				: '';
 			return sprintf(
-				'<div %s><p>%s</p></div>',
+				'<div %s><p>%s</p>%s</div>',
 				get_block_wrapper_attributes(),
-				esc_html__( 'This page is temporarily unavailable. Please try again a little later.', 'livia' )
+				esc_html__( 'This page is temporarily unavailable. Please try again a little later.', 'livia' ),
+				$back
 			);
 		}
 		// The fragment comes from the Livia service over the plugin's own connection; kses would strip its widget. Its

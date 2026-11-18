@@ -109,6 +109,18 @@ final class CacheToolsTest extends Livia_TestCase {
 		$this->assertFalse( apply_filters( 'w3tc_minify_js_do_tag_minification', true, '<script src="' . $this->bundle . '"></script>', '' ) );
 		$this->assertTrue( apply_filters( 'w3tc_minify_js_do_tag_minification', true, '<script src="https://example.com/app.js"></script>', '' ) );
 		$this->assertStringStartsWith( 'jquery.js, ', apply_filters( 'autoptimize_filter_js_exclude', 'jquery.js', '' ) );
+		// Another plugin may hand Autoptimize an array: pattern => '' to exclude, => 'remove' to drop the script.
+		$excluded = apply_filters(
+			'autoptimize_filter_js_exclude',
+			array(
+				'jquery.js' => '',
+				'ads.js'    => 'remove',
+			),
+			''
+		);
+		$this->assertSame( array( 'ads.js' ), array_keys( $excluded, 'remove' ) ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- Autoptimize compares loosely.
+		$this->assertContains( 'jquery.js', array_keys( $excluded ) );
+		$this->assertContains( 'liviaGuests', array_keys( $excluded ) );
 	}
 
 	public function test_only_the_group_page_escapes_the_page_cache() {
@@ -117,7 +129,21 @@ final class CacheToolsTest extends Livia_TestCase {
 			++$nocache;
 		};
 		add_action( 'litespeed_control_set_nocache', $count );
-		add_action( 'wpfc_exclude_current_page', $count );
+		if ( ! function_exists( 'wpfc_exclude_current_page' ) ) {
+			// WP Fastest Cache's public function, as it defines it; it detects the tool by its class.
+			function wpfc_exclude_current_page() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- WP Fastest Cache's own function.
+				do_action( 'wpfc_exclude_current_page' );
+			}
+		}
+		// WP Fastest Cache excludes the page only when its own function is in the call stack.
+		add_action(
+			'wpfc_exclude_current_page',
+			static function () use ( $count ) {
+				if ( in_array( 'wpfc_exclude_current_page', array_column( debug_backtrace(), 'function' ), true ) ) { // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- The test WP Fastest Cache makes.
+					$count();
+				}
+			}
+		);
 
 		$this->go_to( get_permalink( self::factory()->post->create( array( 'post_type' => 'page' ) ) ) );
 		Livia_Cache::group_page_uncached();
@@ -137,6 +163,43 @@ final class CacheToolsTest extends Livia_TestCase {
 		$regex = sprintf( '/%s(%s)$/i', preg_quote( home_url(), '/' ), str_replace( '\*', '.*', preg_quote( $parts[0], '/' ) ) );
 		$this->assertMatchesRegularExpression( $regex, home_url( '/reservation-groupe/?couverts=12' ) );
 		$this->assertDoesNotMatchRegularExpression( $regex, home_url( '/menu/' ) );
+	}
+
+	public function test_siteground_keeps_the_rest_of_the_site_cached_when_the_group_page_is_the_home_page() {
+		$this->guests_tag();
+		update_option( 'show_on_front', 'page' );
+		update_option( 'page_on_front', Livia_Group_Page::published( 'r1' )->ID );
+
+		$parts = apply_filters( 'sgo_exclude_urls_from_cache', array() );
+		$this->assertSame( array( '/', '/?*' ), $parts );
+		$regex = sprintf( '/%s(%s)$/i', preg_quote( home_url(), '/' ), implode( '|', array_map( static fn( $part ) => str_replace( '\*', '.*', preg_quote( $part, '/' ) ), $parts ) ) );
+		$this->assertMatchesRegularExpression( $regex, home_url( '/' ) );
+		$this->assertMatchesRegularExpression( $regex, home_url( '/?couverts=12' ) );
+		$this->assertDoesNotMatchRegularExpression( $regex, home_url( '/menu/' ) );
+	}
+
+	/**
+	 * WP Super Cache's function, defined for this process only: it marks the tool as detected.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_wp_super_cache_empties_the_current_site_only() {
+		$GLOBALS['livia_test_cleared'] = array();
+		function wp_cache_clear_cache( $blog_id = 0 ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- WP Super Cache's own function.
+			$GLOBALS['livia_test_cleared'][] = $blog_id;
+		}
+
+		if ( is_multisite() ) {
+			switch_to_blog( self::factory()->blog->create() );
+		}
+		$this->assertSame( array( 'WP Super Cache' ), Livia_Cache::purge() );
+		// 0 empties the cache of every site of a network: a site of a network empties its own.
+		$this->assertSame( array( is_multisite() ? get_current_blog_id() : 0 ), $GLOBALS['livia_test_cleared'] );
+		if ( is_multisite() ) {
+			$this->assertGreaterThan( 1, $GLOBALS['livia_test_cleared'][0] );
+			restore_current_blog();
+		}
 	}
 
 	public function test_no_tool_detected_and_nothing_to_clear_without_one() {

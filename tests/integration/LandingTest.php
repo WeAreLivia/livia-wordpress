@@ -69,6 +69,22 @@ final class LandingTest extends Livia_TestCase {
 		$this->assertStringNotContainsString( 'widget.thefork.com', $html );
 	}
 
+	public function test_a_landing_page_never_received_leads_back_to_the_site() {
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		Livia_Service::forget_page( 'r1' );
+		$this->answers['/wordpress/v1/page'] = array( 403, array( 'error' => 'connector_disabled' ) );
+		$this->go_to( get_permalink( $this->page ) );
+
+		ob_start();
+		include LIVIA_DIR . 'includes/views/landing.php';
+		$html = ob_get_clean();
+		$this->assertStringContainsString( 'temporarily unavailable', $html );
+		$this->assertStringContainsString( '<a href="' . esc_url( home_url( '/' ) ) . '">Back to the site</a>', $html );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'theme' ) );
+		$this->assertStringNotContainsString( 'Back to the site', do_blocks( $this->page->post_content ), 'the theme leads back itself' );
+	}
+
 	public function test_a_page_in_the_theme_keeps_every_script() {
 		$this->go_to( get_permalink( $this->page ) );
 		wp_enqueue_script( 'zenchef-sdk', 'https://sdk.zenchef.com/v1/sdk.min.js', array(), null, false );

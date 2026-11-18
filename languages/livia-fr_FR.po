@@ -108,111 +108,111 @@ msgstr "%s vous accompagne pour votre événement."
 msgid "Your restaurant"
 msgstr "Votre restaurant"
 
-#: includes/class-livia-group-page.php:207
+#: includes/class-livia-group-page.php:213
 msgid "This page is temporarily unavailable. Please try again a little later."
 msgstr "Cette page est momentanément indisponible. Merci de réessayer un peu plus tard."
 
-#: includes/class-livia-group-page.php:238
+#: includes/class-livia-group-page.php:245
 msgid "Your permalinks are set to “Plain”: WordPress cannot give the page a readable address. Choose another setting in Settings > Permalinks."
 msgstr "Vos permaliens sont réglés sur « Simple » : WordPress ne peut pas donner d'adresse lisible à la page. Choisissez un autre réglage dans Réglages > Permaliens."
 
-#: includes/class-livia-group-page.php:243
+#: includes/class-livia-group-page.php:250
 msgid "Enter an address."
 msgstr "Saisissez une adresse."
 
 #. translators: %s: category or tag name.
-#: includes/class-livia-group-page.php:290
+#: includes/class-livia-group-page.php:297
 #, php-format
 msgid "This address is already used by the category “%s”."
 msgstr "Cette adresse est déjà prise par la catégorie « %s »."
 
 #. translators: %s: category or tag name.
-#: includes/class-livia-group-page.php:290
+#: includes/class-livia-group-page.php:297
 #, php-format
 msgid "This address is already used by the tag “%s”."
 msgstr "Cette adresse est déjà prise par l'étiquette « %s »."
 
-#: includes/class-livia-group-page.php:299
+#: includes/class-livia-group-page.php:306
 msgid "This address matches a file or a folder of your server."
 msgstr "Cette adresse correspond à un fichier ou à un dossier de votre serveur."
 
-#: includes/class-livia-group-page.php:303
+#: includes/class-livia-group-page.php:310
 msgid "This address is reserved by WordPress."
 msgstr "Cette adresse est réservée par WordPress."
 
-#: includes/class-livia-group-page.php:306
+#: includes/class-livia-group-page.php:313
 msgid "This address is already used by WordPress or by another plugin."
 msgstr "Cette adresse est déjà utilisée par WordPress ou par une autre extension."
 
-#: includes/class-livia-group-page.php:318
+#: includes/class-livia-group-page.php:325
 msgid "(no title)"
 msgstr "(sans titre)"
 
 #. translators: %s: media file title.
-#: includes/class-livia-group-page.php:321
+#: includes/class-livia-group-page.php:328
 #, php-format
 msgid "This address is already used by the media file “%s”."
 msgstr "Cette adresse est déjà prise par le fichier « %s » de la médiathèque."
 
-#: includes/class-livia-group-page.php:325
+#: includes/class-livia-group-page.php:332
 msgctxt "page status"
 msgid "published"
 msgstr "publiée"
 
-#: includes/class-livia-group-page.php:326
+#: includes/class-livia-group-page.php:333
 msgctxt "page status"
 msgid "scheduled"
 msgstr "programmée"
 
-#: includes/class-livia-group-page.php:327
+#: includes/class-livia-group-page.php:334
 msgctxt "page status"
 msgid "private"
 msgstr "privée"
 
-#: includes/class-livia-group-page.php:328
+#: includes/class-livia-group-page.php:335
 msgctxt "page status"
 msgid "in the trash"
 msgstr "dans la corbeille"
 
 #. translators: 1: page title, 2: page status.
-#: includes/class-livia-group-page.php:331
+#: includes/class-livia-group-page.php:338
 #, php-format
 msgid "This address is already used by your page “%1$s” (%2$s)."
 msgstr "Cette adresse est déjà prise par votre page « %1$s » (%2$s)."
 
-#: includes/class-livia-group-page.php:334
+#: includes/class-livia-group-page.php:341
 msgctxt "post status"
 msgid "published"
 msgstr "publié"
 
-#: includes/class-livia-group-page.php:335
+#: includes/class-livia-group-page.php:342
 msgctxt "post status"
 msgid "scheduled"
 msgstr "programmé"
 
-#: includes/class-livia-group-page.php:336
+#: includes/class-livia-group-page.php:343
 msgctxt "post status"
 msgid "private"
 msgstr "privé"
 
-#: includes/class-livia-group-page.php:337
+#: includes/class-livia-group-page.php:344
 msgctxt "post status"
 msgid "in the trash"
 msgstr "dans la corbeille"
 
 #. translators: 1: post title, 2: post status.
-#: includes/class-livia-group-page.php:340
+#: includes/class-livia-group-page.php:347
 #, php-format
 msgid "This address is already used by your post “%1$s” (%2$s)."
 msgstr "Cette adresse est déjà prise par votre article « %1$s » (%2$s)."
 
 #. translators: 1: post title, 2: post status.
-#: includes/class-livia-group-page.php:340
+#: includes/class-livia-group-page.php:347
 #, php-format
 msgid "This address is already used by the content “%1$s” (%2$s)."
 msgstr "Cette adresse est déjà prise par le contenu « %1$s » (%2$s)."
 
-#: includes/class-livia-group-page.php:342
+#: includes/class-livia-group-page.php:349
 msgctxt "content status"
 msgid "draft"
 msgstr "brouillon"
@@ -543,7 +543,7 @@ msgid "Group booking, %s"
 msgstr "Réservation de groupe, %s"
 
 #. translators: %s: restaurant name (in French, already preceded by "de" and contracted).
-#: includes/class-livia-group-page.php:273
+#: includes/class-livia-group-page.php:280
 #, php-format
 msgid "This address is already used by the group booking page of %s."
 msgstr "Cette adresse est déjà prise par la page de réservation de groupe %s."
@@ -1737,3 +1737,7 @@ msgstr "Chargement différé des images de la page groupe"
 #: includes/views/settings.php:432
 msgid "Left to the attributes Livia puts on its images"
 msgstr "Confiée aux attributs que Livia pose sur ses images"
+
+#: includes/class-livia-group-page.php:208
+msgid "Back to the site"
+msgstr "Retour au site"

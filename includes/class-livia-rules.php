@@ -424,9 +424,9 @@ final class Livia_Rules {
 
 	/**
 	 * Whether a script loads a booking tool of BOOKING_TOOLS: an address of its host or of its plugin's folder, or its
-	 * id, in the opening tag (a consent manager moves `src` to another attribute), or, in an inline script that creates
-	 * scripts, an address of its host. Livia's own scripts, whose id starts with `livia-`, never are: their settings
-	 * carry the restaurant's booking address.
+	 * id, in the opening tag (a consent manager moves `src` to another attribute), or an inline script that creates
+	 * scripts from the hosts of booking tools only. Livia's own scripts, whose id starts with `livia-`, never are: their
+	 * settings carry the restaurant's booking address.
 	 *
 	 * @param string $tag  Attributes of the opening tag.
 	 * @param string $body Content of the script.
@@ -436,19 +436,40 @@ final class Livia_Rules {
 		if ( preg_match( '#(?<![\w-])id\s*=\s*["\']?livia-#i', $tag ) ) {
 			return false;
 		}
-		$text = false !== stripos( $body, 'createElement' ) ? $tag . ' ' . $body : $tag;
-		// Hosts, escaped slashes of a JSON string included; plugin folders; the tag's id.
-		preg_match_all( '#(?:https?:)?\\\\?/\\\\?/([a-z0-9-]+(?:\.[a-z0-9-]+)+)|/plugins/([^/"\'\s>]+)/#i', $text, $found );
-		$names = array_merge( $found[1], $found[2] );
+		$names = self::script_names( $tag );
 		if ( preg_match( '#(?<![\w-])id\s*=\s*["\']?([^"\'\s>]+)#i', $tag, $id ) ) {
 			$names[] = $id[1];
 		}
-		foreach ( $names as $name ) {
-			if ( array_intersect( preg_split( '#[^a-z0-9]+#', strtolower( $name ), -1, PREG_SPLIT_NO_EMPTY ), self::BOOKING_TOOLS ) ) {
-				return true;
-			}
+		if ( array_filter( $names, array( __CLASS__, 'is_booking_name' ) ) ) {
+			return true;
 		}
-		return false;
+		// An inline script goes only when every address it holds is a booking tool's: one merged with the site's own tags
+		// (audience measure, consent) by a snippets plugin holds their addresses too, and stays.
+		// shortcut: a merged script whose other tags carry no address (a `gtag('config')` call alone) still goes with
+		// the loader; upgrade to cutting the loader out of the script if a restaurant's site needs it.
+		$hosts = false !== stripos( $body, 'createElement' ) ? self::script_names( $body ) : array();
+		return $hosts && count( array_filter( $hosts, array( __CLASS__, 'is_booking_name' ) ) ) === count( $hosts );
+	}
+
+	/**
+	 * The hosts, escaped slashes of a JSON string included, and the plugin folders in a part of a script.
+	 *
+	 * @param string $text Opening tag or content.
+	 * @return string[]
+	 */
+	private static function script_names( $text ) {
+		preg_match_all( '#(?:https?:)?\\\\?/\\\\?/([a-z0-9-]+(?:\.[a-z0-9-]+)+)|/plugins/([^/"\'\s>]+)/#i', $text, $found );
+		return array_values( array_filter( array_merge( $found[1], $found[2] ) ) );
+	}
+
+	/**
+	 * Whether a host, folder or id names a booking tool of BOOKING_TOOLS by one of its words.
+	 *
+	 * @param string $name Host, folder or id.
+	 * @return bool
+	 */
+	private static function is_booking_name( $name ) {
+		return (bool) array_intersect( preg_split( '#[^a-z0-9]+#', strtolower( $name ), -1, PREG_SPLIT_NO_EMPTY ), self::BOOKING_TOOLS );
 	}
 
 	/**
@@ -461,7 +482,8 @@ final class Livia_Rules {
 		// shortcut: a script that Google Tag Manager or another script injects in the browser never shows here and
 		// stays, as does a script printed outside the parts filtered; upgrade to a client-side guard if restaurants need it.
 		$kept = preg_replace_callback(
-			'#<script\b([^>]*)>(.*?)</script\s*>#is',
+			// Possessive: a lazy `.*?` costs a step per character and PCRE gives up past a million, a script of about 1 MB.
+			'#<script\b([^>]*)>((?:[^<]++|<(?!/script\s*>))*+)</script\s*>#is',
 			static function ( $script ) {
 				return self::is_booking_script( $script[1], $script[2] ) ? '' : $script[0];
 			},

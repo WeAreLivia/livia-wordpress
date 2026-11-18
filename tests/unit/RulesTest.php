@@ -442,6 +442,11 @@ final class RulesTest extends TestCase {
 		$this->assertFalse( Livia_Rules::is_booking_script( ' type="application/ld+json"', '{"potentialAction":{"target":"https://www.thefork.fr/restaurant/brasserie-r1"}}' ), 'SEO data stays' );
 		$this->assertFalse( Livia_Rules::is_booking_script( ' id="livia-experience-js-before"', 'var liviaExperience={"url":"https://bookings.zenchef.com/results?rid=1"};document.createElement("a");' ), 'Livia\'s own settings' );
 		$this->assertFalse( Livia_Rules::is_booking_script( ' src="https://chat.booking.wearelivia.com/livia-chat.standalone.js" id="livia-0a1b-js"' ) );
+		$this->assertFalse(
+			Livia_Rules::is_booking_script( '', 'var g=document.createElement("script");g.src="https://www.googletagmanager.com/gtag/js?id=G-1";var z=document.createElement("script");z.src="https://sdk.zenchef.com/v1/sdk.min.js";' ),
+			'a loader merged with the site\'s audience measure stays'
+		);
+		$this->assertFalse( Livia_Rules::is_booking_script( '', 'document.createElement("div");' ), 'no address' );
 	}
 
 	public function test_without_booking_tools_keeps_everything_else() {
@@ -453,5 +458,10 @@ final class RulesTest extends TestCase {
 			'<script id="gtm">gtag("js")</script><script id="livia-experience-js-before">var liviaExperience={"url":"https://bookings.zenchef.com/results"};</script><link rel="stylesheet" href="https://widget.thefork.com/x.css">',
 			Livia_Rules::without_booking_tools( $html )
 		);
+	}
+
+	public function test_without_booking_tools_reads_a_page_with_a_long_inline_script() {
+		$long = '<script>var data="' . str_repeat( 'a', 1100000 ) . '";</script>';
+		$this->assertSame( $long, Livia_Rules::without_booking_tools( '<script src="https://sdk.zenchef.com/v1/sdk.min.js"></script>' . $long ) );
 	}
 }

@@ -462,12 +462,17 @@ final class Livia_Cache {
 	}
 
 	/**
-	 * Adds Livia's patterns to Autoptimize's exclusions, a comma-separated list.
+	 * Adds Livia's patterns to Autoptimize's exclusions: a comma-separated list, or an array whose keys are the
+	 * patterns and whose value `remove` drops the script.
 	 *
-	 * @param string $entries Exclusions.
-	 * @return string
+	 * @param string|array $entries Exclusions.
+	 * @return string|array
 	 */
 	public static function autoptimize_exclude( $entries ) {
+		if ( is_array( $entries ) ) {
+			// An empty value: Autoptimize compares each value loosely with `remove`, which `true` would equal.
+			return $entries + array_fill_keys( self::patterns(), '' );
+		}
 		return trim( (string) $entries . ', ' . implode( ', ', self::patterns() ), ', ' );
 	}
 
@@ -558,8 +563,11 @@ final class Livia_Cache {
 		if ( ! defined( 'LITESPEED_NO_LAZY' ) ) {
 			define( 'LITESPEED_NO_LAZY', true );
 		}
-		// WP Fastest Cache reads DONOTCACHEPAGE only on a few pages of its own.
-		do_action( 'wpfc_exclude_current_page' );
+		// WP Fastest Cache reads DONOTCACHEPAGE only on a few pages of its own, and excludes a page only when its own
+		// function is in the call stack: its action, run directly, leaves the page cached.
+		if ( function_exists( 'wpfc_exclude_current_page' ) ) {
+			wpfc_exclude_current_page();
+		}
 		// phpcs:enable
 	}
 
@@ -575,7 +583,7 @@ final class Livia_Cache {
 
 	/**
 	 * The published group pages, relative to the site's home and followed by `*`, as SiteGround Optimizer matches them
-	 * against the address asked, query included.
+	 * against the whole address asked, query included.
 	 *
 	 * @param mixed $parts The tool's excluded addresses.
 	 * @return array
@@ -585,7 +593,9 @@ final class Livia_Cache {
 		$home  = untrailingslashit( home_url() );
 		foreach ( self::group_page_urls() as $url ) {
 			if ( 0 === strpos( $url, $home ) ) {
-				$parts[] = substr( $url, strlen( $home ) ) . '*';
+				$path = substr( $url, strlen( $home ) );
+				// A group page set as the home page has the path `/`, whose `/*` would match the whole site.
+				$parts = array_merge( $parts, '/' === $path ? array( '/', '/?*' ) : array( $path . '*' ) );
 			}
 		}
 		return $parts;
@@ -641,7 +651,8 @@ final class Livia_Cache {
 			} elseif ( 'w3tc' === $id && function_exists( 'w3tc_flush_all' ) ) {
 				w3tc_flush_all();
 			} elseif ( 'wp-super-cache' === $id ) {
-				wp_cache_clear_cache();
+				// Without a site id, it empties the cache of every site of a network.
+				wp_cache_clear_cache( is_multisite() ? get_current_blog_id() : 0 );
 			} elseif ( 'wp-fastest-cache' === $id ) {
 				do_action( 'wpfc_clear_all_cache', true );
 			} elseif ( 'autoptimize' === $id && is_callable( array( 'autoptimizeCache', 'clearall' ) ) ) {

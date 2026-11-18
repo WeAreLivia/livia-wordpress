@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-18T16:08:55+00:00\n"
+"POT-Creation-Date: 2026-11-18T16:42:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: livia\n"
@@ -447,117 +447,121 @@ msgstr ""
 msgid "Enter the restaurant's e-mail address: the window shows a “Write to the restaurant” button."
 msgstr ""
 
-#: includes/class-livia-group-page.php:207
+#: includes/class-livia-group-page.php:208
+msgid "Back to the site"
+msgstr ""
+
+#: includes/class-livia-group-page.php:213
 msgid "This page is temporarily unavailable. Please try again a little later."
 msgstr ""
 
-#: includes/class-livia-group-page.php:238
+#: includes/class-livia-group-page.php:245
 msgid "Your permalinks are set to “Plain”: WordPress cannot give the page a readable address. Choose another setting in Settings > Permalinks."
 msgstr ""
 
-#: includes/class-livia-group-page.php:243
+#: includes/class-livia-group-page.php:250
 msgid "Enter an address."
 msgstr ""
 
 #. translators: %s: restaurant name (in French, already preceded by "de" and contracted).
-#: includes/class-livia-group-page.php:273
+#: includes/class-livia-group-page.php:280
 #, php-format
 msgid "This address is already used by the group booking page of %s."
 msgstr ""
 
 #. translators: %s: category or tag name.
-#: includes/class-livia-group-page.php:290
+#: includes/class-livia-group-page.php:297
 #, php-format
 msgid "This address is already used by the category “%s”."
 msgstr ""
 
 #. translators: %s: category or tag name.
-#: includes/class-livia-group-page.php:290
+#: includes/class-livia-group-page.php:297
 #, php-format
 msgid "This address is already used by the tag “%s”."
 msgstr ""
 
-#: includes/class-livia-group-page.php:299
+#: includes/class-livia-group-page.php:306
 msgid "This address matches a file or a folder of your server."
 msgstr ""
 
-#: includes/class-livia-group-page.php:303
+#: includes/class-livia-group-page.php:310
 msgid "This address is reserved by WordPress."
 msgstr ""
 
-#: includes/class-livia-group-page.php:306
+#: includes/class-livia-group-page.php:313
 msgid "This address is already used by WordPress or by another plugin."
 msgstr ""
 
-#: includes/class-livia-group-page.php:318
+#: includes/class-livia-group-page.php:325
 msgid "(no title)"
 msgstr ""
 
 #. translators: %s: media file title.
-#: includes/class-livia-group-page.php:321
+#: includes/class-livia-group-page.php:328
 #, php-format
 msgid "This address is already used by the media file “%s”."
 msgstr ""
 
-#: includes/class-livia-group-page.php:325
+#: includes/class-livia-group-page.php:332
 msgctxt "page status"
 msgid "published"
 msgstr ""
 
-#: includes/class-livia-group-page.php:326
+#: includes/class-livia-group-page.php:333
 msgctxt "page status"
 msgid "scheduled"
 msgstr ""
 
-#: includes/class-livia-group-page.php:327
+#: includes/class-livia-group-page.php:334
 msgctxt "page status"
 msgid "private"
 msgstr ""
 
-#: includes/class-livia-group-page.php:328
+#: includes/class-livia-group-page.php:335
 msgctxt "page status"
 msgid "in the trash"
 msgstr ""
 
 #. translators: 1: page title, 2: page status.
-#: includes/class-livia-group-page.php:331
+#: includes/class-livia-group-page.php:338
 #, php-format
 msgid "This address is already used by your page “%1$s” (%2$s)."
 msgstr ""
 
-#: includes/class-livia-group-page.php:334
+#: includes/class-livia-group-page.php:341
 msgctxt "post status"
 msgid "published"
 msgstr ""
 
-#: includes/class-livia-group-page.php:335
+#: includes/class-livia-group-page.php:342
 msgctxt "post status"
 msgid "scheduled"
 msgstr ""
 
-#: includes/class-livia-group-page.php:336
+#: includes/class-livia-group-page.php:343
 msgctxt "post status"
 msgid "private"
 msgstr ""
 
-#: includes/class-livia-group-page.php:337
+#: includes/class-livia-group-page.php:344
 msgctxt "post status"
 msgid "in the trash"
 msgstr ""
 
 #. translators: 1: post title, 2: post status.
-#: includes/class-livia-group-page.php:340
+#: includes/class-livia-group-page.php:347
 #, php-format
 msgid "This address is already used by your post “%1$s” (%2$s)."
 msgstr ""
 
 #. translators: 1: post title, 2: post status.
-#: includes/class-livia-group-page.php:340
+#: includes/class-livia-group-page.php:347
 #, php-format
 msgid "This address is already used by the content “%1$s” (%2$s)."
 msgstr ""
 
-#: includes/class-livia-group-page.php:342
+#: includes/class-livia-group-page.php:349
 msgctxt "content status"
 msgid "draft"
 msgstr ""
