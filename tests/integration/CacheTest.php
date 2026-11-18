@@ -57,6 +57,20 @@ final class CacheTest extends Livia_TestCase {
 		$this->assertSame( 2, $this->page_calls() );
 	}
 
+	public function test_a_new_headline_or_widget_keeps_the_last_version_while_livia_is_down() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp">Version 1</div>' );
+		Livia_Service::group_page( 'r1' );
+		unset( $this->answers['/wordpress/v1/page'] );
+
+		Livia_Service::save_restaurant( 'r1', array( 'headline' => 'Vos événements' ) );
+		$this->new_request();
+		$this->assertSame( '<div class="livia-rp">Version 1</div>', Livia_Service::group_page( 'r1' )['html'] );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_other' ) );
+		$this->new_request();
+		$this->assertSame( '<div class="livia-rp">Version 1</div>', Livia_Service::group_page( 'r1' )['html'] );
+	}
+
 	public function test_a_refused_key_or_a_turned_off_connector_drops_the_last_version() {
 		$refusals = array(
 			array( 404, array( 'error' => 'unknown_key' ) ),
@@ -180,8 +194,81 @@ final class CacheTest extends Livia_TestCase {
 		$this->assertSame( 1, $this->page_calls() );
 		$this->assertStringContainsString( 'couverts', $with );
 		$this->assertStringContainsString( 'setAttribute("guests"', $with );
-		$this->assertStringContainsString( 'if(n>=1&&999>=n&&n%1===0){', $with, 'wptexturize leaves the script body intact' );
+		$this->assertStringContainsString( 'if(liviaGuests>=1&&999>=liviaGuests&&liviaGuests%1===0){', $with, 'wptexturize leaves the script body intact' );
+		$this->assertStringContainsString( '.shadowRoot', $with, 'an isolated page keeps its conversation in a shadow root' );
 		$this->assertStringNotContainsString( '&#038;', $with );
 		$this->assertLessThan( strpos( $with, '<script' ), strpos( $with, '<livia-chat' ), 'the script follows the conversation it hands the number to' );
+	}
+
+	public function test_a_shortcode_of_the_site_leaves_the_number_of_guests_script_intact() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp"><livia-chat widget="wdg_page"></livia-chat></div>' );
+		$page                                = Livia_Group_Page::publish( 'r1', 'reservation-groupe', 'Réservation de groupe' )['page'];
+		$this->go_to( get_permalink( $page ) );
+		$plain = apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+		// A theme or another plugin may declare any shortcode name; `the_content` runs do_shortcode after the block.
+		add_shortcode( 'root', '__return_empty_string' );
+		$html = apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+		remove_shortcode( 'root' );
+
+		$this->assertSame( $plain, $html );
+		preg_match( '#<script\b[^>]*>(.*?liviaGuests.*?)</script>#s', $html, $script );
+		$this->assertNotEmpty( $script );
+		$body = preg_replace( '#^\s*/\* <!\[CDATA\[ \*/|/\* \]\]> \*/\s*$#', '', $script[1] ); // WordPress 6.5 wraps an inline script in a CDATA comment.
+		$this->assertDoesNotMatchRegularExpression( '/[\[\]<]/', $body, 'no bracket for do_shortcode, no `<` for wptexturize' );
+	}
+
+	public function test_a_site_updated_from_1_0_keeps_its_page_and_its_cache_key() {
+		// Options as 1.0 saved them: neither the display mode nor the styles.
+		$this->assertArrayNotHasKey( 'page_layout', get_option( 'livia_restaurants' )['r1'] );
+		$this->assertArrayNotHasKey( 'page_styles', get_option( 'livia_settings' ) );
+		$this->assertSame( 'theme', Livia_Service::restaurant( 'r1' )['page_layout'] );
+		$this->assertSame( 'inherit', Livia_Service::settings()['page_styles'] );
+		$this->assertSame(
+			array(
+				'key'    => self::KEY,
+				'widget' => 'wdg_page',
+			),
+			Livia_Service::page_query( 'r1' )
+		);
+
+		$this->answers['/wordpress/v1/page'] = $this->page_answer();
+		Livia_Service::group_page( 'r1' );
+		$this->assertIsArray( get_transient( 'livia_page_' . md5( self::KEY . '|wdg_page' ) ), 'the transient 1.0 wrote' );
+		foreach ( array( 'layout', 'styles', 'home' ) as $argument ) {
+			$this->assertStringNotContainsString( $argument . '=', $this->calls[0] );
+		}
+	}
+
+	public function test_the_copy_1_0_kept_still_serves_while_livia_does_not_answer() {
+		update_option(
+			'livia_last_' . md5( self::KEY ),
+			array(
+				'html'    => '<div class="livia-rp">1.0</div>',
+				'styles'  => array(),
+				'scripts' => array(),
+				'version' => 'v0',
+			),
+			false
+		);
+		$this->assertSame( '<div class="livia-rp">1.0</div>', Livia_Service::group_page( 'r1' )['html'] );
+
+		Livia_Service::save_settings( array( 'page_styles' => 'isolated' ) );
+		$this->new_request();
+		$this->assertNull( Livia_Service::group_page( 'r1' ), 'it was rendered for the inherited styles' );
+	}
+
+	public function test_the_landing_mode_and_isolated_styles_are_asked_for_with_their_own_cache() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer();
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		Livia_Service::save_settings( array( 'page_styles' => 'isolated' ) );
+		Livia_Service::group_page( 'r1' );
+
+		$this->assertStringContainsString( 'layout=landing', $this->calls[0] );
+		$this->assertStringContainsString( 'styles=isolated', $this->calls[0] );
+		$this->assertStringContainsString( 'home=' . rawurlencode( home_url( '/' ) ), $this->calls[0] );
+		$this->assertFalse( get_transient( 'livia_page_' . md5( self::KEY . '|wdg_page' ) ) );
+
+		// A service that ignores the mode answers with the page for the theme: it is served as it comes.
+		$this->assertSame( '<div class="livia-rp">Livia</div>', Livia_Service::group_page( 'r1' )['html'] );
 	}
 }

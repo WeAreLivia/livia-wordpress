@@ -381,6 +381,7 @@ final class ExperienceTest extends Livia_TestCase {
 			array(
 				'xp_group_dest'   => 'page',
 				'xp_group_widget' => 'wdg_chat',
+				'page_widget'     => 'wdg_page',
 			)
 		);
 		$connections                                      = get_option( 'livia_connections' );

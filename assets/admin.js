@@ -1,5 +1,6 @@
 /**
- * Livia settings screen: the widget menus redraw their label, the page list follows the display rule, the address
+ * Livia settings screen: the widget menus redraw their label (and, on a group page, say when its conversations count
+ * with the Livia booking page's), the page list follows the display rule, the address
  * state clears once the address is edited (checked again on save), a removal asks first, a widget's shortcode copies
  * in one click, the booking experience picks its photos in the media library, orders its restaurants and shows one
  * restaurant at a time, and the preview window shows the settings in progress, saved or not. Every text comes from the
@@ -12,6 +13,11 @@
 			var label = select.parentNode.querySelector( '.lv-sel-label' );
 			label.querySelector( 'b' ).textContent = option.dataset.name;
 			label.querySelector( 'span' ).textContent = option.dataset.format;
+			var field = select.closest( '[data-livia-field]' );
+			var follow = field && field.querySelector( '[data-livia-follow]' );
+			if ( follow ) {
+				follow.hidden = ( select.value || field.dataset.liviaAuto ) !== field.dataset.liviaShared;
+			}
 		} );
 	} );
 
@@ -236,8 +242,9 @@
 			select = phone;
 		}
 		var siteOn = form.querySelector( '[name="livia_site_on"]' );
-		// The page tab's empty choice follows the Livia booking page's widget; a bubble needs a widget of its own.
+		// The page tab's empty choice is the automatic widget; a bubble needs a widget of its own.
 		var shown = select && ( page || ( siteOn.checked && field( current, 'bubble_on' ).checked && select.value ) );
+		var widget = select && ( select.value || ( page && select.closest( '[data-livia-field]' ).dataset.liviaAuto ) );
 		// Printed only when the phone bar shows on the site, where it hides the bubble on phones.
 		var underBar = dialog.querySelector( '[data-livia-under-bar]' );
 		var barred = !! ( shown && underBar && frame.classList.contains( 'phone' ) );
@@ -247,8 +254,8 @@
 		shown = shown && ! barred;
 		var src = new URL( current.dataset.preview );
 		var address = current.dataset.address;
-		if ( shown && select.value ) {
-			src.searchParams.set( 'widget', select.value );
+		if ( shown && widget ) {
+			src.searchParams.set( 'widget', widget );
 		}
 		if ( page ) {
 			var headline = field( current, 'headline' ).value.trim();
@@ -256,6 +263,11 @@
 				src.searchParams.set( 'headline', headline );
 			}
 			address += field( current, 'slug' ).value.trim() + '/';
+			var layout = current.querySelector( '[name="livia[' + current.dataset.liviaRestaurant + '][page_layout]"]:checked' );
+			if ( layout && 'landing' === layout.value ) {
+				src.searchParams.set( 'layout', 'landing' );
+				src.searchParams.set( 'home', current.dataset.home );
+			}
 		}
 		frame.hidden = ! shown;
 		dialog.querySelector( '[data-livia-empty]' ).hidden = !! shown || barred;

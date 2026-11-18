@@ -57,6 +57,11 @@ jobs:
           git rev-parse --verify --quiet origin/main >/dev/null || { echo "::error::origin/main is missing: check out with fetch-depth: 0."; exit 1; }
           git merge-base --is-ancestor "$GITHUB_SHA" origin/main \
             || { echo "::error::$GITHUB_REF_NAME points to $GITHUB_SHA, which is not on main. Tag the commit on origin/main once the change is merged."; exit 1; }
+      # The release text is the version's section of CHANGELOG.md, from its "## <version>" heading to the next one.
+      - name: Read the release notes
+        run: |
+          awk -v version="${GITHUB_REF_NAME#v}" '/^## /{found = ($2 == version && NF == 2); next} found' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md" || { echo "::error::CHANGELOG.md has no section \"## ${GITHUB_REF_NAME#v}\": add it before tagging."; exit 1; }
       - name: Download the zip
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -83,7 +88,7 @@ jobs:
           api="https://api.github.com/repos/$GITHUB_REPOSITORY"
           auth=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
           release=$(curl -fsS -X POST "$api/releases" "${auth[@]}" \
-            -d "$(jq -n --arg tag "$GITHUB_REF_NAME" '{tag_name: $tag, name: $tag, generate_release_notes: true, draft: true}')")
+            -d "$(jq -n --arg tag "$GITHUB_REF_NAME" --rawfile body "$RUNNER_TEMP/notes.md" '{tag_name: $tag, name: $tag, body: $body, draft: true}')")
           id=$(echo "$release" | jq -r '.id')
           upload=$(echo "$release" | jq -r '.upload_url' | sed 's/{.*}//')
           curl -fsS -X POST "$upload?name=$(basename "$zip")" \

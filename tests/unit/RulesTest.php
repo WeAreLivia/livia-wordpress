@@ -8,6 +8,7 @@
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Signatures travel in base64.
+// phpcs:disable WordPress.WP.EnqueuedResources -- Pages as printed, booking tools' tags included.
 
 final class RulesTest extends TestCase {
 
@@ -424,5 +425,43 @@ final class RulesTest extends TestCase {
 		$this->assertSame( 'd\'Éden', Livia_Rules::of_name( 'Éden', 'fr_FR' ) );
 		$this->assertSame( 'de Laura', Livia_Rules::of_name( 'Laura', 'fr_FR' ) );
 		$this->assertSame( 'Le Grand Palais', Livia_Rules::of_name( 'Le Grand Palais', 'en_US' ) );
+	}
+
+	public function test_booking_tool_scripts_are_known_by_host_plugin_folder_or_id() {
+		$this->assertTrue( Livia_Rules::is_booking_script( ' src="https://sdk.zenchef.com/v1/sdk.min.js"' ) );
+		$this->assertTrue( Livia_Rules::is_booking_script( ' src="//widget.thefork.com/loader.js" async' ) );
+		$this->assertTrue( Livia_Rules::is_booking_script( ' type="text/plain" data-cmplz-src="https://www.opentable.com/widget/reservation/loader?rid=1"' ), 'held by a consent manager' );
+		$this->assertTrue( Livia_Rules::is_booking_script( ' src="/wp-content/plugins/sevenrooms-widget/js/app.js?ver=2"' ) );
+		$this->assertTrue( Livia_Rules::is_booking_script( ' id="guestonline-js" src="/wp-content/themes/brasserie/booking.js"' ) );
+		$this->assertTrue( Livia_Rules::is_booking_script( '', '!function(e,n){var c=e.createElement(n);c.src="https:\/\/sdk.zenchef.com\/v1\/sdk.min.js"}(document,"script")' ), 'an inline loader' );
+
+		$this->assertFalse( Livia_Rules::is_booking_script( ' src="https://www.googletagmanager.com/gtag/js?id=G-1"' ) );
+		$this->assertFalse( Livia_Rules::is_booking_script( ' src="https://resystem.example.com/a.js"' ), 'a word, not a part of one' );
+		$this->assertFalse( Livia_Rules::is_booking_script( ' data-id="zenchef"' ), 'only the tag id counts' );
+		$this->assertFalse( Livia_Rules::is_booking_script( '', 'var theme={book:"https://www.thefork.fr/restaurant/brasserie-r1"};' ), 'a link in settings creates no script' );
+		$this->assertFalse( Livia_Rules::is_booking_script( ' type="application/ld+json"', '{"potentialAction":{"target":"https://www.thefork.fr/restaurant/brasserie-r1"}}' ), 'SEO data stays' );
+		$this->assertFalse( Livia_Rules::is_booking_script( ' id="livia-experience-js-before"', 'var liviaExperience={"url":"https://bookings.zenchef.com/results?rid=1"};document.createElement("a");' ), 'Livia\'s own settings' );
+		$this->assertFalse( Livia_Rules::is_booking_script( ' src="https://chat.booking.wearelivia.com/livia-chat.standalone.js" id="livia-0a1b-js"' ) );
+		$this->assertFalse(
+			Livia_Rules::is_booking_script( '', 'var g=document.createElement("script");g.src="https://www.googletagmanager.com/gtag/js?id=G-1";var z=document.createElement("script");z.src="https://sdk.zenchef.com/v1/sdk.min.js";' ),
+			'a loader merged with the site\'s audience measure stays'
+		);
+		$this->assertFalse( Livia_Rules::is_booking_script( '', 'document.createElement("div");' ), 'no address' );
+	}
+
+	public function test_without_booking_tools_keeps_everything_else() {
+		$html = '<script src="https://sdk.zenchef.com/v1/sdk.min.js"></script><script id="gtm">gtag("js")</script>'
+			. "<SCRIPT\n src='https://widget.thefork.com/x.js'></SCRIPT >"
+			. '<script id="livia-experience-js-before">var liviaExperience={"url":"https://bookings.zenchef.com/results"};</script>'
+			. '<link rel="stylesheet" href="https://widget.thefork.com/x.css">';
+		$this->assertSame(
+			'<script id="gtm">gtag("js")</script><script id="livia-experience-js-before">var liviaExperience={"url":"https://bookings.zenchef.com/results"};</script><link rel="stylesheet" href="https://widget.thefork.com/x.css">',
+			Livia_Rules::without_booking_tools( $html )
+		);
+	}
+
+	public function test_without_booking_tools_reads_a_page_with_a_long_inline_script() {
+		$long = '<script>var data="' . str_repeat( 'a', 1100000 ) . '";</script>';
+		$this->assertSame( $long, Livia_Rules::without_booking_tools( '<script src="https://sdk.zenchef.com/v1/sdk.min.js"></script>' . $long ) );
 	}
 }

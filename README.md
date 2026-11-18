@@ -9,7 +9,8 @@ conversational assistant without any code.
 ## What it does
 
 - **Group booking page**: one real WordPress page per restaurant, at the address you choose, showing the
-  restaurant's Livia group booking page with its assistant. The theme keeps its header and footer. Livia's content is
+  restaurant's Livia group booking page with its assistant, inside the theme (its header and footer kept) or as a
+  landing page (without them, and without the scripts of other booking tools that the site prints). Livia's content is
   cached and the last version received is kept when Livia cannot be reached. A visitor arriving with `?couverts=N`
   (1 to 999) starts the conversation with N guests.
 - **Site widgets**: one Livia bubble per restaurant, on all pages, all pages but some, or only some. A page shows one
@@ -17,6 +18,13 @@ conversational assistant without any code.
   "Livia" panel of the editor.
 - **Widgets in the content**: the "Livia widget" block, the "Livia" element of Elementor (3.5 or later), or the
   shortcode `[livia_widget widget="..."]` for the classic editor and other page builders.
+- **Cache and optimisation tools**: Livia's scripts escape the delay, deferral, minification and combination of the
+  common cache and optimisation tools, and its stylesheets their style optimisations, through the tools' own hooks and
+  the attributes they read on a tag; the group booking pages escape their page cache and image lazy loading. Nothing is
+  written in the tools' settings. The "Advanced settings" tab shows the state of each rule for each tool detected and
+  the rules to copy into a tool without hooks; the plugin never clears the tools' cache by itself, the tab's button
+  does, and the screen asks for it after an update or a change of display mode or styles. The tools and their hooks are
+  in `includes/class-livia-cache.php`.
 - **Booking experience**: a window that asks for the number of guests (and the restaurant, when the site connects
   several) and leads the visitor to the right path for that restaurant: its booking tool for a small party, its Livia
   conversation or group booking page for a group, its contact or private hire tool for an event. The thresholds and
@@ -42,7 +50,8 @@ conversational assistant without any code.
 4. Open the **Livia** menu in WordPress, paste the key and click **Connect**. **Add a restaurant** connects another
    one.
 5. In the **Site widget**, **Booking page** and **Booking experience** tabs, choose each restaurant's bubble and
-   pages, the address of its booking page, and its thresholds and paths. Each tab saves on its own.
+   pages, the address and display mode of its booking page, and its thresholds and paths; in **Advanced settings**, the
+   styles of the booking pages. Each tab saves on its own.
 
 Deactivating the plugin turns the published group booking pages into drafts; activating it again publishes them
 again. On a multisite network, a network-wide activation does so on every site, and a network-wide deactivation on

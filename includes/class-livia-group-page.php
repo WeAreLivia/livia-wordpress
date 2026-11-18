@@ -30,6 +30,9 @@ final class Livia_Group_Page {
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register_block' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'dequeue_booking_tools' ), PHP_INT_MAX );
+		// Last, after the theme builders of page builders, which choose their own templates.
+		add_filter( 'template_include', array( __CLASS__, 'template' ), PHP_INT_MAX - 1 );
 		add_action( 'admin_init', array( __CLASS__, 'resume' ) );
 	}
 
@@ -119,6 +122,63 @@ final class Livia_Group_Page {
 	}
 
 	/**
+	 * The restaurant whose group page is shown in landing mode: set so, and received from Livia as a landing page, or
+	 * not received at all (its notice then leads back to the site). A Livia service that does not render landing pages
+	 * answers with the page for the theme, which has no way back to the site: that page stays in the theme.
+	 *
+	 * @return string|null Restaurant id.
+	 */
+	public static function landing() {
+		$id = self::current();
+		if ( null === $id || 'landing' !== Livia_Service::restaurant( $id )['page_layout'] ) {
+			return null;
+		}
+		$page = Livia_Service::group_page( $id );
+		return ! $page || preg_match( '#\sclass="livia-rp(?:\s[^"]*)?\slivia-rp--landing[\s"]#', $page['html'] ) ? $id : null;
+	}
+
+	/**
+	 * Serves a group page in landing mode with the plugin's own template: the site's head and footer hooks, without the
+	 * theme's header and footer. Its embed address keeps WordPress's embed template.
+	 *
+	 * @param string $template Template WordPress chose.
+	 * @return string
+	 */
+	public static function template( $template ) {
+		return ! is_embed() && null !== self::landing() ? LIVIA_DIR . 'includes/views/landing.php' : $template;
+	}
+
+	/**
+	 * Takes the scripts of the booking tools WordPress was asked to load off a group page in landing mode, their inline
+	 * scripts with them.
+	 */
+	public static function dequeue_booking_tools() {
+		if ( null === self::landing() ) {
+			return;
+		}
+		$scripts = wp_scripts();
+		foreach ( $scripts->queue as $handle ) {
+			$src = isset( $scripts->registered[ $handle ] ) ? (string) $scripts->registered[ $handle ]->src : '';
+			if ( Livia_Rules::is_booking_script( 'id="' . $handle . '-js" src="' . $src . '"' ) ) {
+				wp_dequeue_script( $handle );
+			}
+		}
+	}
+
+	/**
+	 * Prints what a hook of the landing template prints, the scripts of the booking tools left out.
+	 *
+	 * @param string $hook `wp_head`, `wp_body_open` or `wp_footer`.
+	 */
+	public static function print_without_booking_tools( $hook ) {
+		// shortcut: a plugin that opens an output buffer in one hook and closes it in another loses its processing, as
+		// the buffers close out of order; upgrade to one buffer around the whole template if a restaurant's site needs it.
+		ob_start();
+		do_action( $hook ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- WordPress's own hooks.
+		echo Livia_Rules::without_booking_tools( ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The site's own output, scripts removed.
+	}
+
+	/**
 	 * Loads the page's styles in the head and its scripts, on a group page only.
 	 */
 	public static function enqueue() {
@@ -149,22 +209,30 @@ final class Livia_Group_Page {
 		$id      = self::restaurant_of( $post_id );
 		$page    = null !== $id ? Livia_Service::group_page( $id ) : null;
 		if ( ! $page ) {
+			// A landing page has no theme header to lead the visitor back to the site.
+			$back = null !== $id && 'landing' === Livia_Service::restaurant( $id )['page_layout']
+				? sprintf( '<p><a href="%s">%s</a></p>', esc_url( home_url( '/' ) ), esc_html__( 'Back to the site', 'livia' ) )
+				: '';
 			return sprintf(
-				'<div %s><p>%s</p></div>',
+				'<div %s><p>%s</p>%s</div>',
 				get_block_wrapper_attributes(),
-				esc_html__( 'This page is temporarily unavailable. Please try again a little later.', 'livia' )
+				esc_html__( 'This page is temporarily unavailable. Please try again a little later.', 'livia' ),
+				$back
 			);
 		}
 		// The fragment comes from the Livia service over the plugin's own connection; kses would strip its widget. Its
 		// text is the restaurant's, written in Livia: `the_content` must run none of its brackets as a shortcode.
 		// The script hands `?couverts=N` to the conversation before its bundle, loaded later in the footer, starts it;
-		// it reads the address in the browser, so the page stays the same for every address and its cache holds.
-		// wptexturize on the_content reads a `<` as a tag start and escapes the `&` after it: the script has no `<`.
+		// it reads the address in the browser, so the page stays the same for every address and its cache holds. It
+		// also looks in the open shadow roots of the fragment, where an isolated page puts its conversation.
+		// wptexturize on the_content reads a `<` as a tag start and escapes the `&` after it: the script has no `<`; and
+		// do_shortcode runs any `[name]` a theme or plugin declares as a shortcode: it has no bracket either.
+		// `liviaGuests` and the attributes keep it out of the cache and optimisation tools, see Livia_Cache.
 		return sprintf(
 			'<div %s>%s%s</div>',
 			get_block_wrapper_attributes(),
 			Livia_Rules::without_shortcodes( $page['html'] ),
-			wp_get_inline_script_tag( 'var n=Number(new URLSearchParams(location.search).get("couverts"));if(n>=1&&999>=n&&n%1===0){document.currentScript.parentNode.querySelectorAll("livia-chat").forEach(function(chat){chat.setAttribute("guests",String(n));});}' )
+			wp_get_inline_script_tag( '(function(){var liviaGuests=Number(new URLSearchParams(location.search).get("couverts"));var root=document.currentScript.parentNode;if(liviaGuests>=1&&999>=liviaGuests&&liviaGuests%1===0){Array.prototype.concat.call(root,Array.prototype.map.call(root.querySelectorAll("*"),function(el){return el.shadowRoot;}).filter(Boolean)).forEach(function(part){part.querySelectorAll("livia-chat").forEach(function(chat){chat.setAttribute("guests",String(liviaGuests));});});}}());', Livia_Cache::ATTRIBUTES )
 		);
 	}
 

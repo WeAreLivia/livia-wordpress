@@ -102,6 +102,8 @@ final class AdminTest extends Livia_TestCase {
 				'livia_save_experience',
 			),
 			'handle_add_menu'        => array( array(), 'livia_add_menu' ),
+			'handle_save_advanced'   => array( array( 'livia_page_styles' => 'isolated' ), 'livia_save_advanced' ),
+			'handle_purge_cache'     => array( array(), 'livia_purge_cache' ),
 		);
 	}
 
@@ -111,6 +113,7 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertSame( '', Livia_Service::restaurant( 'r1' )['title'] );
 		$this->assertTrue( Livia_Service::settings()['site_on'] );
 		$this->assertFalse( Livia_Service::settings()['xp_on'] );
+		$this->assertSame( 'inherit', Livia_Service::settings()['page_styles'] );
 		$this->assertSame( 15, Livia_Service::restaurant( 'r1' )['xp_from'] );
 		$this->assertSame( 'publish', get_post_status( $post ) );
 	}
@@ -607,15 +610,16 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertStringContainsString( $alert, $this->screen( 'page' ) );
 	}
 
-	public function test_without_a_choice_the_page_keeps_the_livia_booking_page_s_widget() {
+	public function test_without_a_choice_the_page_takes_the_embedded_conversation_when_the_livia_booking_page_has_a_bubble() {
 		$this->as_role( 'administrator' );
 		$connections                       = get_option( 'livia_connections' );
 		$connections['r1']['pageWidgetId'] = 'wdg_site';
 		update_option( 'livia_connections', $connections );
 
 		$html = $this->screen( 'page' );
-		$this->assertMatchesRegularExpression( '#<option value=""  selected=\'selected\'\s+data-name="Widget of your Livia booking page"\s+data-format="· Floating bubble"#', $html, 'offered and kept as it is' );
-		$this->assertStringContainsString( '<option value="wdg_page"', $html );
+		$this->assertMatchesRegularExpression( '#<option value=""  selected=\'selected\'\s+data-name="Automatic: Page de réservation"\s+data-format="· Embedded conversation"#', $html, 'the Livia booking page\'s bubble gives way' );
+		$this->assertStringContainsString( 'data-livia-auto="wdg_page" data-livia-shared="wdg_site"', $html );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow hidden>#', $html, 'its own conversation, counted apart' );
 
 		$this->request(
 			array(
@@ -632,7 +636,63 @@ final class AdminTest extends Livia_TestCase {
 		);
 		$this->assertSame( 'redirect', $this->run_action( 'handle_save_page' ) );
 		$this->assertSame( '', Livia_Service::restaurant( 'r1' )['page_widget'] );
-		$this->assertSame( 'wdg_site', Livia_Service::page_widget( 'r1' ), 'saved unchanged, the page keeps its widget' );
+		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ) );
+	}
+
+	public function test_without_a_choice_the_page_leaves_the_livia_booking_page_s_embedded_conversation_to_it() {
+		$this->as_role( 'administrator' );
+		$connections                    = get_option( 'livia_connections' );
+		$connections['r1']['widgets'][] = array(
+			'id'         => 'wdg_first',
+			'name'       => 'Groupes',
+			'format'     => 'inline',
+			'fullscreen' => false,
+		);
+		$connections['r1']['widgets'][] = array(
+			'id'         => 'wdg_second',
+			'name'       => 'Mariages',
+			'format'     => 'inline',
+			'fullscreen' => false,
+		);
+		update_option( 'livia_connections', $connections );
+		$this->assertSame( 'wdg_page', Livia_Rules::widget_ids( Livia_Service::widgets( 'r1', array( 'inline' ) ) )[0] );
+		$this->assertSame( 'wdg_first', Livia_Service::page_widget( 'r1' ), 'the first one that is not the Livia booking page\'s' );
+		$this->assertSame( 'wdg_first', Livia_Service::page_query( 'r1' )['widget'] );
+
+		$html = $this->screen( 'page' );
+		$this->assertMatchesRegularExpression( '#<option value=""  selected=\'selected\'\s+data-name="Automatic: Groupes"#', $html, 'the label names the widget kept' );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow hidden>#', $html, 'counted apart' );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_page' ) );
+		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ), 'a choice comes first' );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>#', $this->screen( 'page' ), 'chosen, so counted together' );
+	}
+
+	public function test_when_the_livia_booking_page_s_is_the_only_embedded_conversation_the_page_takes_it() {
+		$this->as_role( 'administrator' );
+		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ) );
+		$html = $this->screen( 'page' );
+		$this->assertMatchesRegularExpression( '#<option value=""  selected=\'selected\'\s+data-name="Automatic: Page de réservation"#', $html );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>#', $html, 'counted together' );
+	}
+
+	public function test_without_an_embedded_conversation_the_page_keeps_the_livia_booking_page_s_widget() {
+		$this->as_role( 'administrator' );
+		$connections                       = get_option( 'livia_connections' );
+		$connections['r1']['pageWidgetId'] = 'wdg_site';
+		$connections['r1']['widgets']      = array_slice( $connections['r1']['widgets'], 1 );
+		update_option( 'livia_connections', $connections );
+
+		$this->assertSame( 'wdg_site', Livia_Service::page_widget( 'r1' ) );
+		$this->assertSame(
+			array(
+				'key'    => self::KEY,
+				'widget' => 'wdg_site',
+			),
+			Livia_Service::page_query( 'r1' ),
+			'the query, hence the cache key, of a site without an embedded conversation is unchanged'
+		);
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>#', $this->screen( 'page' ) );
 	}
 
 	public function test_the_texts_agree_with_the_bubble_and_the_page_waiting_for_its_save() {
@@ -669,5 +729,110 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertStringContainsString( 'value="livia_connect"', $html );
 		$this->assertStringContainsString( 'aria-disabled="true"', $html );
 		$this->assertStringNotContainsString( 'livia_save_', $html );
+	}
+
+	public function test_the_page_tab_saves_each_restaurant_s_display_mode() {
+		$this->as_role( 'administrator' );
+		$page_tab = $this->screen( 'page' );
+		$this->assertStringContainsString( 'name="livia[r1][page_layout]" value="theme"  checked=\'checked\'', $page_tab, 'inside the theme by default' );
+		$this->assertStringContainsString( 'data-home="' . home_url( '/' ) . '"', $page_tab );
+		Livia_Service::save_settings( array( 'purge_due' => false ) );
+
+		$this->save_page_tab(
+			'r1',
+			array(
+				'slug'        => 'reservation-groupe',
+				'page_on'     => 1,
+				'page_layout' => 'landing',
+			)
+		);
+		$this->assertSame( 'landing', Livia_Service::restaurant( 'r1' )['page_layout'] );
+		$this->assertTrue( Livia_Service::settings()['purge_due'], 'the screen asks to clear the cache, nothing is cleared' );
+		$this->save_page_tab(
+			'r1',
+			array(
+				'slug'        => 'reservation-groupe',
+				'page_on'     => 1,
+				'page_layout' => 'anything',
+			)
+		);
+		$this->assertSame( 'theme', Livia_Service::restaurant( 'r1' )['page_layout'] );
+	}
+
+	public function test_the_page_tab_explains_the_phone_button() {
+		$this->as_role( 'administrator' );
+		$this->assertStringContainsString( '<p class="lv-help">On phones, the conversation opens from a button fixed at the bottom of the screen, in your widget&#039;s colours, whatever its format.</p>', $this->screen( 'page' ) );
+	}
+
+	public function test_the_page_tab_says_when_conversations_count_with_the_livia_booking_page() {
+		$this->as_role( 'administrator' );
+		$text = 'Conversations from this page are counted together with those of your Livia booking page.';
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>' . preg_quote( $text, '#' ) . '#', $this->screen( 'page' ), 'no embedded conversation chosen' );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_page' ) );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>#', $this->screen( 'page' ), 'the Livia booking page\'s widget, chosen' );
+
+		$connections                    = get_option( 'livia_connections' );
+		$connections['r1']['widgets'][] = array(
+			'id'         => 'wdg_own',
+			'name'       => 'Groupes',
+			'format'     => 'inline',
+			'fullscreen' => false,
+		);
+		update_option( 'livia_connections', $connections );
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_own' ) );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow hidden>#', $this->screen( 'page' ), 'its own conversation' );
+	}
+
+	public function test_the_advanced_tab_saves_the_styles_and_lists_the_tools() {
+		$user     = $this->as_role( 'administrator' );
+		$advanced = $this->screen( 'advanced' );
+		$this->assertStringContainsString( 'name="action" value="livia_save_advanced"', $advanced );
+		$this->assertStringContainsString( 'name="livia_page_styles" value="inherit"  checked=\'checked\'', $advanced );
+		$this->assertStringContainsString( 'No cache or optimisation tool detected on this site.', $advanced );
+		$this->assertStringContainsString( 'Supported tools: WP Rocket, LiteSpeed Cache, W3 Total Cache, WP Super Cache, WP Fastest Cache, Autoptimize, SiteGround Optimizer, Perfmatters, FlyingPress, Hummingbird, Breeze, Jetpack Boost, NitroPack.', $advanced );
+		$this->assertStringContainsString( 'form="livia-purge-cache"', $advanced );
+		$this->assertStringNotContainsString( 'data-livia-open', $advanced, 'no preview on this tab' );
+		$this->assertStringNotContainsString( 'data-livia-dialog', $advanced );
+		$this->assertTrue( Livia_Service::settings()['purge_due'], 'a site updated to 1.1 is asked to clear its cache' );
+		$this->assertStringNotContainsString( 'do not reflect the latest Livia changes', $advanced, 'only with a cache tool' );
+
+		$this->request( array( 'livia_page_styles' => 'isolated' ), 'livia_save_advanced' );
+		$this->assertSame( 'redirect', $this->run_action( 'handle_save_advanced' ) );
+		$this->assertSame( 'isolated', Livia_Service::settings()['page_styles'] );
+		$this->assertStringContainsString( 'styles=isolated', $this->screen( 'page' ), 'the preview follows the saved styles' );
+
+		$this->request( array(), 'livia_purge_cache' );
+		$this->assertSame( 'redirect', $this->run_action( 'handle_purge_cache' ) );
+		$this->assertSame( array(), get_transient( 'livia_notice_' . $user )['purged'] );
+		$this->assertFalse( Livia_Service::settings()['purge_due'] );
+
+		$this->request( array( 'livia_page_styles' => 'inherit' ), 'livia_save_advanced' );
+		$this->run_action( 'handle_save_advanced' );
+		$this->assertTrue( Livia_Service::settings()['purge_due'], 'a change of styles asks again' );
+	}
+
+	/**
+	 * Constants of FlyingPress, NitroPack and WP Fastest Cache's class, defined for this process only: they mark the
+	 * tools as detected.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_the_image_lazy_loading_rule_names_the_images_each_tool_compares() {
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- The tools' own names.
+		define( 'FLYING_PRESS_VERSION', '5.0' );
+		define( 'NITROPACK_VERSION', '1.18' );
+		class_alias( get_class( new class() {} ), 'WpFastestCache' ); // class_alias() refuses an internal class such as stdClass under PHP 7.4.
+		// phpcs:enable
+		Livia_Group_Page::publish( 'r1', 'reservation-groupe', 'Réservation de groupe' );
+		$this->as_role( 'administrator' );
+		$advanced = $this->screen( 'advanced' );
+
+		$this->assertStringContainsString( 'data-livia-copy="skip-lazy"', $advanced, 'FlyingPress compares a keyword with the image tag' );
+		$this->assertStringContainsString( 'data-livia-copy="img.skip-lazy"', $advanced, 'NitroPack takes CSS selectors' );
+		$this->assertStringContainsString( 'Specify CSS selectors to disable image lazy loading for matching elements', $advanced );
+		$this->assertMatchesRegularExpression( '#<b>Image lazy loading on the group booking page</b><span>Applied automatically</span>#', $advanced, 'WP Fastest Cache' );
+		$this->assertSame( 1, substr_count( $advanced, 'data-livia-copy="' . esc_attr( home_url( '/reservation-groupe/' ) ) ), 'the page address is a rule of NitroPack\'s page cache only' );
 	}
 }

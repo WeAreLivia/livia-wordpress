@@ -29,7 +29,7 @@ final class Livia_Admin {
 	/**
 	 * The screen's tabs, the first one shown by default.
 	 */
-	const TABS = array( 'widget', 'page', 'experience' );
+	const TABS = array( 'widget', 'page', 'experience', 'advanced' );
 
 	/**
 	 * Hooks the screen.
@@ -45,6 +45,8 @@ final class Livia_Admin {
 		add_action( 'admin_post_livia_trash', array( __CLASS__, 'handle_trash' ) );
 		add_action( 'admin_post_livia_save_experience', array( __CLASS__, 'handle_save_experience' ) );
 		add_action( 'admin_post_livia_add_menu', array( __CLASS__, 'handle_add_menu' ) );
+		add_action( 'admin_post_livia_save_advanced', array( __CLASS__, 'handle_save_advanced' ) );
+		add_action( 'admin_post_livia_purge_cache', array( __CLASS__, 'handle_purge_cache' ) );
 		add_filter( 'plugin_action_links_' . LIVIA_BASENAME, array( __CLASS__, 'action_links' ) );
 	}
 
@@ -323,6 +325,7 @@ final class Livia_Admin {
 		self::guard( 'livia_save_page' );
 		$notice  = array( 'restaurants' => array() );
 		$several = count( Livia_Service::restaurants() ) > 1;
+		$layouts = false;
 		foreach ( self::posted_restaurants() as $id => $fields ) {
 			$slug    = isset( $fields['slug'] ) ? sanitize_title( $fields['slug'] ) : '';
 			$title   = isset( $fields['title'] ) ? sanitize_text_field( $fields['title'] ) : '';
@@ -332,7 +335,9 @@ final class Livia_Admin {
 				'title'       => '' !== $title ? $title : self::default_title( $several ? Livia_Service::name( $id ) : '' ),
 				'headline'    => mb_substr( $accro, 0, self::HEADLINE_MAX ),
 				'page_widget' => in_array( $widget, Livia_Rules::widget_ids( Livia_Service::widgets( $id, array( 'inline' ) ) ), true ) ? $widget : '',
+				'page_layout' => isset( $fields['page_layout'] ) && 'landing' === $fields['page_layout'] ? 'landing' : 'theme',
 			);
+			$layouts = $layouts || Livia_Service::restaurant( $id )['page_layout'] !== $changes['page_layout'];
 			// The page cached for the previous settings and for the new ones: both may be served otherwise.
 			Livia_Service::forget_page( $id );
 			Livia_Service::save_restaurant( $id, $changes );
@@ -367,6 +372,10 @@ final class Livia_Admin {
 				$notice['restaurants'][ $id ] = array( 'menu_info' => true );
 			}
 		}//end foreach
+		// A page cache keeps serving the page in its former layout: the screen asks to clear it.
+		if ( $layouts ) {
+			Livia_Service::save_settings( array( 'purge_due' => true ) );
+		}
 		// A restaurant whose only notice is menu_info was saved.
 		$notice['saved'] = ! array_filter(
 			$notice['restaurants'],
@@ -408,6 +417,34 @@ final class Livia_Admin {
 		Livia_Service::save_settings( $settings );
 		$notice['saved'] = ! $notice['restaurants'];
 		self::back( $notice );
+	}
+
+	/**
+	 * Saves the advanced settings tab: the styles of the group pages.
+	 */
+	public static function handle_save_advanced() {
+		self::guard( 'livia_save_advanced' );
+		$styles = isset( $_POST['livia_page_styles'] ) && 'isolated' === $_POST['livia_page_styles'] ? 'isolated' : 'inherit'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by guard().
+		if ( Livia_Service::settings()['page_styles'] !== $styles ) {
+			// A page cache keeps serving the pages with their former styles: the screen asks to clear it.
+			Livia_Service::save_settings(
+				array(
+					'page_styles' => $styles,
+					'purge_due'   => true,
+				)
+			);
+		}
+		self::back( array( 'saved' => true ) );
+	}
+
+	/**
+	 * Empties the cache of the cache and optimisation tools detected.
+	 */
+	public static function handle_purge_cache() {
+		self::guard( 'livia_purge_cache' );
+		$purged = Livia_Cache::purge();
+		Livia_Service::save_settings( array( 'purge_due' => false ) );
+		self::back( array( 'purged' => $purged ) );
 	}
 
 	/**
@@ -564,10 +601,19 @@ final class Livia_Admin {
 				'notice'     => isset( $notice['restaurants'][ $id ] ) ? $notice['restaurants'][ $id ] : array(),
 				'preview'    => array(
 					'widget' => Livia_Service::public_url( '/wordpress/v1/preview/widget', array( 'key' => $restaurant['key'] ) ),
-					'page'   => Livia_Service::public_url( '/wordpress/v1/preview/page', array( 'key' => $restaurant['key'] ) ),
+					// The styles are a setting of the site, saved in another tab; the layout follows the form.
+					'page'   => Livia_Service::public_url(
+						'/wordpress/v1/preview/page',
+						array_filter(
+							array(
+								'key'    => $restaurant['key'],
+								'styles' => 'isolated' === $settings['page_styles'] ? 'isolated' : '',
+							)
+						)
+					),
 				),
 			);
-		}
+		}//end foreach
 		$online = count( array_filter( array_keys( Livia_Service::restaurants() ), static fn( $id ) => null !== Livia_Group_Page::published( (string) $id ) ) );
 
 		$view = array(
@@ -586,12 +632,17 @@ final class Livia_Admin {
 			'xp_bar'      => $settings['xp_bar'],
 			'online'      => $online,
 			'home_host'   => untrailingslashit( preg_replace( '#^https?://#', '', home_url( '/' ) ) ),
+			// Only a cache tool keeps pages from before a change.
+			'purge_due'   => $settings['purge_due'] && Livia_Cache::detected(),
 		);
 		if ( ! $restaurants ) {
 			return $view;
 		}
 		if ( 'experience' === $tab ) {
 			return array_merge( $view, self::experience_view( $restaurants ) );
+		}
+		if ( 'advanced' === $tab ) {
+			return array_merge( $view, self::advanced_view() );
 		}
 		return 'page' === $tab ? array_merge( $view, self::page_view( $restaurants, $several ) ) : array_merge( $view, self::widget_view( $restaurants, $bubbles ) );
 	}
@@ -644,6 +695,43 @@ final class Livia_Admin {
 				'theme'  => wp_get_global_stylesheet() . Livia_Experience::theme_css(),
 				'site'   => get_bloginfo( 'name' ),
 			),
+		);
+	}
+
+	/**
+	 * What the advanced settings tab shows: the cache and optimisation tools detected, with what to copy into those
+	 * that offer no hook, and the styles of the group pages.
+	 *
+	 * @return array
+	 */
+	private static function advanced_view() {
+		$patterns = implode( "\n", Livia_Cache::patterns() );
+		$pages    = implode( "\n", Livia_Cache::group_page_urls() );
+		$copy     = array(
+			'delay'   => $patterns,
+			'defer'   => $patterns,
+			'minify'  => $patterns,
+			'combine' => $patterns,
+			'page'    => $pages,
+			'css'     => implode( "\n", Livia_Cache::style_patterns() ),
+		);
+		// The image lazy loading exclusions of these tools read the image tag, not the page: they get the class Livia
+		// puts on the images of its group pages, each as the tool expects it, and where to paste it.
+		$lazy = array(
+			'flyingpress' => array(
+				'copy'  => 'skip-lazy',
+				'where' => __( 'Image lazy loading: in FlyingPress, add the copied keyword to the images excluded from lazy loading; FlyingPress looks for it anywhere in the image tag.', 'livia' ),
+			),
+			'nitropack'   => array(
+				'copy'  => 'img.skip-lazy',
+				'where' => __( 'Image lazy loading: paste the copied rule in NitroPack, Settings > Images & Media > Images lazy loading > Additional options, field “Specify CSS selectors to disable image lazy loading for matching elements”.', 'livia' ),
+			),
+		);
+		return array(
+			'tools'       => Livia_Cache::detected(),
+			'copy'        => $copy,
+			'lazy'        => $lazy,
+			'page_styles' => Livia_Service::settings()['page_styles'],
 		);
 	}
 
@@ -708,15 +796,21 @@ final class Livia_Admin {
 			}
 			$conflict = Livia_Group_Page::check_address( $slug, $id );
 			$widgets  = Livia_Service::widgets( $id, array( 'inline' ) );
-			// Without a choice, the page follows the Livia booking page's widget, which may be a bubble: the list offers
-			// it as such, so that saving the tab unchanged keeps it.
-			$default = Livia_Service::widget( (string) $view['connection']['pageWidgetId'] );
-			$follow  = array(
+			// The list is offered with an embedded conversation only, so its empty choice always names one.
+			$auto     = Livia_Service::auto_page_widget( $id );
+			$default  = Livia_Service::widget( $auto );
+			$follow   = array(
 				'id'          => '',
-				'name'        => __( 'Widget of your Livia booking page', 'livia' ),
+				'name'        => sprintf(
+					/* translators: %s: name of the embedded conversation the group page shows when none is chosen. */
+					__( 'Automatic: %s', 'livia' ),
+					$default['name'] ?? ''
+				),
 				'format'      => $default['format'] ?? '',
 				'description' => $default['description'] ?? array(),
 			);
+			$shared   = (string) $view['connection']['pageWidgetId'];
+			$fallback = '' !== $settings['page_widget'] && ! in_array( $settings['page_widget'], Livia_Rules::widget_ids( $widgets ), true );
 
 			$restaurants[ $id ] = array_merge(
 				$view,
@@ -737,8 +831,13 @@ final class Livia_Admin {
 					),
 					'page_widgets' => $widgets ? array_merge( array( $follow ), $widgets ) : array(),
 					'page_widget'  => $settings['page_widget'],
+					'page_layout'  => $settings['page_layout'],
 					// Only a widget chosen here can be missing: the Livia booking page's widget is a default, and may be a bubble.
-					'fallback'     => '' !== $settings['page_widget'] && ! in_array( $settings['page_widget'], Livia_Rules::widget_ids( $widgets ), true ),
+					'fallback'     => $fallback,
+					'auto_widget'  => $auto,
+					'shared'       => $shared,
+					// The page counts its conversations with the Livia booking page's when it shows that same widget.
+					'follow'       => $fallback || Livia_Service::page_widget( $id ) === $shared,
 				)
 			);
 			++$index;
