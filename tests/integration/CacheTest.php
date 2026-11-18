@@ -186,6 +186,22 @@ final class CacheTest extends Livia_TestCase {
 		$this->assertLessThan( strpos( $with, '<script' ), strpos( $with, '<livia-chat' ), 'the script follows the conversation it hands the number to' );
 	}
 
+	public function test_a_shortcode_of_the_site_leaves_the_number_of_guests_script_intact() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp"><livia-chat widget="wdg_page"></livia-chat></div>' );
+		$page                                = Livia_Group_Page::publish( 'r1', 'reservation-groupe', 'Réservation de groupe' )['page'];
+		$this->go_to( get_permalink( $page ) );
+		$plain = apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+		// A theme or another plugin may declare any shortcode name; `the_content` runs do_shortcode after the block.
+		add_shortcode( 'root', '__return_empty_string' );
+		$html = apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+		remove_shortcode( 'root' );
+
+		$this->assertSame( $plain, $html );
+		preg_match( '#<script\b[^>]*>(.*?liviaGuests.*?)</script>#s', $html, $script );
+		$this->assertNotEmpty( $script );
+		$this->assertDoesNotMatchRegularExpression( '/[\[\]<]/', $script[1], 'no bracket for do_shortcode, no `<` for wptexturize' );
+	}
+
 	public function test_a_site_updated_from_1_0_keeps_its_page_and_its_cache_key() {
 		// Options as 1.0 saved them: neither the display mode nor the styles.
 		$this->assertArrayNotHasKey( 'page_layout', get_option( 'livia_restaurants' )['r1'] );
@@ -206,6 +222,24 @@ final class CacheTest extends Livia_TestCase {
 		foreach ( array( 'layout', 'styles', 'home' ) as $argument ) {
 			$this->assertStringNotContainsString( $argument . '=', $this->calls[0] );
 		}
+	}
+
+	public function test_the_copy_1_0_kept_still_serves_while_livia_does_not_answer() {
+		update_option(
+			'livia_last_' . md5( self::KEY ),
+			array(
+				'html'    => '<div class="livia-rp">1.0</div>',
+				'styles'  => array(),
+				'scripts' => array(),
+				'version' => 'v0',
+			),
+			false
+		);
+		$this->assertSame( '<div class="livia-rp">1.0</div>', Livia_Service::group_page( 'r1' )['html'] );
+
+		Livia_Service::save_settings( array( 'page_styles' => 'isolated' ) );
+		$this->new_request();
+		$this->assertNull( Livia_Service::group_page( 'r1' ), 'it was rendered for the inherited styles' );
 	}
 
 	public function test_the_landing_mode_and_isolated_styles_are_asked_for_with_their_own_cache() {

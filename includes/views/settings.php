@@ -450,16 +450,17 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 							<?php endif; ?>
 						</div>
 						<div class="lv-rows">
-							<?php foreach ( $view['tools'] as $livia_tool ) : ?>
+							<?php foreach ( $view['tools'] as $livia_tool_id => $livia_tool ) : ?>
 								<div class="lv-row">
 									<span class="lv-lab"><?php echo esc_html( $livia_tool['name'] ); ?></span>
 									<div>
 										<div class="lv-wlist">
 											<?php foreach ( $livia_tool['rules'] as $livia_rule => $livia_state ) : ?>
+												<?php $livia_text = 'lazy' === $livia_rule ? ( $view['lazy'][ $livia_tool_id ]['copy'] ?? '' ) : $view['copy'][ $livia_rule ]; ?>
 												<div>
 													<b><?php echo esc_html( $livia_rule_names[ $livia_rule ] ); ?></b><span><?php echo esc_html( $livia_rule_states[ $livia_state ] ); ?></span>
-													<?php if ( 'copy' === $livia_state && '' !== $view['copy'][ $livia_rule ] ) : ?>
-														<button type="button" class="lv-link lv-copy" data-livia-copy="<?php echo esc_attr( $view['copy'][ $livia_rule ] ); ?>" data-done="<?php esc_attr_e( 'Copied', 'livia' ); ?>"><?php echo Livia_Admin::icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup. ?><span><?php esc_html_e( 'Copy the rule', 'livia' ); ?></span></button>
+													<?php if ( 'copy' === $livia_state && '' !== $livia_text ) : ?>
+														<button type="button" class="lv-link lv-copy" data-livia-copy="<?php echo esc_attr( $livia_text ); ?>" data-done="<?php esc_attr_e( 'Copied', 'livia' ); ?>"><?php echo Livia_Admin::icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup. ?><span><?php esc_html_e( 'Copy the rule', 'livia' ); ?></span></button>
 													<?php endif; ?>
 												</div>
 											<?php endforeach; ?>
@@ -471,6 +472,9 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 												echo esc_html( sprintf( __( '%s offers no hook for some of these rules: paste each copied rule into its exclusion settings, one line per entry.', 'livia' ), $livia_tool['name'] ) );
 												?>
 											</p>
+										<?php endif; ?>
+										<?php if ( 'copy' === ( $livia_tool['rules']['lazy'] ?? '' ) && isset( $view['lazy'][ $livia_tool_id ] ) ) : ?>
+											<p class="lv-help"><?php echo esc_html( $view['lazy'][ $livia_tool_id ]['where'] ); ?></p>
 										<?php endif; ?>
 									</div>
 								</div>

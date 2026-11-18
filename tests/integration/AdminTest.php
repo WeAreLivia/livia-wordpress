@@ -737,4 +737,28 @@ final class AdminTest extends Livia_TestCase {
 		$this->run_action( 'handle_save_advanced' );
 		$this->assertTrue( Livia_Service::settings()['purge_due'], 'a change of styles asks again' );
 	}
+
+	/**
+	 * Constants of FlyingPress, NitroPack and WP Fastest Cache's class, defined for this process only: they mark the
+	 * tools as detected.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_the_image_lazy_loading_rule_names_the_images_each_tool_compares() {
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- The tools' own names.
+		define( 'FLYING_PRESS_VERSION', '5.0' );
+		define( 'NITROPACK_VERSION', '1.18' );
+		class_alias( 'stdClass', 'WpFastestCache' );
+		// phpcs:enable
+		Livia_Group_Page::publish( 'r1', 'reservation-groupe', 'Réservation de groupe' );
+		$this->as_role( 'administrator' );
+		$advanced = $this->screen( 'advanced' );
+
+		$this->assertStringContainsString( 'data-livia-copy="skip-lazy"', $advanced, 'FlyingPress compares a keyword with the image tag' );
+		$this->assertStringContainsString( 'data-livia-copy="img.skip-lazy"', $advanced, 'NitroPack takes CSS selectors' );
+		$this->assertStringContainsString( 'Specify CSS selectors to disable image lazy loading for matching elements', $advanced );
+		$this->assertMatchesRegularExpression( '#<b>Image lazy loading on the group booking page</b><span>Applied automatically</span>#', $advanced, 'WP Fastest Cache' );
+		$this->assertSame( 1, substr_count( $advanced, 'data-livia-copy="' . esc_attr( home_url( '/reservation-groupe/' ) ) ), 'the page address is a rule of NitroPack\'s page cache only' );
+	}
 }

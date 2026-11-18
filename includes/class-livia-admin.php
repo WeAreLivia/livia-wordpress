@@ -714,11 +714,23 @@ final class Livia_Admin {
 			'combine' => $patterns,
 			'page'    => $pages,
 			'css'     => implode( "\n", Livia_Cache::style_patterns() ),
-			'lazy'    => $pages,
+		);
+		// The image lazy loading exclusions of these tools read the image tag, not the page: they get the class Livia
+		// puts on the images of its group pages, each as the tool expects it, and where to paste it.
+		$lazy = array(
+			'flyingpress' => array(
+				'copy'  => 'skip-lazy',
+				'where' => __( 'Image lazy loading: in FlyingPress, add the copied keyword to the images excluded from lazy loading; FlyingPress looks for it anywhere in the image tag.', 'livia' ),
+			),
+			'nitropack'   => array(
+				'copy'  => 'img.skip-lazy',
+				'where' => __( 'Image lazy loading: paste the copied rule in NitroPack, Settings > Images & Media > Images lazy loading > Additional options, field “Specify CSS selectors to disable image lazy loading for matching elements”.', 'livia' ),
+			),
 		);
 		return array(
 			'tools'       => Livia_Cache::detected(),
 			'copy'        => $copy,
+			'lazy'        => $lazy,
 			'page_styles' => Livia_Service::settings()['page_styles'],
 		);
 	}

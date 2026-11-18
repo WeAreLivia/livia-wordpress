@@ -105,6 +105,7 @@ final class Livia_Cache {
 				'lazy'    => 'none',
 			),
 		),
+		// Its lazy loading runs only on a page it caches, never on the group page, see group_page_uncached().
 		'wp-fastest-cache' => array(
 			'name'   => 'WP Fastest Cache',
 			'detect' => 'WpFastestCache',
@@ -115,7 +116,7 @@ final class Livia_Cache {
 				'combine' => 'auto',
 				'page'    => 'auto',
 				'css'     => 'copy',
-				'lazy'    => 'copy',
+				'lazy'    => 'auto',
 			),
 		),
 		'autoptimize'      => array(

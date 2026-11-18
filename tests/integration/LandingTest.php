@@ -36,6 +36,14 @@ final class LandingTest extends Livia_TestCase {
 		$this->assertSame( 'theme.php', apply_filters( 'template_include', 'theme.php' ), 'another page keeps its theme' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
 	}
 
+	public function test_the_embed_address_of_a_landing_page_keeps_wordpress_s_embed_template() {
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		$this->go_to( get_post_embed_url( $this->page ) );
+		$this->assertTrue( is_embed() );
+		$this->assertSame( 'r1', Livia_Group_Page::landing() );
+		$this->assertSame( 'embed.php', apply_filters( 'template_include', 'embed.php' ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+	}
+
 	public function test_the_landing_page_keeps_the_site_s_scripts_and_livia_s_but_not_the_booking_tools() {
 		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
 		$this->go_to( get_permalink( $this->page ) );
@@ -83,6 +91,22 @@ final class LandingTest extends Livia_TestCase {
 
 		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'theme' ) );
 		$this->assertStringNotContainsString( 'Back to the site', do_blocks( $this->page->post_content ), 'the theme leads back itself' );
+	}
+
+	public function test_a_page_received_for_the_theme_is_not_shown_as_a_landing_page_while_livia_does_not_answer() {
+		$this->go_to( get_permalink( $this->page ) );
+		$this->assertStringContainsString( 'wdg_page', do_blocks( $this->page->post_content ) );
+
+		unset( $this->answers['/wordpress/v1/page'] );
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		$this->new_request();
+		$html = do_blocks( $this->page->post_content );
+		$this->assertStringNotContainsString( 'wdg_page', $html, 'the theme\'s page has no way back to the site' );
+		$this->assertStringContainsString( 'Back to the site', $html );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'theme' ) );
+		Livia_Service::forget_page( 'r1' );
+		$this->assertStringContainsString( 'wdg_page', do_blocks( $this->page->post_content ), 'the theme keeps its copy' );
 	}
 
 	public function test_a_page_in_the_theme_keeps_every_script() {

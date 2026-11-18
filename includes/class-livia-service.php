@@ -17,7 +17,8 @@ final class Livia_Service {
 	const CONNECTIONS = 'livia_connections';
 
 	/**
-	 * Prefix of the options holding the last group page received for a key, one per key.
+	 * Prefix of the options holding the last group page received for a key, one per key, with the transient of the page
+	 * query it was rendered for under `query`, see last_page().
 	 */
 	const PAGE_LAST = 'livia_last_';
 
@@ -521,7 +522,7 @@ final class Livia_Service {
 		$answer = self::call( '/wordpress/v1/page', self::page_query( $id ) );
 		$page   = 'ok' === $answer['status'] ? self::read_page( $answer['data'] ) : null;
 		if ( $page ) {
-			update_option( self::PAGE_LAST . md5( $restaurant['key'] ), $page, false );
+			update_option( self::PAGE_LAST . md5( $restaurant['key'] ), $page + array( 'query' => $transient ), false );
 			$ttl = isset( $answer['data']['cacheSeconds'] ) ? (int) $answer['data']['cacheSeconds'] : 0;
 			set_transient( $transient, array( 'page' => $page ), max( self::RETRY_AFTER, min( self::CACHE_MAX, $ttl ) ) );
 		} else {
@@ -548,7 +549,9 @@ final class Livia_Service {
 	}
 
 	/**
-	 * The last group page received for a restaurant's key: a visit that asked with a previous key does not count.
+	 * The last group page received for a restaurant's key and its current page query: a visit that asked with a previous
+	 * key, or for another display mode or styles, does not count, as a page rendered for the theme has no way back to
+	 * the site on a landing page.
 	 *
 	 * @param string $id Restaurant id.
 	 * @return array|null
@@ -556,7 +559,14 @@ final class Livia_Service {
 	public static function last_page( $id ) {
 		$restaurant = self::restaurant( $id );
 		$last       = $restaurant ? get_option( self::PAGE_LAST . md5( $restaurant['key'] ) ) : null;
-		return is_array( $last ) ? $last : null;
+		if ( ! is_array( $last ) ) {
+			return null;
+		}
+		$current = self::page_transient( $id );
+		// A copy kept by 1.0 names no query: it was rendered for the service's default layout and styles.
+		$for = $last['query'] ?? ( array_intersect_key( self::page_query( $id ), array_flip( array( 'layout', 'styles' ) ) ) ? '' : $current );
+		unset( $last['query'] );
+		return $current === $for ? $last : null;
 	}
 
 	/**

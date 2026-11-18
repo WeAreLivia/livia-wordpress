@@ -133,13 +133,13 @@ final class Livia_Group_Page {
 
 	/**
 	 * Serves a group page in landing mode with the plugin's own template: the site's head and footer hooks, without the
-	 * theme's header and footer.
+	 * theme's header and footer. Its embed address keeps WordPress's embed template.
 	 *
 	 * @param string $template Template WordPress chose.
 	 * @return string
 	 */
 	public static function template( $template ) {
-		return null !== self::landing() ? LIVIA_DIR . 'includes/views/landing.php' : $template;
+		return ! is_embed() && null !== self::landing() ? LIVIA_DIR . 'includes/views/landing.php' : $template;
 	}
 
 	/**
@@ -219,13 +219,14 @@ final class Livia_Group_Page {
 		// The script hands `?couverts=N` to the conversation before its bundle, loaded later in the footer, starts it;
 		// it reads the address in the browser, so the page stays the same for every address and its cache holds. It
 		// also looks in the open shadow roots of the fragment, where an isolated page puts its conversation.
-		// wptexturize on the_content reads a `<` as a tag start and escapes the `&` after it: the script has no `<`.
+		// wptexturize on the_content reads a `<` as a tag start and escapes the `&` after it: the script has no `<`; and
+		// do_shortcode runs any `[name]` a theme or plugin declares as a shortcode: it has no bracket either.
 		// `liviaGuests` and the attributes keep it out of the cache and optimisation tools, see Livia_Cache.
 		return sprintf(
 			'<div %s>%s%s</div>',
 			get_block_wrapper_attributes(),
 			Livia_Rules::without_shortcodes( $page['html'] ),
-			wp_get_inline_script_tag( '(function(){var liviaGuests=Number(new URLSearchParams(location.search).get("couverts"));var root=document.currentScript.parentNode;if(liviaGuests>=1&&999>=liviaGuests&&liviaGuests%1===0){[root].concat([].map.call(root.querySelectorAll("*"),function(el){return el.shadowRoot;}).filter(Boolean)).forEach(function(part){part.querySelectorAll("livia-chat").forEach(function(chat){chat.setAttribute("guests",String(liviaGuests));});});}}());', Livia_Cache::ATTRIBUTES )
+			wp_get_inline_script_tag( '(function(){var liviaGuests=Number(new URLSearchParams(location.search).get("couverts"));var root=document.currentScript.parentNode;if(liviaGuests>=1&&999>=liviaGuests&&liviaGuests%1===0){Array.prototype.concat.call(root,Array.prototype.map.call(root.querySelectorAll("*"),function(el){return el.shadowRoot;}).filter(Boolean)).forEach(function(part){part.querySelectorAll("livia-chat").forEach(function(chat){chat.setAttribute("guests",String(liviaGuests));});});}}());', Livia_Cache::ATTRIBUTES )
 		);
 	}
 
