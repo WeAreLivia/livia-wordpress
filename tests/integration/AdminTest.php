@@ -610,7 +610,7 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertStringContainsString( $alert, $this->screen( 'page' ) );
 	}
 
-	public function test_without_a_choice_the_page_takes_the_first_embedded_conversation() {
+	public function test_without_a_choice_the_page_takes_the_embedded_conversation_when_the_livia_booking_page_has_a_bubble() {
 		$this->as_role( 'administrator' );
 		$connections                       = get_option( 'livia_connections' );
 		$connections['r1']['pageWidgetId'] = 'wdg_site';
@@ -639,7 +639,8 @@ final class AdminTest extends Livia_TestCase {
 		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ) );
 	}
 
-	public function test_without_a_choice_the_page_prefers_the_livia_booking_page_s_embedded_conversation() {
+	public function test_without_a_choice_the_page_leaves_the_livia_booking_page_s_embedded_conversation_to_it() {
+		$this->as_role( 'administrator' );
 		$connections                    = get_option( 'livia_connections' );
 		$connections['r1']['widgets'][] = array(
 			'id'         => 'wdg_first',
@@ -647,13 +648,32 @@ final class AdminTest extends Livia_TestCase {
 			'format'     => 'inline',
 			'fullscreen' => false,
 		);
-		$connections['r1']['widgets']   = array_reverse( $connections['r1']['widgets'] );
+		$connections['r1']['widgets'][] = array(
+			'id'         => 'wdg_second',
+			'name'       => 'Mariages',
+			'format'     => 'inline',
+			'fullscreen' => false,
+		);
 		update_option( 'livia_connections', $connections );
-		$this->assertSame( 'wdg_first', Livia_Rules::widget_ids( Livia_Service::widgets( 'r1', array( 'inline' ) ) )[0] );
-		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ) );
+		$this->assertSame( 'wdg_page', Livia_Rules::widget_ids( Livia_Service::widgets( 'r1', array( 'inline' ) ) )[0] );
+		$this->assertSame( 'wdg_first', Livia_Service::page_widget( 'r1' ), 'the first one that is not the Livia booking page\'s' );
+		$this->assertSame( 'wdg_first', Livia_Service::page_query( 'r1' )['widget'] );
 
-		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_first' ) );
-		$this->assertSame( 'wdg_first', Livia_Service::page_widget( 'r1' ), 'a choice comes first' );
+		$html = $this->screen( 'page' );
+		$this->assertMatchesRegularExpression( '#<option value=""  selected=\'selected\'\s+data-name="Automatic: Groupes"#', $html, 'the label names the widget kept' );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow hidden>#', $html, 'counted apart' );
+
+		Livia_Service::save_restaurant( 'r1', array( 'page_widget' => 'wdg_page' ) );
+		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ), 'a choice comes first' );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>#', $this->screen( 'page' ), 'chosen, so counted together' );
+	}
+
+	public function test_when_the_livia_booking_page_s_is_the_only_embedded_conversation_the_page_takes_it() {
+		$this->as_role( 'administrator' );
+		$this->assertSame( 'wdg_page', Livia_Service::page_widget( 'r1' ) );
+		$html = $this->screen( 'page' );
+		$this->assertMatchesRegularExpression( '#<option value=""  selected=\'selected\'\s+data-name="Automatic: Page de réservation"#', $html );
+		$this->assertMatchesRegularExpression( '#<p class="lv-help" data-livia-follow>#', $html, 'counted together' );
 	}
 
 	public function test_without_an_embedded_conversation_the_page_keeps_the_livia_booking_page_s_widget() {
@@ -737,6 +757,11 @@ final class AdminTest extends Livia_TestCase {
 			)
 		);
 		$this->assertSame( 'theme', Livia_Service::restaurant( 'r1' )['page_layout'] );
+	}
+
+	public function test_the_page_tab_explains_the_phone_button() {
+		$this->as_role( 'administrator' );
+		$this->assertStringContainsString( '<p class="lv-help">On phones, the conversation opens from a button fixed at the bottom of the screen, in your widget&#039;s colours, whatever its format.</p>', $this->screen( 'page' ) );
 	}
 
 	public function test_the_page_tab_says_when_conversations_count_with_the_livia_booking_page() {

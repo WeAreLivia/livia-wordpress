@@ -40,7 +40,7 @@ The settings screen uses the Hanken Grotesk and Archivo fonts, under the SIL Ope
 * Group booking page shown as a landing page, without the theme's header and footer and without the widgets of other booking tools, as a choice of each restaurant.
 * "Advanced settings" tab: Livia's scripts, stylesheets and group booking pages kept out of the common cache and optimisation tools, their cache cleared in one click, and the group booking pages' styles isolated from the site's.
 * The group booking page says when its conversations are counted with those of the Livia booking page.
-* Without a widget chosen, the group booking page shows the Livia booking page's widget when it is an embedded conversation, else the restaurant's first embedded conversation.
+* Without a widget chosen, the group booking page shows the restaurant's first embedded conversation other than the Livia booking page's widget, else the Livia booking page's widget.
 
 = 1.0.0 =
 * First release: one or several restaurants, group booking pages, site bubbles, "Livia widget" block, Elementor elements and shortcodes, editor panel, booking experience, updates from Livia.

@@ -659,6 +659,7 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 										<?php endif; ?>
 										<p class="lv-help"><?php esc_html_e( 'Embedded conversations of this restaurant, created and set in your Livia space; the page uses their settings as they are. Full screen widgets are not offered: they would cover the page.', 'livia' ); ?></p>
 										<p class="lv-help" data-livia-follow<?php echo $livia_r['follow'] ? '' : ' hidden'; ?>><?php esc_html_e( 'Conversations from this page are counted together with those of your Livia booking page. To track them separately, create an embedded conversation in your Livia space.', 'livia' ); ?></p>
+										<p class="lv-help"><?php esc_html_e( 'On phones, the conversation opens from a button fixed at the bottom of the screen, in your widget\'s colours, whatever its format.', 'livia' ); ?></p>
 									</div>
 								</div>
 								<div class="lv-row">

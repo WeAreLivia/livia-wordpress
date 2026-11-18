@@ -464,8 +464,8 @@ final class Livia_Service {
 	}
 
 	/**
-	 * The group page's widget when none is chosen: the Livia booking page's widget when it is an embedded conversation,
-	 * else the restaurant's first embedded conversation, else the Livia booking page's widget, bubble included.
+	 * The group page's widget when none is chosen: the restaurant's first embedded conversation that is not the Livia booking
+	 * page's widget, so that the two do not share a tracking source, else the Livia booking page's widget, bubble included.
 	 *
 	 * @param string $id Restaurant id.
 	 * @return string
@@ -473,7 +473,8 @@ final class Livia_Service {
 	public static function auto_page_widget( $id ) {
 		$page    = (string) self::connection( $id )['pageWidgetId'];
 		$offered = Livia_Rules::widget_ids( self::widgets( $id, array( 'inline' ) ) );
-		return ! $offered || in_array( $page, $offered, true ) ? $page : $offered[0];
+		$own     = array_values( array_diff( $offered, array( $page ) ) );
+		return $own ? $own[0] : $page;
 	}
 
 	/**
