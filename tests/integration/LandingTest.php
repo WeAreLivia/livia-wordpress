@@ -19,7 +19,7 @@ final class LandingTest extends Livia_TestCase {
 		$this->features        = $GLOBALS['_wp_theme_features'] ?? array();
 		$this->connect();
 		$this->new_request();
-		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp"><livia-chat widget="wdg_page"></livia-chat></div>' );
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp livia-rp--landing"><livia-chat widget="wdg_page"></livia-chat></div>' );
 		$this->page                          = Livia_Group_Page::publish( 'r1', 'reservation-groupe', 'Réservation de groupe' )['page'];
 	}
 
@@ -38,6 +38,23 @@ final class LandingTest extends Livia_TestCase {
 
 		$this->go_to( get_permalink( self::factory()->post->create( array( 'post_type' => 'page' ) ) ) );
 		$this->assertSame( 'theme.php', apply_filters( 'template_include', 'theme.php' ), 'another page keeps its theme' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+	}
+
+	public function test_a_page_livia_rendered_for_the_theme_stays_in_the_theme_in_landing_mode() {
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp livia-rp--colonne"><p>livia-rp--landing</p><livia-chat widget="wdg_page"></livia-chat></div>' );
+		Livia_Service::save_restaurant( 'r1', array( 'page_layout' => 'landing' ) );
+		$this->go_to( get_permalink( $this->page ) );
+		wp_enqueue_script( 'zenchef-sdk', 'https://sdk.zenchef.com/v1/sdk.min.js', array(), null, false );
+
+		$this->assertNull( Livia_Group_Page::landing() );
+		$this->assertSame( 'theme.php', apply_filters( 'template_include', 'theme.php' ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
+		Livia_Group_Page::dequeue_booking_tools();
+		$this->assertTrue( wp_script_is( 'zenchef-sdk' ), 'a page in the theme keeps the site\'s scripts' );
+
+		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp-hote"><template shadowrootmode="open"><div class="livia-rp livia-rp--landing">Livia</div></template></div>' );
+		Livia_Service::forget_page( 'r1' );
+		$this->new_request();
+		$this->assertSame( LIVIA_DIR . 'includes/views/landing.php', apply_filters( 'template_include', 'theme.php' ), 'an isolated landing page' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress's own filter.
 	}
 
 	public function test_the_embed_address_of_a_landing_page_keeps_wordpress_s_embed_template() {

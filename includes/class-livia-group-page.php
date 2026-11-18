@@ -122,13 +122,19 @@ final class Livia_Group_Page {
 	}
 
 	/**
-	 * The restaurant whose group page is shown in landing mode.
+	 * The restaurant whose group page is shown in landing mode: set so, and received from Livia as a landing page, or
+	 * not received at all (its notice then leads back to the site). A Livia service that does not render landing pages
+	 * answers with the page for the theme, which has no way back to the site: that page stays in the theme.
 	 *
 	 * @return string|null Restaurant id.
 	 */
 	public static function landing() {
 		$id = self::current();
-		return null !== $id && 'landing' === Livia_Service::restaurant( $id )['page_layout'] ? $id : null;
+		if ( null === $id || 'landing' !== Livia_Service::restaurant( $id )['page_layout'] ) {
+			return null;
+		}
+		$page = Livia_Service::group_page( $id );
+		return ! $page || preg_match( '#\sclass="livia-rp(?:\s[^"]*)?\slivia-rp--landing[\s"]#', $page['html'] ) ? $id : null;
 	}
 
 	/**
