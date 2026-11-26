@@ -2,6 +2,15 @@
 
 Each version's section is the text of its GitHub release and of the plugin's update window in WordPress: one line per list item, no inline formatting.
 
+## 1.1.1
+
+Livia 1.1.1 tells you when a restaurant's Livia account is no longer active.
+
+### Changed
+
+- When the Livia service refuses a restaurant because its account is no longer active, the group booking page is removed as for a turned off connector, and visitors see the same short notice as before.
+- The Livia screen then shows "Livia account inactive" and tells you that the account is no longer active and to contact your Livia representative to reactivate it.
+
 ## 1.1.0
 
 Livia 1.1 lets each restaurant choose how its group booking page looks on your site, keeps cache and optimisation tools from getting in the way of Livia, and gives every group booking page a conversation of its own.

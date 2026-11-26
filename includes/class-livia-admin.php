@@ -208,6 +208,7 @@ final class Livia_Admin {
 		$messages = array(
 			'unknown_key'        => __( 'Livia does not recognise this key. Check that you copied all of it from your Livia space.', 'livia' ),
 			'connector_disabled' => __( 'The WordPress connector of this restaurant is turned off in Livia: the plugin no longer receives anything. Turn it on again in your Livia space, Connectors section.', 'livia' ),
+			'account_inactive'   => __( 'This restaurant\'s Livia account is no longer active. To reactivate it, contact your Livia representative.', 'livia' ),
 			'already_connected'  => __( 'This restaurant is already connected.', 'livia' ),
 			'unavailable'        => __( 'Livia is not answering right now. Please try again in a few minutes.', 'livia' ),
 		);
@@ -590,7 +591,7 @@ final class Livia_Admin {
 		$restaurants = array();
 		foreach ( Livia_Service::restaurants() as $id => $restaurant ) {
 			$connection         = Livia_Service::connection( $id );
-			$refused            = in_array( $connection['state'], array( 'unknown_key', 'connector_disabled' ), true );
+			$refused            = in_array( $connection['state'], array( 'unknown_key', 'connector_disabled', 'account_inactive' ), true );
 			$restaurants[ $id ] = array(
 				'settings'   => $restaurant,
 				'connection' => $connection,

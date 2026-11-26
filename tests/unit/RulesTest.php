@@ -42,6 +42,9 @@ final class RulesTest extends TestCase {
 		$this->assertSame( 'unknown_key', Livia_Rules::read_response( 404, '{"error":"unknown_key"}' )['status'] );
 		$this->assertSame( 'unknown_widget', Livia_Rules::read_response( 404, '{"error":"unknown_widget"}' )['status'] );
 		$this->assertSame( 'connector_disabled', Livia_Rules::read_response( 403, '{"error":"connector_disabled"}' )['status'] );
+		$this->assertSame( 'account_inactive', Livia_Rules::read_response( 403, '{"error":"connector_disabled","reason":"account_inactive"}' )['status'] );
+		$this->assertSame( 'connector_disabled', Livia_Rules::read_response( 403, '{"error":"connector_disabled","reason":"other"}' )['status'] );
+		$this->assertSame( 'unavailable', Livia_Rules::read_response( 403, '{"error":"unknown_key","reason":"account_inactive"}' )['status'] );
 		$this->assertSame( 'unavailable', Livia_Rules::read_response( 403, '{"error":"unknown_key"}' )['status'] );
 		$this->assertSame( 'unavailable', Livia_Rules::read_response( 503, '{"error":"unavailable"}' )['status'] );
 		$this->assertSame( 'unavailable', Livia_Rules::read_response( 429, 'Too Many Requests' )['status'] );

@@ -3,7 +3,7 @@
  * Plugin Name:       Livia
  * Plugin URI:        https://www.wearelivia.com
  * Description:       Publishes your restaurant's Livia group booking page on your site, with its booking assistant, and places Livia widgets on your pages.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 6.5
  * Tested up to:      7.1
  * Requires PHP:      7.4
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LIVIA_VERSION', '1.1.0' );
+define( 'LIVIA_VERSION', '1.1.1' );
 define( 'LIVIA_FILE', __FILE__ );
 define( 'LIVIA_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LIVIA_URL', plugin_dir_url( __FILE__ ) );

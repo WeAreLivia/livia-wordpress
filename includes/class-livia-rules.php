@@ -68,7 +68,7 @@ final class Livia_Rules {
 	 * @param int    $code HTTP status, 0 when the service could not be reached.
 	 * @param string $body Response body.
 	 * @return array{status: string, data: array|null} Status `ok`, `unknown_key`, `connector_disabled`,
-	 *                                                 `unknown_widget` or `unavailable`, and the decoded body on `ok`.
+	 *                                                 `account_inactive`, `unknown_widget` or `unavailable`, and the decoded body on `ok`.
 	 */
 	public static function read_response( $code, $body ) {
 		$data = json_decode( (string) $body, true );
@@ -89,6 +89,10 @@ final class Livia_Rules {
 			403 => array( 'connector_disabled' ),
 		);
 		$status = isset( $known[ $code ] ) && in_array( $error, $known[ $code ], true ) ? $error : 'unavailable';
+		// A closed account stays a disabled connector for an older plugin; only this one reads the reason.
+		if ( 'connector_disabled' === $status && 'account_inactive' === ( $data['reason'] ?? '' ) ) {
+			$status = 'account_inactive';
+		}
 		return array(
 			'status' => $status,
 			'data'   => null,

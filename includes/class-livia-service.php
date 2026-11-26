@@ -545,7 +545,7 @@ final class Livia_Service {
 			$ttl = isset( $answer['data']['cacheSeconds'] ) ? (int) $answer['data']['cacheSeconds'] : 0;
 			set_transient( $transient, array( 'page' => $page ), max( self::RETRY_AFTER, min( self::CACHE_MAX, $ttl ) ) );
 		} else {
-			if ( in_array( $answer['status'], array( 'unknown_key', 'connector_disabled' ), true ) ) {
+			if ( in_array( $answer['status'], array( 'unknown_key', 'connector_disabled', 'account_inactive' ), true ) ) {
 				delete_option( self::PAGE_LAST . md5( $restaurant['key'] ) );
 			}
 			$page = self::last_page( $id );

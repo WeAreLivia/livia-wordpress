@@ -200,6 +200,8 @@ $livia_key_form = static function ( $restaurant_id, $error, $value, $cancel ) us
 							<span class="lv-tag t-ok"><i></i><?php esc_html_e( 'Connected', 'livia' ); ?></span>
 						<?php elseif ( 'connector_disabled' === $livia_r['connection']['state'] ) : ?>
 							<span class="lv-tag t-todo"><i></i><?php esc_html_e( 'Connector turned off', 'livia' ); ?></span>
+						<?php elseif ( 'account_inactive' === $livia_r['connection']['state'] ) : ?>
+							<span class="lv-tag t-todo"><i></i><?php esc_html_e( 'Livia account inactive', 'livia' ); ?></span>
 						<?php else : ?>
 							<span class="lv-tag t-todo"><i></i><?php esc_html_e( 'Key refused', 'livia' ); ?></span>
 						<?php endif; ?>
