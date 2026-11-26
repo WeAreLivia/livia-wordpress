@@ -75,6 +75,13 @@ final class CacheTest extends Livia_TestCase {
 		$refusals = array(
 			array( 404, array( 'error' => 'unknown_key' ) ),
 			array( 403, array( 'error' => 'connector_disabled' ) ),
+			array(
+				403,
+				array(
+					'error'  => 'connector_disabled',
+					'reason' => 'account_inactive',
+				),
+			),
 		);
 		foreach ( $refusals as $refusal ) {
 			$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp">Version 1</div>' );

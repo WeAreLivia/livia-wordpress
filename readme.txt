@@ -4,7 +4,7 @@ Tags: restaurant, booking, reservation, chat, assistant
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: Proprietary
 License URI: https://www.wearelivia.com
 
@@ -35,6 +35,9 @@ The plugin needs a Livia account. Turn on the WordPress connector in your Livia 
 The settings screen uses the Hanken Grotesk and Archivo fonts, under the SIL Open Font License 1.1; their licences are in assets/fonts.
 
 == Changelog ==
+
+= 1.1.1 =
+* When the Livia service refuses a restaurant because its account is no longer active, the group booking page is removed as for a turned off connector, visitors see the same short notice, and the Livia screen says the account is no longer active and to contact your Livia representative.
 
 = 1.1.0 =
 * Display mode of the group booking page, per restaurant: inside the theme (default) or as a landing page, without the theme's header and footer, with the restaurant's logo and a "Back to the site" link; the site's scripts still load, except the widgets of other booking tools.

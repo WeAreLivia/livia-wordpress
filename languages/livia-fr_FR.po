@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Livia 1.1.0\n"
+"Project-Id-Version: Livia 1.1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: Livia\n"
 "Language-Team: \n"
@@ -245,6 +245,10 @@ msgstr "Connecté"
 #: includes/views/settings.php:202
 msgid "Connector turned off"
 msgstr "Connecteur désactivé"
+
+#: includes/views/settings.php:203
+msgid "Livia account inactive"
+msgstr "Compte Livia inactif"
 
 #: includes/views/settings.php:168
 msgid "To do"
@@ -515,6 +519,10 @@ msgstr "réservation"
 #: includes/class-livia-admin.php:210
 msgid "The WordPress connector of this restaurant is turned off in Livia: the plugin no longer receives anything. Turn it on again in your Livia space, Connectors section."
 msgstr "Le connecteur WordPress de ce restaurant est désactivé dans Livia : l'extension ne reçoit plus rien. Réactivez-le dans votre espace Livia, rubrique Connecteurs."
+
+#: includes/class-livia-admin.php:211
+msgid "This restaurant's Livia account is no longer active. To reactivate it, contact your Livia representative."
+msgstr "Le compte Livia de ce restaurant n'est plus actif. Pour le réactiver, contactez votre interlocuteur Livia."
 
 #: includes/class-livia-admin.php:480
 msgid "This site has no trash for media files: the file would be hidden with no way to restore it. Choose another address, or delete the file yourself."

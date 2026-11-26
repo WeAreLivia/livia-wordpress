@@ -58,6 +58,25 @@ final class ConnectionTest extends Livia_TestCase {
 		$this->assertSame( 'connector_disabled', Livia_Service::connection( 'r1' )['state'] );
 	}
 
+	public function test_an_inactive_account_is_treated_like_a_turned_off_connector() {
+		$this->connect();
+		$this->answers['/wordpress/v1/page'] = $this->page_answer();
+		Livia_Service::group_page( 'r1' );
+		$this->assertNotNull( Livia_Service::last_page( 'r1' ) );
+
+		$this->answers['/wordpress/v1/connection'] = array(
+			403,
+			array(
+				'error'  => 'connector_disabled',
+				'reason' => 'account_inactive',
+			),
+		);
+		$this->assertSame( 'account_inactive', Livia_Service::refresh_connection( 'r1' ) );
+		$this->assertNull( Livia_Service::last_page( 'r1' ) );
+		$this->assertSame( 'account_inactive', Livia_Service::connection( 'r1' )['state'] );
+		$this->assertStringContainsString( 'no longer active', Livia_Admin::key_message( 'account_inactive' ) );
+	}
+
 	public function test_a_429_in_front_of_the_service_is_only_unavailable_for_a_while() {
 		$this->connect();
 		$this->answers['/wordpress/v1/page'] = $this->page_answer( '<div class="livia-rp">Version 1</div>' );

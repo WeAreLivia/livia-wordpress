@@ -2,7 +2,7 @@
 # This file is distributed under the Proprietary.
 msgid ""
 msgstr ""
-"Project-Id-Version: Livia 1.1.0\n"
+"Project-Id-Version: Livia 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/livia\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,6 +65,10 @@ msgstr ""
 
 #: includes/class-livia-admin.php:210
 msgid "The WordPress connector of this restaurant is turned off in Livia: the plugin no longer receives anything. Turn it on again in your Livia space, Connectors section."
+msgstr ""
+
+#: includes/class-livia-admin.php:211
+msgid "This restaurant's Livia account is no longer active. To reactivate it, contact your Livia representative."
 msgstr ""
 
 #: includes/class-livia-admin.php:211
@@ -1125,6 +1129,10 @@ msgstr ""
 
 #: includes/views/settings.php:202
 msgid "Connector turned off"
+msgstr ""
+
+#: includes/views/settings.php:203
+msgid "Livia account inactive"
 msgstr ""
 
 #: includes/views/settings.php:204
